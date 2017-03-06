@@ -28,7 +28,7 @@
         autoMovement() {
 
             // Horizontal movement
-            if ((this.position.x > (this.game.scale.width * 0.85)) || (this.position.x < (this.game.scale.width * 0.15))) { // if (too far right || too far left)
+            if ((this.position.x > (this.game.world.width * 0.90)) || (this.position.x < (this.game.world.width * 0.10))) { // if (too far right || too far left)
                 this.turnToFaceCenter();
             }
 
@@ -36,7 +36,7 @@
         }
         
         turnToFaceCenter() {
-            if (this.position.x > this.game.scale.width * 0.5) {
+            if (this.position.x > this.game.world.width * 0.5) {
                 this.moveSpeedCurr = this.moveSpeed * -1.0;
                 this.scale.setTo(-1, 1);
             }

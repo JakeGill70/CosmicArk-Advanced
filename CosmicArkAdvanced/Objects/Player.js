@@ -23,7 +23,7 @@ var CosmicArkAdvanced;
             this.touchMovement();
         };
         Player.prototype.touchMovement = function () {
-            var pos = this.game.input.position;
+            var pos = new Phaser.Point(this.game.input.worldX, this.game.input.worldY);
             var ang = Phaser.Math.angleBetweenPoints(this.position, pos);
             var moveAmtX = this.realSpeed() * Math.cos(ang);
             var moveAmtY = this.realSpeed() * Math.sin(ang);

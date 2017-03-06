@@ -34,7 +34,7 @@
         }
 
         touchMovement() {
-            let pos = this.game.input.position;
+            let pos = new Phaser.Point(this.game.input.worldX, this.game.input.worldY);
             let ang = Phaser.Math.angleBetweenPoints(this.position, pos);
             let moveAmtX = this.realSpeed() * Math.cos(ang);
             let moveAmtY = this.realSpeed() * Math.sin(ang);
