@@ -41,20 +41,22 @@ var CosmicArkAdvanced;
             }
         };
         Player.prototype.arrowKeyMovement = function () {
-            // TODO: Make it so that if the ship is moving diagonally, both speeds are multiplied by 0.707, aka sin(45)
+            // Make it so that if the ship is moving diagonally, both speeds are multiplied by 0.707, aka sin(45)
+            // This keeps the ship from moving too fast when diagonal. For more, look up "vector addition".
+            var isDiagonal = ((this.cursor.right.isDown || this.cursor.left.isDown) && (this.cursor.up.isDown || this.cursor.down.isDown));
             // Horizontal movement
             if (this.cursor.right.isDown == true) {
-                this.x += this.realSpeed(); // this.walkingSpeed / player.maxSpeed = a percentage
+                this.x += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
             }
             else if (this.cursor.left.isDown == true) {
-                this.x -= this.realSpeed(); // this.walkingSpeed / player.maxSpeed = a percentage
+                this.x -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
             }
             //Vertical movement
             if (this.cursor.up.isDown == true) {
-                this.y -= this.realSpeed(); // this.walkingSpeed / player.maxSpeed = a percentage
+                this.y -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
             }
             else if (this.cursor.down.isDown == true) {
-                this.y += this.realSpeed(); // this.walkingSpeed / player.maxSpeed = a percentage
+                this.y += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
             }
         };
         Player.prototype.getDeltaTime = function () {
