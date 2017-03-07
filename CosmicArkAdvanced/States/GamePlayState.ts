@@ -1,14 +1,16 @@
 ﻿module CosmicArkAdvanced {
     export class GamePlayState extends Phaser.State {
-        game: Phaser.Game;
-        backdrop1: Phaser.Image;
-        backdrop2: Phaser.Image;
-        backdrop2_2: Phaser.Image;
-        player: CosmicArkAdvanced.Player;
-        man1: CosmicArkAdvanced.Man;
+        game: Phaser.Game;                  // Game Refence
+        backdrop1: Phaser.Image;            // Night Sky
+        backdrop2: Phaser.Image;            // Left half of city
+        backdrop2_2: Phaser.Image;          // Right half of city
+        player: CosmicArkAdvanced.Player;   // Player object
+        man1: CosmicArkAdvanced.Man;        // Test Alien
+        aliens: CosmicArkAdvanced.IPhysicsReady[];            // List of aliens in this scene that are capable of recieving physics calls
 
         constructor() {
             super();
+            this.aliens = [];
         }
 
         create() {
@@ -39,6 +41,41 @@
 
             // Set Camera settings
             this.game.camera.follow(this.player);
+
+            // Set Physics settings
+            this.game.physics.startSystem(Phaser.Physics.ARCADE);
+
+            // Turn on physics for the required objects
+            this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
+            this.player.body.collideWorldBounds = true;     // Automatically lock the players sprite into the world so they cannot move off screen.
+            
+            this.game.physics.enable(this.man1, Phaser.Physics.ARCADE);
+            this.aliens.push(this.man1);        // Man one is a test case, in reality, these would be made inside of a for loop.
+
+            
+            
+        }
+
+        update() {
+            for (let i = 0; i < this.aliens.length; i++){
+                let alien = this.aliens[i];
+                this.game.physics.arcade.collide(this.player, alien, this.OnCollisionCaller, this.OnCollisionEnterCaller);
+            }
+        }
+
+        OnCollisionEnterCaller(obj1:IPhysicsReady, obj2:IPhysicsReady) {
+            return (obj1.OnCollisionEnter(obj2) && obj2.OnCollisionEnter(obj1));
+        }
+
+        OnCollisionCaller(obj1, obj2) {
+            obj1.OnCollision(obj2);
+            obj2.OnCollision(obj1);
+        }
+
+        render() {
+            // Debug feature...
+            this.game.debug.body(this.player);
+            this.game.debug.body(this.man1, "rgba(255,0,0,0.4");
         }
     }
 }

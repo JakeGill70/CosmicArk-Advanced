@@ -12,7 +12,7 @@ var CosmicArkAdvanced;
             this.moveSpeed = 15; // Set current walking speed
             this.moveDistThreshold = 5; // Set threshold for moving the ship based on tapping the screen
             _super.call(this, _game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
-            this.anchor.set(0.0, 1.0); // Move anchor point to the bottom-left
+            this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-left
             this.scale.set(2.0, 2.0);
             this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
         }
@@ -64,6 +64,13 @@ var CosmicArkAdvanced;
         };
         Player.prototype.realSpeed = function () {
             return (this.moveSpeed * this.getDeltaTime());
+        };
+        Player.prototype.OnCollisionEnter = function (other) {
+            console.log("Collision Enter on Player");
+            return true;
+        };
+        Player.prototype.OnCollision = function (other) {
+            console.log("Collision Code on Player");
         };
         return Player;
     })(Phaser.Sprite);

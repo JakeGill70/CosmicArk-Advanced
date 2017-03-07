@@ -9,6 +9,7 @@ var CosmicArkAdvanced;
         __extends(GamePlayState, _super);
         function GamePlayState() {
             _super.call(this);
+            this.aliens = [];
         }
         GamePlayState.prototype.create = function () {
             // Set Level size
@@ -34,6 +35,31 @@ var CosmicArkAdvanced;
             this.game.add.existing(this.man1);
             // Set Camera settings
             this.game.camera.follow(this.player);
+            // Set Physics settings
+            this.game.physics.startSystem(Phaser.Physics.ARCADE);
+            // Turn on physics for the required objects
+            this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
+            this.player.body.collideWorldBounds = true; // Automatically lock the players sprite into the world so they cannot move off screen.
+            this.game.physics.enable(this.man1, Phaser.Physics.ARCADE);
+            this.aliens.push(this.man1); // Man one is a test case, in reality, these would be made inside of a for loop.
+        };
+        GamePlayState.prototype.update = function () {
+            for (var i = 0; i < this.aliens.length; i++) {
+                var alien = this.aliens[i];
+                this.game.physics.arcade.collide(this.player, alien, this.OnCollisionCaller, this.OnCollisionEnterCaller);
+            }
+        };
+        GamePlayState.prototype.OnCollisionEnterCaller = function (obj1, obj2) {
+            return (obj1.OnCollisionEnter(obj2) && obj2.OnCollisionEnter(obj1));
+        };
+        GamePlayState.prototype.OnCollisionCaller = function (obj1, obj2) {
+            obj1.OnCollision(obj2);
+            obj2.OnCollision(obj1);
+        };
+        GamePlayState.prototype.render = function () {
+            // Debug feature...
+            this.game.debug.body(this.player);
+            this.game.debug.body(this.man1, "rgba(255,0,0,0.4");
         };
         return GamePlayState;
     })(Phaser.State);

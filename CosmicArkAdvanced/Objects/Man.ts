@@ -1,6 +1,6 @@
 ﻿module CosmicArkAdvanced {
 
-    export class Man extends Phaser.Sprite {
+    export class Man extends Phaser.Sprite implements IPhysicsReady{
         game: Phaser.Game;              // Game Context
         
         moveSpeed: number;              // How fast the ship moves across the screen
@@ -52,6 +52,15 @@
 
         realSpeed() {
             return (this.moveSpeedCurr * this.getDeltaTime());
+        }
+
+        OnCollisionEnter(other) {
+            console.log("Collision Enter on man");
+            return true;
+        }
+
+        OnCollision(other) {
+            console.log("Collision Code on man");
         }
     }
 }
