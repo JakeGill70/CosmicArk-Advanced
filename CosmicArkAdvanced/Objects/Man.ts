@@ -6,11 +6,16 @@
         moveSpeed: number;              // How fast the ship moves across the screen
         moveSpeedCurr: number;          // Velocity as a vector 
 
+        tag: PhysicsTag;
 
-        constructor(_game: Phaser.Game, _x: number, _y: number) {
+
+        constructor(_game: Phaser.Game, _x: number, _y: number, _name:string) {
             this.game = _game; // get game context
+            this.name = _name; // Set the objects unique name
 
             this.moveSpeed = 5; // Set current walking speed
+
+            this.tag = PhysicsTag.ALIEN; // Physics tag to determine how other sections of code should interact with it.
 
             super(_game, _x, _y, "man"); // Create the sprite at the x,y coordinate in game
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
@@ -54,13 +59,23 @@
             return (this.moveSpeedCurr * this.getDeltaTime());
         }
 
+
         OnCollisionEnter(other) {
-            console.log("Collision Enter on man");
+            console.log("Man Enter");
+        }
+
+        OnCollisionProposal(other) {
             return true;
         }
 
         OnCollision(other) {
-            console.log("Collision Code on man");
+            //console.log("Collision Code on man");
+        }
+
+        OnCollisionExit(other) {
+            console.log("Man Exit");
         }
     }
 }
+
+

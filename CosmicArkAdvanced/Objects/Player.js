@@ -7,10 +7,13 @@ var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     var Player = (function (_super) {
         __extends(Player, _super);
-        function Player(_game, _x, _y) {
+        function Player(_game, _x, _y, _name) {
             this.game = _game; // get game context
+            this.name = _name; // Set the objects unique name
             this.moveSpeed = 15; // Set current walking speed
             this.moveDistThreshold = 5; // Set threshold for moving the ship based on tapping the screen
+            this.tag = CosmicArkAdvanced.PhysicsTag.PLAYER; // Physics tag to determine how other sections of code should interact with it.
+            this.isAbudcting = false;
             _super.call(this, _game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-left
             this.scale.set(2.0, 2.0);
@@ -18,9 +21,14 @@ var CosmicArkAdvanced;
         }
         Player.prototype.create = function () {
         };
+        // preUpdate() {
+        //     this.isAbudcting = false;   // Set isAbucting to false each frame
+        // }
         Player.prototype.update = function () {
-            this.arrowKeyMovement();
-            this.touchMovement();
+            if (!this.game.paused) {
+                this.arrowKeyMovement();
+                this.touchMovement();
+            }
         };
         Player.prototype.touchMovement = function () {
             var pos = new Phaser.Point(this.game.input.worldX, this.game.input.worldY);
@@ -66,11 +74,18 @@ var CosmicArkAdvanced;
             return (this.moveSpeed * this.getDeltaTime());
         };
         Player.prototype.OnCollisionEnter = function (other) {
-            console.log("Collision Enter on Player");
-            return true;
+            console.log("Player Enter");
+        };
+        Player.prototype.OnCollisionProposal = function (other) {
+            return true; // We want to accept the collision by default
         };
         Player.prototype.OnCollision = function (other) {
-            console.log("Collision Code on Player");
+            if (other.tag == CosmicArkAdvanced.PhysicsTag.ALIEN) {
+                this.isAbudcting = true;
+            }
+        };
+        Player.prototype.OnCollisionExit = function (other) {
+            console.log("Player Exit");
         };
         return Player;
     })(Phaser.Sprite);

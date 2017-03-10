@@ -10,6 +10,7 @@ var CosmicArkAdvanced;
         function GamePlayState() {
             _super.call(this);
             this.aliens = [];
+            this.dict = [];
         }
         GamePlayState.prototype.create = function () {
             // Set Level size
@@ -19,8 +20,8 @@ var CosmicArkAdvanced;
             this.backdrop1 = new Phaser.Image(this.game, 0, 0, "nightSky");
             this.backdrop2 = new Phaser.Image(this.game, 0, this.game.world.height, "city");
             this.backdrop2_2 = new Phaser.Image(this.game, this.game.width, this.game.world.height, "city");
-            this.player = new CosmicArkAdvanced.Player(this.game, 0, 50);
-            this.man1 = new CosmicArkAdvanced.Man(this.game, 50, this.game.world.height - 50);
+            this.player = new CosmicArkAdvanced.Player(this.game, 50, 50, "player");
+            this.man1 = new CosmicArkAdvanced.Man(this.game, 50, this.game.world.height - 50, "man1"); // eventually, this creation should be in a loop. Don't forget to make the name unique!
             // Make adjustments to objects
             this.backdrop1.scale.setTo(this.game.world.width / this.backdrop1.width, this.game.world.height / this.backdrop1.height); // Scale it to fit the size of the screen
             this.backdrop2.anchor.setTo(0, 1);
@@ -42,19 +43,54 @@ var CosmicArkAdvanced;
             this.player.body.collideWorldBounds = true; // Automatically lock the players sprite into the world so they cannot move off screen.
             this.game.physics.enable(this.man1, Phaser.Physics.ARCADE);
             this.aliens.push(this.man1); // Man one is a test case, in reality, these would be made inside of a for loop.
+            var offset = 75;
+            this.man1.body.setSize(this.man1.width, this.man1.height + offset, 0, -offset);
         };
+        // TODO: Move the collision stuff from the update function into it's own method, maybe two, idk at the moment. 
         GamePlayState.prototype.update = function () {
             for (var i = 0; i < this.aliens.length; i++) {
                 var alien = this.aliens[i];
-                this.game.physics.arcade.collide(this.player, alien, this.OnCollisionCaller, this.OnCollisionEnterCaller);
+                if (this.game.physics.arcade.collide(this.player, alien, this.OnCollisionCaller, this.OnCollisionProposalCaller)) {
+                    // if there is a collision
+                    try {
+                        if (this.dict[this.player.name, alien.name] == false) {
+                            this.OnCollisionEnterCaller(this.player, alien); // then tell the objects a collision has started
+                        }
+                        this.dict[this.player.name, alien.name] = true; // and mark this collision as new
+                    }
+                    catch (err) {
+                        console.log('#');
+                        this.dict[this.player.name, alien.name] = false; // If there was an exception, 
+                    }
+                }
+                else {
+                    try {
+                        if (this.dict[this.player.name, alien.name] == true) {
+                            this.OnCollisionExitCaller(this.player, alien); // then tell the objects the collision is over
+                        }
+                        this.dict[this.player.name, alien.name] = false; // and mark this collision as old
+                    }
+                    catch (err) {
+                        console.log('#');
+                        this.dict[this.player.name, alien.name] = false; // If there was an exception, 
+                    }
+                }
             }
         };
+        GamePlayState.prototype.OnCollisionProposalCaller = function (obj1, obj2) {
+            return (obj1.OnCollisionProposal(obj2) && obj2.OnCollisionProposal(obj1));
+        };
         GamePlayState.prototype.OnCollisionEnterCaller = function (obj1, obj2) {
-            return (obj1.OnCollisionEnter(obj2) && obj2.OnCollisionEnter(obj1));
+            obj1.OnCollisionEnter(obj2);
+            obj2.OnCollisionEnter(obj1);
         };
         GamePlayState.prototype.OnCollisionCaller = function (obj1, obj2) {
             obj1.OnCollision(obj2);
             obj2.OnCollision(obj1);
+        };
+        GamePlayState.prototype.OnCollisionExitCaller = function (obj1, obj2) {
+            obj1.OnCollisionExit(obj2);
+            obj2.OnCollisionExit(obj1);
         };
         GamePlayState.prototype.render = function () {
             // Debug feature...

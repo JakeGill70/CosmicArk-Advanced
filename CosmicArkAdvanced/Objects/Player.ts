@@ -8,13 +8,22 @@
 
         moveSpeed: number;              // How fast the ship moves across the screen
 
+        tag: PhysicsTag;
 
-        constructor(_game: Phaser.Game, _x: number, _y: number) {
+        isAbudcting: boolean;
+
+
+        constructor(_game: Phaser.Game, _x: number, _y: number, _name:string) {
             this.game = _game; // get game context
+            this.name = _name; // Set the objects unique name
 
             this.moveSpeed = 15; // Set current walking speed
 
             this.moveDistThreshold = 5; // Set threshold for moving the ship based on tapping the screen
+
+            this.tag = PhysicsTag.PLAYER; // Physics tag to determine how other sections of code should interact with it.
+
+            this.isAbudcting = false;
 
             super(_game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-left
@@ -27,10 +36,15 @@
             
         }
 
-        update() {
-            this.arrowKeyMovement();
+        // preUpdate() {
+        //     this.isAbudcting = false;   // Set isAbucting to false each frame
+        // }
 
-            this.touchMovement();
+        update() {
+            if (!this.game.paused) {
+                this.arrowKeyMovement();
+                this.touchMovement();
+            }
         }
 
         touchMovement() {
@@ -85,12 +99,23 @@
         }
 
         OnCollisionEnter(other) {
-            console.log("Collision Enter on Player");
-            return true;
+            console.log("Player Enter");
+        }
+
+        OnCollisionProposal(other) {
+            return true; // We want to accept the collision by default
         }
 
         OnCollision(other) {
-            console.log("Collision Code on Player");
+            if (other.tag == PhysicsTag.ALIEN) {
+                this.isAbudcting = true;
+            }
+        }
+
+        OnCollisionExit(other) {
+            console.log("Player Exit");
         }
     }
 }
+
+
