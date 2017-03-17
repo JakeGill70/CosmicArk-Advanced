@@ -24,12 +24,14 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="Graphics\Backgrounds\CityBackdrop.png" />
+    <Content Include="Graphics\Sprites\dinghy.png" />
+    <Content Include="Graphics\Sprites\dinghy2.png" />
+    <Content Include="Graphics\Sprites\dinghy3.png" />
     <Content Include="Graphics\Sprites\Mine.png" />
     <Content Include="Graphics\Statics\planet_1.png" />
     <Content Include="Graphics\Statics\planet_2.png" />
     <Content Include="Graphics\Statics\planet_3.png" />
     <Content Include="Graphics\Backgrounds\NightSky.png" />
-    <Content Include="Graphics\Sprites\dinghy.png" />
     <Content Include="index.html" />
     <Content Include="Graphics\Sprites\Man.png" />
     <Content Include="Phaser\p2.js" />

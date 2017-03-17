@@ -5,6 +5,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
+    // TODO: Is supercollider still needed? Can IPhysics ready be gutted? How much of this code is dead now?
     var GamePlayState = (function (_super) {
         __extends(GamePlayState, _super);
         function GamePlayState() {
@@ -20,7 +21,9 @@ var CosmicArkAdvanced;
             this.backdrop1 = new Phaser.Image(this.game, 0, 0, "nightSky");
             this.backdrop2 = new Phaser.Image(this.game, 0, this.game.world.height, "city");
             this.backdrop2_2 = new Phaser.Image(this.game, this.game.width, this.game.world.height, "city");
-            this.player = new CosmicArkAdvanced.Player(this.game, 50, 50, "player");
+            this.beam = new Phaser.Graphics(this.game);
+            this.player = new CosmicArkAdvanced.Player(this.game, 50, 50, "player", this.beam);
+            this.player.addChild(this.beam);
             this.man1 = new CosmicArkAdvanced.Man(this.game, 50, this.game.world.height - 50, "man1"); // eventually, this creation should be in a loop. Don't forget to make the name unique!
             // Make adjustments to objects
             this.backdrop1.scale.setTo(this.game.world.width / this.backdrop1.width, this.game.world.height / this.backdrop1.height); // Scale it to fit the size of the screen
@@ -50,30 +53,38 @@ var CosmicArkAdvanced;
         GamePlayState.prototype.update = function () {
             for (var i = 0; i < this.aliens.length; i++) {
                 var alien = this.aliens[i];
-                if (this.game.physics.arcade.collide(this.player, alien, this.OnCollisionCaller, this.OnCollisionProposalCaller)) {
-                    // if there is a collision
-                    try {
-                        if (this.dict[this.player.name, alien.name] == false) {
-                            this.OnCollisionEnterCaller(this.player, alien); // then tell the objects a collision has started
-                        }
-                        this.dict[this.player.name, alien.name] = true; // and mark this collision as new
-                    }
-                    catch (err) {
-                        console.log('#');
-                        this.dict[this.player.name, alien.name] = false; // If there was an exception, 
-                    }
+                //this.superCollider(this.player, alien); // Original
+                // TEMP
+                if (this.game.physics.arcade.collide(this.player, alien)) {
+                    this.player.startAbducting(alien);
                 }
                 else {
-                    try {
-                        if (this.dict[this.player.name, alien.name] == true) {
-                            this.OnCollisionExitCaller(this.player, alien); // then tell the objects the collision is over
-                        }
-                        this.dict[this.player.name, alien.name] = false; // and mark this collision as old
+                    this.player.stopAbducting();
+                }
+            }
+        };
+        GamePlayState.prototype.superCollider = function (obj1, obj2) {
+            if (this.game.physics.arcade.collide(obj1, obj2, this.OnCollisionCaller, this.OnCollisionProposalCaller)) {
+                // if there is a collision
+                try {
+                    if (this.dict[obj1.name, obj2.name] == false) {
+                        this.OnCollisionEnterCaller(obj1, obj2); // then tell the objects a collision has started
                     }
-                    catch (err) {
-                        console.log('#');
-                        this.dict[this.player.name, alien.name] = false; // If there was an exception, 
+                    this.dict[obj1.name, obj2.name] = true; // and mark this collision as new
+                }
+                catch (err) {
+                    this.dict[obj1.name, obj2.name] = false; // If there was an exception, 
+                }
+            }
+            else {
+                try {
+                    if (this.dict[obj1.name, obj2.name] == true) {
+                        this.OnCollisionExitCaller(obj1, obj2); // then tell the objects the collision is over
                     }
+                    this.dict[obj1.name, obj2.name] = false; // and mark this collision as old
+                }
+                catch (err) {
+                    this.dict[obj1.name, obj2.name] = false; // If there was an exception, 
                 }
             }
         };

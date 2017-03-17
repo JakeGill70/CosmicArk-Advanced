@@ -19,7 +19,7 @@
             this.game.load.image("city", "Graphics/Backgrounds/CityBackdrop.png");
             // Sprites
             this.game.load.image("man", "Graphics/Sprites/Man.png");
-            this.game.load.image("ship", "Graphics/Sprites/dinghy.png");
+            this.game.load.image("ship", "Graphics/Sprites/dinghy3.png");
             this.game.load.image("mine", "Graphics/Sprites/Mine.png");
             // Static Sprites
             this.game.load.image("planet1", "Graphics/Statics/planet_1.png");

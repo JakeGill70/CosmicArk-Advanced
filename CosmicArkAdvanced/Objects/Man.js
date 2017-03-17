@@ -5,6 +5,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
+    // TODO: A lot of this needs to split off into a default abstract class called "ALIEN"
+    // TODO: BUGFIX: The man will still act like he is being abducted even if the player has stopped abducting
     var Man = (function (_super) {
         __extends(Man, _super);
         function Man(_game, _x, _y, _name) {
@@ -12,13 +14,28 @@ var CosmicArkAdvanced;
             this.name = _name; // Set the objects unique name
             this.moveSpeed = 5; // Set current walking speed
             this.tag = CosmicArkAdvanced.PhysicsTag.ALIEN; // Physics tag to determine how other sections of code should interact with it.
+            this.canMove = true; // Let the alien know that it is ok to move around for right now
+            this.isBeingAbducted = false; // Let the alien know that nothing is capturing him.... yet....
+            this.startY = _y;
             _super.call(this, _game, _x, _y, "man"); // Create the sprite at the x,y coordinate in game
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
         }
         Man.prototype.create = function () {
         };
         Man.prototype.update = function () {
-            this.autoMovement();
+            // OR this with other flags as needed
+            this.canMove = !this.isBeingAbducted; // We can move if we are not being abducted
+            //console.log(this.startY + ", " + this.worldPosition.y);
+            if (this.canMove) {
+                this.autoMovement();
+            }
+            else {
+                if (this.isBeingAbducted) {
+                    // Man is moved by the player in "StartAbducting()"
+                    // TODO: Move that out of there, and into here
+                    this.y -= this.realAbductionSpeed();
+                }
+            }
         };
         Man.prototype.autoMovement = function () {
             // Horizontal movement
@@ -26,6 +43,8 @@ var CosmicArkAdvanced;
                 this.turnToFaceCenter();
             }
             this.x += this.realSpeed();
+            // Reset Y coord
+            this.y = this.startY;
         };
         Man.prototype.turnToFaceCenter = function () {
             if (this.position.x > this.game.world.width * 0.5) {
@@ -43,17 +62,28 @@ var CosmicArkAdvanced;
         Man.prototype.realSpeed = function () {
             return (this.moveSpeedCurr * this.getDeltaTime());
         };
+        Man.prototype.realAbductionSpeed = function () {
+            return (this.abductionSpeed * this.getDeltaTime());
+        };
+        Man.prototype.stopAbducting = function () {
+            console.log("Whew, that was close - they let me go!");
+            this.isBeingAbducted = false;
+        };
+        Man.prototype.startAbducting = function (spd) {
+            console.log("OH NO!! I'M BEING ABDUCTED!!!");
+            this.isBeingAbducted = true;
+            this.abductionSpeed = spd;
+        };
         Man.prototype.OnCollisionEnter = function (other) {
-            console.log("Man Enter");
         };
         Man.prototype.OnCollisionProposal = function (other) {
             return true;
         };
         Man.prototype.OnCollision = function (other) {
-            //console.log("Collision Code on man");
         };
         Man.prototype.OnCollisionExit = function (other) {
-            console.log("Man Exit");
+            if (other.tag == CosmicArkAdvanced.PhysicsTag.PLAYER) {
+            }
         };
         return Man;
     })(Phaser.Sprite);

@@ -1,14 +1,20 @@
 ﻿module CosmicArkAdvanced {
+
+    // TODO: Is supercollider still needed? Can IPhysics ready be gutted? How much of this code is dead now?
+
+
     export class GamePlayState extends Phaser.State {
         game: Phaser.Game;                  // Game Refence
         backdrop1: Phaser.Image;            // Night Sky
         backdrop2: Phaser.Image;            // Left half of city
         backdrop2_2: Phaser.Image;          // Right half of city
         player: CosmicArkAdvanced.Player;   // Player object
+        playerGroup;
+        beam: Phaser.Graphics;              // Player's 'tractor beam'
         man1: CosmicArkAdvanced.Man;        // Test Alien
         aliens: CosmicArkAdvanced.IPhysicsReady[];            // List of aliens in this scene that are capable of recieving physics calls
 
-        dict:any[];
+        dict:any[];                         // 2 key dictionary of IPhysicsReady object's names which define a boolean value for if the two objects were colliding as of the previous frame.
 
         constructor() {
             super();
@@ -27,7 +33,9 @@
             this.backdrop1 = new Phaser.Image(this.game, 0, 0, "nightSky");
             this.backdrop2 = new Phaser.Image(this.game, 0, this.game.world.height, "city");
             this.backdrop2_2 = new Phaser.Image(this.game, this.game.width, this.game.world.height, "city");
-            this.player = new Player(this.game, 50, 50, "player");
+            this.beam = new Phaser.Graphics(this.game);
+            this.player = new Player(this.game, 50, 50, "player", this.beam);
+            this.player.addChild(this.beam);
             this.man1 = new Man(this.game, 50, this.game.world.height - 50, "man1"); // eventually, this creation should be in a loop. Don't forget to make the name unique!
 
             // Make adjustments to objects
@@ -65,34 +73,45 @@
         update() {
             for (let i = 0; i < this.aliens.length; i++){
                 let alien = this.aliens[i];
-                if (this.game.physics.arcade.collide(this.player, alien, this.OnCollisionCaller, this.OnCollisionProposalCaller)) {        
-                                                                                // if there is a collision
-                    try {
-                        if (this.dict[this.player.name, alien.name] == false) { // but there wasn't one last time we checked
-                            this.OnCollisionEnterCaller(this.player, alien);    // then tell the objects a collision has started
-                        }
-                        this.dict[this.player.name, alien.name] = true;         // and mark this collision as new
-                    }
-                    catch (err) {
-                        console.log('#');
-                        this.dict[this.player.name, alien.name] = false;        // If there was an exception, 
-                                                                                // it is because that dictionary entry doesn't exist yet. 
-                                                                                // So add it here.
-                    }
+                //this.superCollider(this.player, alien); // Original
+
+                // TEMP
+                if (this.game.physics.arcade.collide(this.player, alien)) {
+                    this.player.startAbducting(alien as Man);
                 }
-                else {                                                          // If there WASN'T a collision
-                    try {
-                        if (this.dict[this.player.name, alien.name] == true) {  // but there was last time we checked
-                            this.OnCollisionExitCaller(this.player, alien);     // then tell the objects the collision is over
-                        }
-                        this.dict[this.player.name, alien.name] = false;        // and mark this collision as old
+                else {
+                    this.player.stopAbducting();
+                }
+                // END TEMP
+            }
+        }
+
+        superCollider(obj1: IPhysicsReady, obj2: IPhysicsReady) {
+            if (this.game.physics.arcade.collide(obj1, obj2, this.OnCollisionCaller, this.OnCollisionProposalCaller)) {        
+                                                                  // if there is a collision
+                try {
+                    if (this.dict[obj1.name, obj2.name] == false) { // but there wasn't one last time we checked
+                        this.OnCollisionEnterCaller(obj1, obj2);    // then tell the objects a collision has started
                     }
-                    catch (err) {
-                        console.log('#');
-                        this.dict[this.player.name, alien.name] = false;        // If there was an exception, 
-                                                                                // it is because that dictionary entry doesn't exist yet. 
-                                                                                // So add it here.
+                    this.dict[obj1.name, obj2.name] = true;         // and mark this collision as new
+                }
+                catch (err) {
+                    this.dict[obj1.name, obj2.name] = false;        // If there was an exception, 
+                                                                    // it is because that dictionary entry doesn't exist yet. 
+                                                                    // So add it here.
+                }
+            }
+            else {                                              // If there WASN'T a collision
+                try {
+                    if (this.dict[obj1.name, obj2.name] == true) {  // but there was last time we checked
+                        this.OnCollisionExitCaller(obj1, obj2);     // then tell the objects the collision is over
                     }
+                    this.dict[obj1.name, obj2.name] = false;        // and mark this collision as old
+                }
+                catch (err) {
+                    this.dict[obj1.name, obj2.name] = false;        // If there was an exception, 
+                                                                    // it is because that dictionary entry doesn't exist yet. 
+                                                                    // So add it here.
                 }
             }
         }
