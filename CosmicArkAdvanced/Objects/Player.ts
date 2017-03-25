@@ -2,10 +2,24 @@
 
     //TODO: Come up with someway to notify the player which the ship is close enough to abduct an alien
 
+   /**
+    * @description Main player class which handles all major functions of the ship.
+    * @property game {Phaser.game}                  - The game context
+    * @property cursor {Phaser.game}                - Arrow Key Input
+    * @property beam {Phaser.graphics}              - Used to draw the "tractor beam"
+    * @property beamDrawHeight {number}             - Original y-coordinate of the alien being abducted. This is used to root the tractor beam at the bottom of where the alien was standing.
+    * @property moveDistThreshold {number}          - How far away the touch must be before moving towards it
+    * @property moveSpeed {number}                  - How fast the ship moves across the screen
+    * @property abductionSpeed {number}             - How fast the ship can abduct a normal alien
+    * @property alienAbductee {number}              - Reference to the alien currently being abducted
+    * @property tag {CosmicArkAdvanced.PhysicsTag}  - Used to help weed out possible collisions
+    * @property isAbudcting {boolean}               - Flag for if the player should be abducting someone right now
+    * @property isMoving {boolean}                  - Flag for if the user is moving the ship right now
+    */
     export class Player extends Phaser.Sprite implements IPhysicsReady {
         game: Phaser.Game;              // Game Context
         cursor: Phaser.CursorKeys;      // Arrow Key input
-        beam: Phaser.Graphics;      // Used to draw the 'tractor beam'\
+        beam: Phaser.Graphics;      // Used to draw the 'tractor beam'
         beamDrawHeight: number;     // Original y-coordinate of the alien being abducted. This is used to root the tractor beam at the bottom of where the alien was standing.
 
         moveDistThreshold: number;      // How far away the touch must be before moving towards it
@@ -14,15 +28,23 @@
 
         abductionSpeed: number;         // How fast the ship can abduct a normal alien
 
-        alienAbductee: Man;   // Reference to the alien currently being abducted
+        alienAbductee: Man;             // Reference to the alien currently being abducted
 
-        tag: PhysicsTag;
+        tag: PhysicsTag;                // Used to help weed out possible collisions
 
-        isAbudcting: boolean;
+        isAbudcting: boolean;           // Flag for if the player should be abducting someone right now
 
-        isMoving: boolean;
+        isMoving: boolean;              // Flag for if the user is moving the ship right now
 
-
+        /**
+         * @description Constructor for the player's ship
+         * @constructor
+         * @param _game Context of the main game window
+         * @param _x Starting world X coordinate
+         * @param _y Starting world Y coordinate
+         * @param _name Unique identifer for this object
+         * @param _beam Context of the Phaser.Graphics object which handles rendering the "tractor beam"
+         */
         constructor(_game: Phaser.Game, _x: number, _y: number, _name:string, _beam) {
             this.game = _game; // get game context
             this.name = _name; // Set the objects unique name
@@ -45,10 +67,17 @@
             this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
         }
         
+        /**
+         * @description Handles function calls before the state begins. Currently empty.
+         */
         create() {
 
         }
 
+        /**
+         * @description Called every frame. Handles moving the player and sets the "isMoving" flag. 
+         * Also, if abducting, will LERP the abductee's x-coordinate to match the player's.
+         */
         update() {
             if (!this.game.paused) {
 
@@ -69,6 +98,9 @@
             }
         }
 
+        /**
+         * @description moves the ship's position according to touch/mouse input.
+         */
         touchMovement() {
             let pos = new Phaser.Point(this.game.input.worldX, this.game.input.worldY);
             let ang = Phaser.Math.angleBetweenPoints(this.position, pos);
@@ -96,6 +128,9 @@
             }
         }
 
+        /**
+         * @description moves the ship according to array key input
+         */
         arrowKeyMovement() {
             // Make it so that if the ship is moving diagonally, both speeds are multiplied by 0.707, aka sin(45)
             // This keeps the ship from moving too fast when diagonal. For more, look up "vector addition".
@@ -130,15 +165,27 @@
             }
         }
 
+        /**
+         * @description Provides a variable time multiplier based on the framerate instead of the ms passed.
+         * @returns a number, roughly representing the time spent per frame
+         */
         getDeltaTime() {
             return (this.game.time.elapsedMS / 60);
         }
 
+        /**
+         * @description takes the ship's nice integer value movespeed and multiplies it by delta time.
+         * @returns a number representing the movespeed of the ship over time
+         */
         realSpeed() {
             return (this.moveSpeed * this.getDeltaTime());
         }
 
-        OnCollisionEnter(other) {
+        /**
+         * @Descirption Handles what should happen the imediate frame after a collision first occurs.
+         * @param other The object the player's ship collided with
+         */
+        OnCollisionEnter(other:IPhysicsReady) {
             if (other.tag == PhysicsTag.ALIEN) {
 
                 this.startAbducting(other as Man);
@@ -147,20 +194,37 @@
             }
         }
 
-        OnCollisionProposal(other) {
+        /**
+         * @description Handles what should happen the exact frame a collision occurs. Answers the question "Do I want procede with this collision?"
+         * @param other The object the player's ship collided with
+         * @returns {boolean} Should the player's ship accept the collision, or act like nothing happened?
+         */
+        OnCollisionProposal(other:IPhysicsReady) {
             return true; // We want to accept the collision by default
         }
 
-        OnCollision(other) {
+        /**
+         * @descirption Handles what should happen for EVERY FRAME of a collision EXCEPT for the first, which is only handled by OnCollisionProposal.
+         * @see {this.OnCollisionProposal}
+         * @param other The object the player's ship collided with
+         */
+        OnCollision(other:IPhysicsReady) {
             if (other.tag == PhysicsTag.ALIEN) {
                 this.renderBeam();
             }
         }
 
+        /**
+         * @Descirption Handles what should happen the imediate frame after a collision stops occurring.
+         * @param other The object the player's ship collided with
+         */
         OnCollisionExit(other) {
             this.stopAbducting();
         }
 
+        /**
+         * @description Clears the alienAbductee property, and isAbducting flag. Also destroys any graphical artifacts associated with the "tractor beam".
+         */
         stopAbducting() {
             if (this.alienAbductee != null) {
                 this.alienAbductee.stopAbducting();
@@ -171,6 +235,10 @@
             this.beam.clear();  // Destroy any graphic's artifacts of the beam
         }
 
+        /**
+         * @description Will exit imediately if the isMoving flag is set. Begins drawing the Tractor beam. Sets the isAbducting flag and the alienAbductee property.
+         * @param a The alien the player will begin abducting
+         */
         startAbducting(a: Man) {
             if (this.isMoving) {
                 return; // If the player is moving, just go ahead and kick out of this.
@@ -189,6 +257,9 @@
 
         // TODO: Find some way to draw the beam behind the ship
 
+        /**
+         * @description Draws the beam according to "beamDrawHeight" property
+         */
         renderBeam() {
             this.beam.clear();  // Destroy the beam from the previous frame
 
