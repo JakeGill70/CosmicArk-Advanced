@@ -43,6 +43,7 @@ var CosmicArkAdvanced;
             this.tag = CosmicArkAdvanced.PhysicsTag.PLAYER; // Physics tag to determine how other sections of code should interact with it.
             this.isAbudcting = false; // is the player abduction someone right now?
             this.abductionSpeed = 10; // Set the speed which aliens are abducted at.
+            // Test Comment
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
             this.animations.add("flash", [0, 1], 5, true); // Add the animation which makes the ship glow
             this.game.physics.enable(this, Phaser.Physics.ARCADE);
