@@ -65,7 +65,7 @@
 
             this.abductionSpeed = 10;   // Set the speed which aliens are abducted at.
 
-            
+            // Test Comment
 
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
 
