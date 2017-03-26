@@ -28,6 +28,8 @@
     <Content Include="Graphics\Sprites\dinghy2.png" />
     <Content Include="Graphics\Sprites\dinghy4.png" />
     <Content Include="Graphics\Sprites\dinghy3.png" />
+    <Content Include="Graphics\Sprites\bullet1.png" />
+    <Content Include="Graphics\Sprites\gun1.png" />
     <Content Include="Graphics\Sprites\Mine.png" />
     <Content Include="Graphics\Statics\planet_1.png" />
     <Content Include="Graphics\Statics\planet_2.png" />
@@ -45,6 +47,7 @@
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="Enums\PhysicsTag.ts" />
     <TypeScriptCompile Include="Interfaces\IPhysicsReady.ts" />
+    <TypeScriptCompile Include="Objects\Gun.ts" />
     <TypeScriptCompile Include="Objects\Man.ts" />
     <TypeScriptCompile Include="Objects\Player.ts" />
     <TypeScriptCompile Include="Phaser\p2.d.ts" />

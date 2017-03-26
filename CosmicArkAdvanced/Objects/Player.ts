@@ -66,9 +66,10 @@
 
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
 
-            this.animations.add("flash",[0,1],5,true);
+            this.animations.add("flash",[0,1],5,true);      // Add the animation which makes the ship glow
 
-            
+            this.game.physics.enable(this, Phaser.Physics.ARCADE);
+            this.body.collideWorldBounds = true;     // Automatically lock the players sprite into the world so they cannot move off screen.
 
             this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
         }
@@ -85,7 +86,7 @@
          */
         update() {
             if (!this.game.paused) {
-
+                this.body.velocity = new Phaser.Point(0, 0);
                 this.isMoving = false;  // Turn this flag off. Movement will turn it back on if needed.
 
                 this.arrowKeyMovement();

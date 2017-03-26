@@ -44,12 +44,15 @@ var CosmicArkAdvanced;
             this.bMask = new Phaser.Graphics(this.game);
             this.player = new CosmicArkAdvanced.Player(this.game, 0, 0, "player", this.beam, this.bMask);
             this.man1 = new CosmicArkAdvanced.Man(this.game, 50, this.game.world.height - 50, "man1"); // eventually, this creation should be in a loop. Don't forget to make the name unique!
+            //let wep = this.game.add.weapon(10, "bullet");
+            this.gun1 = new CosmicArkAdvanced.Gun(this.game, 150, this.game.world.height - 50, "gun", "gun1");
             // Make adjustments to objects
             this.backdrop1.scale.setTo(this.game.world.width / this.backdrop1.width, this.game.world.height / this.backdrop1.height); // Scale it to fit the size of the screen
             this.backdrop2.anchor.setTo(0, 1);
             this.backdrop2_2.anchor.setTo(0, 1);
             this.backdrop2.scale.setTo(this.game.width / this.backdrop2.width, this.game.height / this.backdrop2.height); // Scale it to fit the size of the screen
             this.backdrop2_2.scale.setTo(this.game.width / this.backdrop2_2.width, this.game.height / this.backdrop2_2.height); // Scale it to fit the size of the screen
+            this.gun1.target = this.player;
             // Add them into the state
             this.game.add.existing(this.backdrop1);
             this.game.add.existing(this.backdrop2);
@@ -58,27 +61,34 @@ var CosmicArkAdvanced;
             this.game.add.existing(this.bMask);
             this.game.add.existing(this.man1);
             this.game.add.existing(this.player);
+            this.game.add.existing(this.gun1);
             // Set Camera settings
             this.game.camera.follow(this.player);
             // Set Physics settings
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
             // Turn on physics for the required objects
-            this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
-            this.player.body.collideWorldBounds = true; // Automatically lock the players sprite into the world so they cannot move off screen.
             this.game.physics.enable(this.man1, Phaser.Physics.ARCADE);
             this.aliens.push(this.man1); // Man one is a test case, in reality, these would be made inside of a for loop.
             var offset = 75; // Offset is how much extra height should be added the alien's collider so the ship will collide at altitude
             this.man1.body.setSize(this.man1.width, this.man1.height + offset, 0, -offset);
+            this.gun1.create();
         };
         // TODO: Move the collision stuff from the update function into it's own method, maybe two, idk at the moment. 
         /**
          * @Description Currently only used for checking collisions between object
          */
         GamePlayState.prototype.update = function () {
+            for (var i = 0; i < this.gun1.bullets.bullets.length; i++) {
+                if (this.game.physics.arcade.collide(this.player, this.gun1.bullets.bullets.getAt(i))) {
+                    var b = this.gun1.bullets.bullets.getAt(i);
+                    b.kill();
+                    console.log("OUCH!!!!!");
+                }
+            }
             for (var i = 0; i < this.aliens.length; i++) {
                 var alien = this.aliens[i];
                 //this.superCollider(this.player, alien); // Original
-                // TEMP
+                // TODO: Changing animation shouldn't happen here, bad OOP practice
                 if (this.game.physics.arcade.collide(this.player, alien)) {
                     if (!this.player.isAbudcting) {
                         this.player.animations.frame = 1;
@@ -165,6 +175,7 @@ var CosmicArkAdvanced;
             // Debug feature...
             //this.game.debug.body(this.player);
             //this.game.debug.body(this.man1, "rgba(255,0,0,0.4");
+            this.gun1.bullets.debug();
         };
         return GamePlayState;
     })(Phaser.State);

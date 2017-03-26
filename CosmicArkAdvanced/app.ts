@@ -31,7 +31,8 @@
             this.game.load.image("city", "Graphics/Backgrounds/CityBackdrop.png");
             // Sprites
             this.game.load.image("man", "Graphics/Sprites/Man.png");
-            //this.game.load.image("ship", "Graphics/Sprites/dinghy3.png");
+            this.game.load.image("gun", "Graphics/Sprites/gun1.png");
+            this.game.load.image("bullet", "Graphics/Sprites/bullet1.png");
             this.game.load.spritesheet("ship", "Graphics/Sprites/dinghy4.png", 52, 24, 2);
             this.game.load.image("mine", "Graphics/Sprites/Mine.png");
             // Static Sprites
