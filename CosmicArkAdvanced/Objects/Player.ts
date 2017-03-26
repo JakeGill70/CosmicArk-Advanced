@@ -47,10 +47,13 @@
          * @param _beam Context of the Phaser.Graphics object which handles rendering the "tractor beam"
          */
         constructor(_game: Phaser.Game, _x: number, _y: number, _name: string, _beam: Phaser.Graphics, _beamMask: Phaser.Graphics) {
+            super(_game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
             this.game = _game;                      // get game context
             this.name = _name;                      // Set the objects unique name
             this.beam = _beam;                      // Pass a reference to the "tractor beam"
             this.beamMask = _beamMask;
+
+            console.log("Test");
 
             this.moveSpeed = 15; // Set current walking speed
 
@@ -62,7 +65,7 @@
 
             this.abductionSpeed = 10;   // Set the speed which aliens are abducted at.
 
-            super(_game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
+            
 
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
 
