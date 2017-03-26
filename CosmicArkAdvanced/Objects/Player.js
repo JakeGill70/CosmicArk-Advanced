@@ -32,6 +32,7 @@ var CosmicArkAdvanced;
          * @param _beam Context of the Phaser.Graphics object which handles rendering the "tractor beam"
          */
         function Player(_game, _x, _y, _name, _beam, _beamMask) {
+            _super.call(this, _game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
             this.game = _game; // get game context
             this.name = _name; // Set the objects unique name
             this.beam = _beam; // Pass a reference to the "tractor beam"
@@ -41,7 +42,6 @@ var CosmicArkAdvanced;
             this.tag = CosmicArkAdvanced.PhysicsTag.PLAYER; // Physics tag to determine how other sections of code should interact with it.
             this.isAbudcting = false; // is the player abduction someone right now?
             this.abductionSpeed = 10; // Set the speed which aliens are abducted at.
-            _super.call(this, _game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
             this.animations.add("flash", [0, 1], 5, true); // Add the animation which makes the ship glow
             this.game.physics.enable(this, Phaser.Physics.ARCADE);
@@ -240,7 +240,7 @@ var CosmicArkAdvanced;
             this.beamMask.endFill();
         };
         return Player;
-    })(Phaser.Sprite);
+    }(Phaser.Sprite));
     CosmicArkAdvanced.Player = Player;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=Player.js.map

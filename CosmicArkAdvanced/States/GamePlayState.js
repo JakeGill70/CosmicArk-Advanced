@@ -178,7 +178,7 @@ var CosmicArkAdvanced;
             this.gun1.bullets.debug();
         };
         return GamePlayState;
-    })(Phaser.State);
+    }(Phaser.State));
     CosmicArkAdvanced.GamePlayState = GamePlayState;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=GamePlayState.js.map

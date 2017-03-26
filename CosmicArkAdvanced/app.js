@@ -53,7 +53,7 @@ var CosmicArkAdvanced;
         };
         MyGame.AUTO_SCALING = false;
         return MyGame;
-    })();
+    }());
     CosmicArkAdvanced.MyGame = MyGame;
     /**
      * @description global function used to find the difference between to x,y corrdinates
