@@ -6,7 +6,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     // TODO: A lot of this needs to split off into a default abstract class called "ALIEN"
-    // TODO: BUGFIX: The man will still act like he is being abducted even if the player has stopped abducting
     var Man = (function (_super) {
         __extends(Man, _super);
         function Man(_game, _x, _y, _name) {
@@ -31,8 +30,6 @@ var CosmicArkAdvanced;
             }
             else {
                 if (this.isBeingAbducted) {
-                    // Man is moved by the player in "StartAbducting()"
-                    // TODO: Move that out of there, and into here
                     this.y -= this.realAbductionSpeed();
                 }
             }
@@ -68,11 +65,13 @@ var CosmicArkAdvanced;
         Man.prototype.stopAbducting = function () {
             console.log("Whew, that was close - they let me go!");
             this.isBeingAbducted = false;
+            this.tint = 0xFFFFFF;
         };
         Man.prototype.startAbducting = function (spd) {
             console.log("OH NO!! I'M BEING ABDUCTED!!!");
             this.isBeingAbducted = true;
             this.abductionSpeed = spd;
+            this.tint = 0x5DDEFF;
         };
         Man.prototype.OnCollisionEnter = function (other) {
         };

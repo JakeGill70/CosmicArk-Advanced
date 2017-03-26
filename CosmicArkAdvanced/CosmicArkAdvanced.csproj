@@ -26,6 +26,7 @@
     <Content Include="Graphics\Backgrounds\CityBackdrop.png" />
     <Content Include="Graphics\Sprites\dinghy.png" />
     <Content Include="Graphics\Sprites\dinghy2.png" />
+    <Content Include="Graphics\Sprites\dinghy4.png" />
     <Content Include="Graphics\Sprites\dinghy3.png" />
     <Content Include="Graphics\Sprites\Mine.png" />
     <Content Include="Graphics\Statics\planet_1.png" />

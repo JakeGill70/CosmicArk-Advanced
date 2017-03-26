@@ -2,24 +2,25 @@
 
     //TODO: Come up with someway to notify the player which the ship is close enough to abduct an alien
 
-   /**
-    * @description Main player class which handles all major functions of the ship.
-    * @property game {Phaser.game}                  - The game context
-    * @property cursor {Phaser.game}                - Arrow Key Input
-    * @property beam {Phaser.graphics}              - Used to draw the "tractor beam"
-    * @property beamDrawHeight {number}             - Original y-coordinate of the alien being abducted. This is used to root the tractor beam at the bottom of where the alien was standing.
-    * @property moveDistThreshold {number}          - How far away the touch must be before moving towards it
-    * @property moveSpeed {number}                  - How fast the ship moves across the screen
-    * @property abductionSpeed {number}             - How fast the ship can abduct a normal alien
-    * @property alienAbductee {number}              - Reference to the alien currently being abducted
-    * @property tag {CosmicArkAdvanced.PhysicsTag}  - Used to help weed out possible collisions
-    * @property isAbudcting {boolean}               - Flag for if the player should be abducting someone right now
-    * @property isMoving {boolean}                  - Flag for if the user is moving the ship right now
-    */
+    /**
+     * @description Main player class which handles all major functions of the ship.
+     * @property game {Phaser.game}                  - The game context
+     * @property cursor {Phaser.game}                - Arrow Key Input
+     * @property beam {Phaser.graphics}              - Used to draw the "tractor beam"
+     * @property beamDrawHeight {number}             - Original y-coordinate of the alien being abducted. This is used to root the tractor beam at the bottom of where the alien was standing.
+     * @property moveDistThreshold {number}          - How far away the touch must be before moving towards it
+     * @property moveSpeed {number}                  - How fast the ship moves across the screen
+     * @property abductionSpeed {number}             - How fast the ship can abduct a normal alien
+     * @property alienAbductee {number}              - Reference to the alien currently being abducted
+     * @property tag {CosmicArkAdvanced.PhysicsTag}  - Used to help weed out possible collisions
+     * @property isAbudcting {boolean}               - Flag for if the player should be abducting someone right now
+     * @property isMoving {boolean}                  - Flag for if the user is moving the ship right now
+     */
     export class Player extends Phaser.Sprite implements IPhysicsReady {
         game: Phaser.Game;              // Game Context
         cursor: Phaser.CursorKeys;      // Arrow Key input
         beam: Phaser.Graphics;      // Used to draw the 'tractor beam'
+        beamMask: Phaser.Graphics;
         beamDrawHeight: number;     // Original y-coordinate of the alien being abducted. This is used to root the tractor beam at the bottom of where the alien was standing.
 
         moveDistThreshold: number;      // How far away the touch must be before moving towards it
@@ -45,10 +46,11 @@
          * @param _name Unique identifer for this object
          * @param _beam Context of the Phaser.Graphics object which handles rendering the "tractor beam"
          */
-        constructor(_game: Phaser.Game, _x: number, _y: number, _name:string, _beam) {
-            this.game = _game; // get game context
-            this.name = _name; // Set the objects unique name
-            this.beam = _beam;
+        constructor(_game: Phaser.Game, _x: number, _y: number, _name: string, _beam: Phaser.Graphics, _beamMask: Phaser.Graphics) {
+            this.game = _game;                      // get game context
+            this.name = _name;                      // Set the objects unique name
+            this.beam = _beam;                      // Pass a reference to the "tractor beam"
+            this.beamMask = _beamMask;
 
             this.moveSpeed = 15; // Set current walking speed
 
@@ -61,17 +63,20 @@
             this.abductionSpeed = 10;   // Set the speed which aliens are abducted at.
 
             super(_game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
-            this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-left
-            //this.scale.set(2.0, 2.0);
+
+            this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
+
+            this.animations.add("flash",[0,1],5,true);
+
+            
 
             this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
         }
         
         /**
-         * @description Handles function calls before the state begins. Currently empty.
+         * @description Handles function calls before the state begins.
          */
         create() {
-
         }
 
         /**
@@ -108,7 +113,7 @@
             let moveAmtY = this.realSpeed() * Math.sin(ang);
 
             if (this.game.input.pointer1.isDown || this.game.input.mousePointer.isDown) {   // If touching the screen
-                if (Phaser.Point.distance(this.position, pos) > this.moveDistThreshold){    // And the touch if far enough away
+                if (Phaser.Point.distance(this.position, pos) > this.moveDistThreshold) {    // And the touch if far enough away
                     // Move along the X-axis
                     if (Phaser.Math.difference(this.position.x, pos.x) > this.moveDistThreshold) {
                         this.x += moveAmtX;
@@ -185,11 +190,11 @@
          * @Descirption Handles what should happen the imediate frame after a collision first occurs.
          * @param other The object the player's ship collided with
          */
-        OnCollisionEnter(other:IPhysicsReady) {
+        OnCollisionEnter(other: IPhysicsReady) {
             if (other.tag == PhysicsTag.ALIEN) {
 
-                this.startAbducting(other as Man);
-                this.beamDrawHeight = other.worldPosition.y - this.worldPosition.y + this.height / 2;
+                this.Abduct(other as Man);
+                this.beamDrawHeight = other.worldPosition.y - this.worldPosition.y + this.body.height / 2;
 
             }
         }
@@ -199,7 +204,7 @@
          * @param other The object the player's ship collided with
          * @returns {boolean} Should the player's ship accept the collision, or act like nothing happened?
          */
-        OnCollisionProposal(other:IPhysicsReady) {
+        OnCollisionProposal(other: IPhysicsReady) {
             return true; // We want to accept the collision by default
         }
 
@@ -208,7 +213,7 @@
          * @see {this.OnCollisionProposal}
          * @param other The object the player's ship collided with
          */
-        OnCollision(other:IPhysicsReady) {
+        OnCollision(other: IPhysicsReady) {
             if (other.tag == PhysicsTag.ALIEN) {
                 this.renderBeam();
             }
@@ -228,31 +233,44 @@
         stopAbducting() {
             if (this.alienAbductee != null) {
                 this.alienAbductee.stopAbducting();
+                this.alienAbductee.mask = null;
                 this.alienAbductee = null;
             }
 
             this.isAbudcting = false;
             this.beam.clear();  // Destroy any graphic's artifacts of the beam
+            this.beamMask.clear();  // Destroy any graphic's artifacts of the beam's mask. This shouldn't make a difference since the mask isn't technically rendered, but do it anyway just in case of weirdness.
         }
 
         /**
          * @description Will exit imediately if the isMoving flag is set. Begins drawing the Tractor beam. Sets the isAbducting flag and the alienAbductee property.
          * @param a The alien the player will begin abducting
          */
-        startAbducting(a: Man) {
+        Abduct(a: Man) {
             if (this.isMoving) {
+                this.stopAbducting();
                 return; // If the player is moving, just go ahead and kick out of this.
             }
 
+            // If the abductee is null (meaning we just "collided" with them) Calculate the height the "tractor" beam needs to be.
             if (this.alienAbductee == null) {
-                this.beamDrawHeight = a.worldPosition.y - this.worldPosition.y + this.height / 2;
+                this.beamDrawHeight = a.worldPosition.y - this.worldPosition.y + this.body.height / 2;
+            }
+
+            if (this.alienAbductee != null) {
+                if (this.alienAbductee.worldPosition.y <= this.worldPosition.y) {
+                    this.alienAbductee.x = (Math.random() * 1500) + 50;
+                    this.stopAbducting();
+                    return;
+                }
             }
 
             this.alienAbductee = a;
             this.alienAbductee.startAbducting(this.abductionSpeed);
+            this.alienAbductee.mask = this.beamMask;
             this.isAbudcting = true;
 
-            this.renderBeam(); // TEMP
+            this.renderBeam();
         }
 
         // TODO: Find some way to draw the beam behind the ship
@@ -262,17 +280,25 @@
          */
         renderBeam() {
             this.beam.clear();  // Destroy the beam from the previous frame
+            this.beamMask.clear();  // Destroy the beam Mask from the previous frame
+
+            //this.beam.x = this.x;
+            //this.beam.y = this.y;
 
             // Pick a random color, favoriting blue, with the ranges like so:
             // r: 0-45          g: 75-150           b: 155-255
             let color: number = Phaser.Color.getColor(Math.random() * 45, Math.random() * 75 + 75, Math.random() * 100 + 155);
             // beamDrawHeight is calculated OnCollisionEnter()
-            let rect = new Phaser.Rectangle(-this.width / 2, -this.height / 2, this.width, this.beamDrawHeight);
+            let rect = new Phaser.Rectangle(this.x - (this.body.width / 2), this.y - (this.body.height / 2), this.body.width, this.beamDrawHeight);
             this.beam.lineStyle(1, color, 0.75);
-
             this.beam.beginFill(color, 0.8);
             this.beam.drawRect(rect.x, rect.y, rect.width, rect.height);
             this.beam.endFill();
+
+            let maskRect = new Phaser.Rectangle(this.x - (this.body.width * 2), this.y - (this.body.height / 3), this.body.width * 4, this.beamDrawHeight);
+            this.beamMask.beginFill(0xFFFFFF);
+            this.beamMask.drawRect(maskRect.x, maskRect.y, maskRect.width, maskRect.height);
+            this.beamMask.endFill();
         }
     }
 }

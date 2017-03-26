@@ -31,22 +31,23 @@ var CosmicArkAdvanced;
          * @param _name Unique identifer for this object
          * @param _beam Context of the Phaser.Graphics object which handles rendering the "tractor beam"
          */
-        function Player(_game, _x, _y, _name, _beam) {
+        function Player(_game, _x, _y, _name, _beam, _beamMask) {
             this.game = _game; // get game context
             this.name = _name; // Set the objects unique name
-            this.beam = _beam;
+            this.beam = _beam; // Pass a reference to the "tractor beam"
+            this.beamMask = _beamMask;
             this.moveSpeed = 15; // Set current walking speed
             this.moveDistThreshold = 5; // Set threshold for moving the ship based on tapping the screen
             this.tag = CosmicArkAdvanced.PhysicsTag.PLAYER; // Physics tag to determine how other sections of code should interact with it.
             this.isAbudcting = false; // is the player abduction someone right now?
             this.abductionSpeed = 10; // Set the speed which aliens are abducted at.
             _super.call(this, _game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
-            this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-left
-            //this.scale.set(2.0, 2.0);
+            this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
+            this.animations.add("flash", [0, 1], 5, true);
             this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
         }
         /**
-         * @description Handles function calls before the state begins. Currently empty.
+         * @description Handles function calls before the state begins.
          */
         Player.prototype.create = function () {
         };
@@ -144,8 +145,8 @@ var CosmicArkAdvanced;
          */
         Player.prototype.OnCollisionEnter = function (other) {
             if (other.tag == CosmicArkAdvanced.PhysicsTag.ALIEN) {
-                this.startAbducting(other);
-                this.beamDrawHeight = other.worldPosition.y - this.worldPosition.y + this.height / 2;
+                this.Abduct(other);
+                this.beamDrawHeight = other.worldPosition.y - this.worldPosition.y + this.body.height / 2;
             }
         };
         /**
@@ -179,26 +180,38 @@ var CosmicArkAdvanced;
         Player.prototype.stopAbducting = function () {
             if (this.alienAbductee != null) {
                 this.alienAbductee.stopAbducting();
+                this.alienAbductee.mask = null;
                 this.alienAbductee = null;
             }
             this.isAbudcting = false;
             this.beam.clear(); // Destroy any graphic's artifacts of the beam
+            this.beamMask.clear(); // Destroy any graphic's artifacts of the beam's mask. This shouldn't make a difference since the mask isn't technically rendered, but do it anyway just in case of weirdness.
         };
         /**
          * @description Will exit imediately if the isMoving flag is set. Begins drawing the Tractor beam. Sets the isAbducting flag and the alienAbductee property.
          * @param a The alien the player will begin abducting
          */
-        Player.prototype.startAbducting = function (a) {
+        Player.prototype.Abduct = function (a) {
             if (this.isMoving) {
+                this.stopAbducting();
                 return; // If the player is moving, just go ahead and kick out of this.
             }
+            // If the abductee is null (meaning we just "collided" with them) Calculate the height the "tractor" beam needs to be.
             if (this.alienAbductee == null) {
-                this.beamDrawHeight = a.worldPosition.y - this.worldPosition.y + this.height / 2;
+                this.beamDrawHeight = a.worldPosition.y - this.worldPosition.y + this.body.height / 2;
+            }
+            if (this.alienAbductee != null) {
+                if (this.alienAbductee.worldPosition.y <= this.worldPosition.y) {
+                    this.alienAbductee.x = (Math.random() * 1500) + 50;
+                    this.stopAbducting();
+                    return;
+                }
             }
             this.alienAbductee = a;
             this.alienAbductee.startAbducting(this.abductionSpeed);
+            this.alienAbductee.mask = this.beamMask;
             this.isAbudcting = true;
-            this.renderBeam(); // TEMP
+            this.renderBeam();
         };
         // TODO: Find some way to draw the beam behind the ship
         /**
@@ -206,15 +219,22 @@ var CosmicArkAdvanced;
          */
         Player.prototype.renderBeam = function () {
             this.beam.clear(); // Destroy the beam from the previous frame
+            this.beamMask.clear(); // Destroy the beam Mask from the previous frame
+            //this.beam.x = this.x;
+            //this.beam.y = this.y;
             // Pick a random color, favoriting blue, with the ranges like so:
             // r: 0-45          g: 75-150           b: 155-255
             var color = Phaser.Color.getColor(Math.random() * 45, Math.random() * 75 + 75, Math.random() * 100 + 155);
             // beamDrawHeight is calculated OnCollisionEnter()
-            var rect = new Phaser.Rectangle(-this.width / 2, -this.height / 2, this.width, this.beamDrawHeight);
+            var rect = new Phaser.Rectangle(this.x - (this.body.width / 2), this.y - (this.body.height / 2), this.body.width, this.beamDrawHeight);
             this.beam.lineStyle(1, color, 0.75);
             this.beam.beginFill(color, 0.8);
             this.beam.drawRect(rect.x, rect.y, rect.width, rect.height);
             this.beam.endFill();
+            var maskRect = new Phaser.Rectangle(this.x - (this.body.width * 2), this.y - (this.body.height / 3), this.body.width * 4, this.beamDrawHeight);
+            this.beamMask.beginFill(0xFFFFFF);
+            this.beamMask.drawRect(maskRect.x, maskRect.y, maskRect.width, maskRect.height);
+            this.beamMask.endFill();
         };
         return Player;
     })(Phaser.Sprite);

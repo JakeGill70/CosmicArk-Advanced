@@ -2,8 +2,6 @@
 
     // TODO: A lot of this needs to split off into a default abstract class called "ALIEN"
 
-    // TODO: BUGFIX: The man will still act like he is being abducted even if the player has stopped abducting
-
     export class Man extends Phaser.Sprite implements IPhysicsReady{
         game: Phaser.Game;              // Game Context
         
@@ -53,8 +51,6 @@
             }
             else {
                 if (this.isBeingAbducted) {
-                    // Man is moved by the player in "StartAbducting()"
-                    // TODO: Move that out of there, and into here
                     this.y -= this.realAbductionSpeed();
                 }
             }
@@ -100,12 +96,14 @@
         stopAbducting() {
             console.log("Whew, that was close - they let me go!");
             this.isBeingAbducted = false;
+            this.tint = 0xFFFFFF;
         }
 
         startAbducting(spd : number) {
             console.log("OH NO!! I'M BEING ABDUCTED!!!");
             this.isBeingAbducted = true;
             this.abductionSpeed = spd;
+            this.tint = 0x5DDEFF;
         }
 
         OnCollisionEnter(other:IPhysicsReady) {
