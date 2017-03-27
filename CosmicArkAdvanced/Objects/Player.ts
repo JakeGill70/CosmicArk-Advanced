@@ -2,6 +2,8 @@
 
     //TODO: Come up with someway to notify the player which the ship is close enough to abduct an alien
 
+    //Ethan's post to master
+
     /**
      * @description Main player class which handles all major functions of the ship.
      * @property game {Phaser.game}                  - The game context
