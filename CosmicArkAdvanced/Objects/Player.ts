@@ -2,8 +2,6 @@
 
     //TODO: Come up with someway to notify the player which the ship is close enough to abduct an alien
 
-    //Ethan's post to master
-
     /**
      * @description Main player class which handles all major functions of the ship.
      * @property game {Phaser.game}                  - The game context
@@ -55,6 +53,8 @@
             this.beam = _beam;                      // Pass a reference to the "tractor beam"
             this.beamMask = _beamMask;
 
+            console.log("Test");
+
             this.moveSpeed = 15; // Set current walking speed
 
             this.moveDistThreshold = 5; // Set threshold for moving the ship based on tapping the screen
@@ -65,7 +65,7 @@
 
             this.abductionSpeed = 10;   // Set the speed which aliens are abducted at.
 
-            
+            // Test Comment
 
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
 
