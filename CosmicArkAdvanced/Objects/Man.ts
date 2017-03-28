@@ -17,7 +17,8 @@
         abductionSpeed: number;         // How quickly the alien travels up to the space ship
 
 
-        constructor(_game: Phaser.Game, _x: number, _y: number, _name:string) {
+        constructor(_game: Phaser.Game, _x: number, _y: number, _name: string) {
+            super(_game, _x, _y, "man"); // Create the sprite at the x,y coordinate in game
             this.game = _game; // get game context
             this.name = _name; // Set the objects unique name
 
@@ -31,7 +32,7 @@
 
             this.startY = _y;
 
-            super(_game, _x, _y, "man"); // Create the sprite at the x,y coordinate in game
+            
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
         }
 

@@ -35,7 +35,7 @@ var CosmicArkAdvanced;
             this.game.state.start("mapSelectState"); // Jump to the GamePlayState
         };
         return TitleScreenState;
-    })(Phaser.State);
+    }(Phaser.State));
     CosmicArkAdvanced.TitleScreenState = TitleScreenState;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=TitleScreenState.js.map

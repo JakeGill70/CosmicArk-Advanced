@@ -9,6 +9,7 @@ var CosmicArkAdvanced;
     var Man = (function (_super) {
         __extends(Man, _super);
         function Man(_game, _x, _y, _name) {
+            _super.call(this, _game, _x, _y, "man"); // Create the sprite at the x,y coordinate in game
             this.game = _game; // get game context
             this.name = _name; // Set the objects unique name
             this.moveSpeed = 5; // Set current walking speed
@@ -16,7 +17,6 @@ var CosmicArkAdvanced;
             this.canMove = true; // Let the alien know that it is ok to move around for right now
             this.isBeingAbducted = false; // Let the alien know that nothing is capturing him.... yet....
             this.startY = _y;
-            _super.call(this, _game, _x, _y, "man"); // Create the sprite at the x,y coordinate in game
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
         }
         Man.prototype.create = function () {
@@ -85,7 +85,7 @@ var CosmicArkAdvanced;
             }
         };
         return Man;
-    })(Phaser.Sprite);
+    }(Phaser.Sprite));
     CosmicArkAdvanced.Man = Man;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=Man.js.map
