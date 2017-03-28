@@ -71,7 +71,7 @@ var CosmicArkAdvanced;
             this.aliens.push(this.man1); // Man one is a test case, in reality, these would be made inside of a for loop.
             var offset = 75; // Offset is how much extra height should be added the alien's collider so the ship will collide at altitude
             this.man1.body.setSize(this.man1.width, this.man1.height + offset, 0, -offset);
-            this.gun1.create();
+            this.gun1.create(this.player, 375);
         };
         // TODO: Move the collision stuff from the update function into it's own method, maybe two, idk at the moment. 
         /**
