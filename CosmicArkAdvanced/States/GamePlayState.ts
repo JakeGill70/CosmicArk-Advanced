@@ -10,6 +10,7 @@
      * @Property aliens {CosmicArkAdvance.IPhysicsReady[]}  - List of aliens in this scene that are capable of recieving physics calls
      * @Property dict {any[]}                               - A 2-keyed dictionary which maps 2 strings to a boolean value. Maps out physics collision states.
      * @Property gun1 {CosmicArkAdvanced.Gun}               - Test Gun
+     * @Property mine {CosmicArkAdvanced.Mine}              - Test Mine
      */
     export class GamePlayState extends Phaser.State {
         game: Phaser.Game;                  // Game Refence
@@ -20,6 +21,7 @@
         dict: any[];                        // 2 key dictionary of IPhysicsReady object's names which define a boolean value for if the two objects were colliding as of the previous frame.
 
         gun1: CosmicArkAdvanced.Gun;        // Test gun
+        mine1: CosmicArkAdvanced.Mine;       // test mine
 
 
         /**
@@ -46,7 +48,8 @@
             this.makeBackgrounds();
             this.player = new Player(this.game, 0, 0, "player");
             this.gun1 = new Gun(this.game, 150, this.game.world.height - 50, "gun", "gun1", this.player);
-            
+            this.mine1 = new Mine(this.game, 200, 200, "mine1");
+
             // Aliens should always be created after the player so that they don't accidently render behind the tractor beam
             this.man1 = new Man(this.game, 50, this.game.world.height - 50, "man1");    // eventually, this creation should be in a loop. Don't forget to make the name unique!
             this.aliens.push(this.man1);        // Man one is a test case, in reality, these would be made inside of a for loop.
@@ -85,7 +88,7 @@
                 }
             }
 
-            // Collode the player's ship with the aliens
+            // Collide the player's ship with the aliens
             for (let i = 0; i < this.aliens.length; i++) {
                 let alien = this.aliens[i];
                 //this.superCollider(this.player, alien); // Original
@@ -104,6 +107,11 @@
                 else {
                     this.player.animations.frame = 0;  
                 }
+            }
+
+            // Collide the player's ship with the mines
+            if (this.game.physics.arcade.collide(this.player, this.mine1)) {
+                console.log("I HIT A MINE! OUCH!");
             }
         }
 
@@ -189,6 +197,7 @@
             //this.game.debug.body(this.player);
             //this.game.debug.body(this.man1, "rgba(255,0,0,0.4");
             //this.gun1.bullets.debug();
+            this.game.debug.body(this.mine1);
         }
     }
 }

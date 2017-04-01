@@ -5,6 +5,7 @@
     * @see {CosmicArkAdvanced.IPhysicsReady} */
     export enum PhysicsTag {
         PLAYER,
-        ALIEN
+        ALIEN,
+        MINE
     }
 }

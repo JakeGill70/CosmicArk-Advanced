@@ -228,7 +228,7 @@ var CosmicArkAdvanced;
             this.beam.beginFill(color, 0.8);
             this.beam.drawRect(rect.x, rect.y, rect.width, rect.height);
             this.beam.endFill();
-            var maskRect = new Phaser.Rectangle(this.x - (this.body.width * 2), this.y - (this.body.height / 3), this.body.width * 4, this.beamDrawHeight);
+            var maskRect = new Phaser.Rectangle(this.x - (this.body.width * 2), this.y - (this.body.height / 10), this.body.width * 4, this.beamDrawHeight); // These values are pretty much just eyeballed. 
             this.beamMask.beginFill(0xFFFFFF);
             this.beamMask.drawRect(maskRect.x, maskRect.y, maskRect.width, maskRect.height);
             this.beamMask.endFill();

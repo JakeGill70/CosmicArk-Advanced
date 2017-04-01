@@ -7,13 +7,14 @@ var CosmicArkAdvanced;
     var MyGame = (function () {
         /**
          * @description Creates the game context to use with the rest of the game
-         * @param elementHook       - The html div box that the game context should be created in.
+         * @param _elementHook       - The html div box that the game context should be created in.
+         * @param _sizeOfScreen      - The size of the window containing the game
          * @constructor
          */
-        function MyGame(elementHook) {
+        function MyGame(_elementHook) {
             // Phaser.AUTO selects either WebGL or canvas (Which ever the browser likes better),
             // then places it in the HTML document at 'elementHook' tag.
-            this.game = new Phaser.Game(800, 450, Phaser.AUTO, elementHook, {
+            this.game = new Phaser.Game(800, 450, Phaser.AUTO, _elementHook, {
                 create: this.create, preload: this.preload
             });
         }
@@ -30,7 +31,7 @@ var CosmicArkAdvanced;
             this.game.load.image("gun", "Graphics/Sprites/gun1.png");
             this.game.load.image("bullet", "Graphics/Sprites/bullet1.png");
             this.game.load.spritesheet("ship", "Graphics/Sprites/dinghy4.png", 52, 24, 2);
-            this.game.load.image("mine", "Graphics/Sprites/Mine.png");
+            this.game.load.image("mine", "Graphics/Sprites/Mine3.png");
             // Static Sprites
             this.game.load.image("planet1", "Graphics/Statics/planet_1.png");
             this.game.load.image("planet2", "Graphics/Statics/planet_2.png");
@@ -50,8 +51,12 @@ var CosmicArkAdvanced;
             if (MyGame.AUTO_SCALING == true) {
                 this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
             }
+            // If on a mobile device, Set the scale mode to be an exact fit
+            if (!this.game.device.desktop) {
+                this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+            }
         };
-        MyGame.AUTO_SCALING = false;
+        MyGame.AUTO_SCALING = false; // Debug var
         return MyGame;
     })();
     CosmicArkAdvanced.MyGame = MyGame;

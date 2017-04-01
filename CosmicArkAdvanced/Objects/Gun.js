@@ -59,7 +59,7 @@ var CosmicArkAdvanced;
                     var deltaY = this.target.worldPosition.y - this.worldPosition.y;
                     var angle = Math.atan2(deltaY, deltaX);
                     this.rotation = angle;
-                    console.log(Phaser.Point.distance(this.target.worldPosition, this.worldPosition));
+                    //console.log(Phaser.Point.distance(this.target.worldPosition, this.worldPosition));
                     this.bullets.fire(); // Fire will not "fire" if the fireRate has not passed.
                 }
             }

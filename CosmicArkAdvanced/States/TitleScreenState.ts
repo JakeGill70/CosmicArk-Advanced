@@ -21,6 +21,11 @@
          * @description Displays the splash image and scales it appropriately. Also registers the "onTap" event
          */
         create() {
+            //if (!this.game.device.desktop) {
+            //    this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+            //    this.game.scale.startFullScreen(false);
+            //}
+
             this.titleScreenImage = this.add.sprite(0, 0, "title"); // Pull the image out of memory
             this.titleScreenImage.scale.setTo(this.game.width / this.titleScreenImage.width, this.game.height / this.titleScreenImage.height);  // Scale it to fit the size of the screen
 

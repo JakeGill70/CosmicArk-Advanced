@@ -20,7 +20,7 @@ var CosmicArkAdvanced;
     var Man = (function (_super) {
         __extends(Man, _super);
         /**
-         *
+         * @constructor
          * @param _game The game context
          * @param _x The initial world x-coordinate
          * @param _y this intial world y coordinate

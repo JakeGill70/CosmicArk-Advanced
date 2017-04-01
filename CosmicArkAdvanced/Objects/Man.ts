@@ -17,7 +17,9 @@
         game: Phaser.Game;              // Game Context
         
         moveSpeed: number;              // How fast the alien moves across the screen
+
         moveSpeedCurr: number;          // Velocity as a vector 
+
         startY: number;                 // Holds the original y-coordinate of this alien. Used for moving it back to the correct spot if abduction stops before completing. 
 
         tag: PhysicsTag;                // What type of physics object is this?
@@ -25,11 +27,12 @@
         canMove: boolean;               // Can this alien move right now?
 
         isBeingAbducted: boolean;       // Is this alien being abducting at this exact moment?
+
         abductionSpeed: number;         // How quickly the alien travels up to the space ship
 
 
         /**
-         * 
+         * @constructor
          * @param _game The game context
          * @param _x The initial world x-coordinate
          * @param _y this intial world y coordinate
