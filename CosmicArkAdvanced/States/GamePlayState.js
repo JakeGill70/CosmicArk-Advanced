@@ -9,15 +9,11 @@ var CosmicArkAdvanced;
     /**
      * @Description The meat and potatoes of the game. This is where the actual "game" part lives.
      * @Property game {Phaser.Game}                         - The game context
-     * @Property backdrop1 {Phaser.Image}                   - The night sky
-     * @Property backdrop2 {Phaser.Image}                   - Left half of the city
-     * @Property backdrop2_2 {Phaser.Image}                 - Right half of the city
      * @Property player {Phaser.Sprite}                     - The player object
-     * @Property beam {Phaser.Graphics}                     - The player's "tractor beam"
-     * @Property bMask {Phaser.Graphics}                    - The bitmask used to selectively hide parts of the alien being abducted
      * @Property man1 {CosmicArkAdvanced.Man}               - Test Alien
      * @Property aliens {CosmicArkAdvance.IPhysicsReady[]}  - List of aliens in this scene that are capable of recieving physics calls
      * @Property dict {any[]}                               - A 2-keyed dictionary which maps 2 strings to a boolean value. Maps out physics collision states.
+     * @Property gun1 {CosmicArkAdvanced.Gun}               - Test Gun
      */
     var GamePlayState = (function (_super) {
         __extends(GamePlayState, _super);
@@ -36,48 +32,38 @@ var CosmicArkAdvanced;
         GamePlayState.prototype.create = function () {
             // Set Level size
             this.game.world.setBounds(0, 0, 1600, 550);
-            // Make the objects
-            this.backdrop1 = new Phaser.Image(this.game, 0, 0, "nightSky");
-            this.backdrop2 = new Phaser.Image(this.game, 0, this.game.world.height, "city");
-            this.backdrop2_2 = new Phaser.Image(this.game, this.game.width, this.game.world.height, "city");
-            this.beam = new Phaser.Graphics(this.game);
-            this.bMask = new Phaser.Graphics(this.game);
-            this.player = new CosmicArkAdvanced.Player(this.game, 0, 0, "player", this.beam, this.bMask);
-            this.man1 = new CosmicArkAdvanced.Man(this.game, 50, this.game.world.height - 50, "man1"); // eventually, this creation should be in a loop. Don't forget to make the name unique!
-            //let wep = this.game.add.weapon(10, "bullet");
-            this.gun1 = new CosmicArkAdvanced.Gun(this.game, 150, this.game.world.height - 50, "gun", "gun1");
-            // Make adjustments to objects
-            this.backdrop1.scale.setTo(this.game.world.width / this.backdrop1.width, this.game.world.height / this.backdrop1.height); // Scale it to fit the size of the screen
-            this.backdrop2.anchor.setTo(0, 1);
-            this.backdrop2_2.anchor.setTo(0, 1);
-            this.backdrop2.scale.setTo(this.game.width / this.backdrop2.width, this.game.height / this.backdrop2.height); // Scale it to fit the size of the screen
-            this.backdrop2_2.scale.setTo(this.game.width / this.backdrop2_2.width, this.game.height / this.backdrop2_2.height); // Scale it to fit the size of the screen
-            this.gun1.target = this.player;
-            // Add them into the state
-            this.game.add.existing(this.backdrop1);
-            this.game.add.existing(this.backdrop2);
-            this.game.add.existing(this.backdrop2_2);
-            this.game.add.existing(this.beam);
-            this.game.add.existing(this.bMask);
-            this.game.add.existing(this.man1);
-            this.game.add.existing(this.player);
-            this.game.add.existing(this.gun1);
-            // Set Camera settings
-            this.game.camera.follow(this.player);
             // Set Physics settings
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
-            // Turn on physics for the required objects
-            this.game.physics.enable(this.man1, Phaser.Physics.ARCADE);
+            // Make the objects
+            this.makeBackgrounds();
+            this.player = new CosmicArkAdvanced.Player(this.game, 0, 0, "player");
+            this.gun1 = new CosmicArkAdvanced.Gun(this.game, 150, this.game.world.height - 50, "gun", "gun1", this.player);
+            // Aliens should always be created after the player so that they don't accidently render behind the tractor beam
+            this.man1 = new CosmicArkAdvanced.Man(this.game, 50, this.game.world.height - 50, "man1"); // eventually, this creation should be in a loop. Don't forget to make the name unique!
             this.aliens.push(this.man1); // Man one is a test case, in reality, these would be made inside of a for loop.
-            var offset = 75; // Offset is how much extra height should be added the alien's collider so the ship will collide at altitude
-            this.man1.body.setSize(this.man1.width, this.man1.height + offset, 0, -offset);
-            this.gun1.create(this.player, 375);
+            // Set Camera settings
+            this.game.camera.follow(this.player);
+        };
+        /**
+         * @description Adds the background images to the gamestate and scales them appropriately
+         */
+        GamePlayState.prototype.makeBackgrounds = function () {
+            var bd1 = this.game.add.image(0, 0, "nightSky"); // Sky
+            var bd2 = this.game.add.image(0, this.game.world.height, "city"); // Left-half of city
+            var bd3 = this.game.add.image(this.game.width, this.game.world.height, "city"); // Right-half of city
+            // Set scaling
+            bd1.scale.setTo(this.game.world.width / bd1.width, this.game.world.height / bd1.height); // Scale it to fit the size of the screen
+            bd2.anchor.setTo(0, 1);
+            bd2.scale.setTo(this.game.width / bd2.width, this.game.height / bd2.height); // Scale it to fit the size of the screen
+            bd3.anchor.setTo(0, 1);
+            bd3.scale.setTo(this.game.width / bd3.width, this.game.height / bd3.height); // Scale it to fit the size of the screen
         };
         // TODO: Move the collision stuff from the update function into it's own method, maybe two, idk at the moment. 
         /**
          * @Description Currently only used for checking collisions between object
          */
         GamePlayState.prototype.update = function () {
+            // Collide the player's ship with the gun's bullets
             for (var i = 0; i < this.gun1.bullets.bullets.length; i++) {
                 if (this.game.physics.arcade.collide(this.player, this.gun1.bullets.bullets.getAt(i))) {
                     var b = this.gun1.bullets.bullets.getAt(i);
@@ -85,10 +71,11 @@ var CosmicArkAdvanced;
                     console.log("OUCH!!!!!");
                 }
             }
+            // Collode the player's ship with the aliens
             for (var i = 0; i < this.aliens.length; i++) {
                 var alien = this.aliens[i];
                 //this.superCollider(this.player, alien); // Original
-                // TODO: Changing animation shouldn't happen here, bad OOP practice
+                // TODO: Changing animation shouldn't happen here, bad OOP practice. Move it to the OnCollision inside of player instead
                 if (this.game.physics.arcade.collide(this.player, alien)) {
                     if (!this.player.isAbudcting) {
                         this.player.animations.frame = 1;
@@ -172,13 +159,13 @@ var CosmicArkAdvanced;
          * @description Post rendering effects.
          */
         GamePlayState.prototype.render = function () {
-            // Debug feature...
+            // Debug features...
             //this.game.debug.body(this.player);
             //this.game.debug.body(this.man1, "rgba(255,0,0,0.4");
-            this.gun1.bullets.debug();
+            //this.gun1.bullets.debug();
         };
         return GamePlayState;
-    }(Phaser.State));
+    })(Phaser.State);
     CosmicArkAdvanced.GamePlayState = GamePlayState;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=GamePlayState.js.map

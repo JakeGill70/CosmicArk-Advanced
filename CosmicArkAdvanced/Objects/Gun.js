@@ -23,14 +23,20 @@ var CosmicArkAdvanced;
          * @param _y The starting world position's y-coordinate
          * @param _graphicKey The string key to pull the sprite out of memory
          * @param _name A unique identifer to the object
+         * @param _target Optional. What the gun should aim at
          */
-        function Gun(_game, _x, _y, _graphicKey, _name) {
+        function Gun(_game, _x, _y, _graphicKey, _name, _target) {
             _super.call(this, _game, _x, _y, _graphicKey); // Pass all the nitty gritty parts to the Phaser.Sprite constructor and let it handle that.
             this.game = _game; // get game contex
+            this.game.add.existing(this); // Add this object to the gamestate
             this.effectiveRange = 10000; // Make a default value for the range. 10,000 gives plenty of headroom
             this.anchor.setTo(0.0, 1); // Move the anchor point to the bottom-left
+            // If the target exists, initialize the object pool, target, and range
+            if (_target != null) {
+                this.init_target(_target, 375); // A range of 375 pixels feels right for right now
+            }
         }
-        Gun.prototype.create = function (_target, _range) {
+        Gun.prototype.init_target = function (_target, _range) {
             this.bullets = this.game.add.weapon(10, "bullet"); // Create an object pool for 10 bullets
             this.bullets.bulletKillType = Phaser.Weapon.KILL_LIFESPAN; // Automatically "delete" the bullets after so many milliseconds
             this.bullets.bulletLifespan = 15000; // Set the bullet lifespan to 15000ms (15sec)
@@ -59,7 +65,7 @@ var CosmicArkAdvanced;
             }
         };
         return Gun;
-    }(Phaser.Sprite));
+    })(Phaser.Sprite);
     CosmicArkAdvanced.Gun = Gun;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=Gun.js.map

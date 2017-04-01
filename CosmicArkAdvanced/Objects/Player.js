@@ -5,7 +5,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
-    //TODO: Come up with someway to notify the player which the ship is close enough to abduct an alien
     /**
      * @description Main player class which handles all major functions of the ship.
      * @property game {Phaser.game}                  - The game context
@@ -31,30 +30,25 @@ var CosmicArkAdvanced;
          * @param _name Unique identifer for this object
          * @param _beam Context of the Phaser.Graphics object which handles rendering the "tractor beam"
          */
-        function Player(_game, _x, _y, _name, _beam, _beamMask) {
+        function Player(_game, _x, _y, _name) {
             _super.call(this, _game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
             this.game = _game; // get game context
             this.name = _name; // Set the objects unique name
-            this.beam = _beam; // Pass a reference to the "tractor beam"
-            this.beamMask = _beamMask;
-            console.log("Test");
+            this.beam = this.game.add.graphics(0, 0); // Create and add the beam to the gamestate
+            this.beamMask = this.game.add.graphics(0, 0); // Create and add the beam's bit mask to the gamestate
+            this.beamMask.renderable = false;
+            this.game.add.existing(this); // Add this object to the gamestate. We have to add it last so that it will render on top of the beam
             this.moveSpeed = 15; // Set current walking speed
             this.moveDistThreshold = 5; // Set threshold for moving the ship based on tapping the screen
             this.tag = CosmicArkAdvanced.PhysicsTag.PLAYER; // Physics tag to determine how other sections of code should interact with it.
             this.isAbudcting = false; // is the player abduction someone right now?
             this.abductionSpeed = 10; // Set the speed which aliens are abducted at.
-            // Test Comment
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
             this.animations.add("flash", [0, 1], 5, true); // Add the animation which makes the ship glow
-            this.game.physics.enable(this, Phaser.Physics.ARCADE);
+            this.game.physics.enable(this, Phaser.Physics.ARCADE); // Enable physics for the ship
             this.body.collideWorldBounds = true; // Automatically lock the players sprite into the world so they cannot move off screen.
             this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
         }
-        /**
-         * @description Handles function calls before the state begins.
-         */
-        Player.prototype.create = function () {
-        };
         /**
          * @description Called every frame. Handles moving the player and sets the "isMoving" flag.
          * Also, if abducting, will LERP the abductee's x-coordinate to match the player's.
@@ -151,7 +145,6 @@ var CosmicArkAdvanced;
         Player.prototype.OnCollisionEnter = function (other) {
             if (other.tag == CosmicArkAdvanced.PhysicsTag.ALIEN) {
                 this.Abduct(other);
-                this.beamDrawHeight = other.worldPosition.y - this.worldPosition.y + this.body.height / 2;
             }
         };
         /**
@@ -168,9 +161,6 @@ var CosmicArkAdvanced;
          * @param other The object the player's ship collided with
          */
         Player.prototype.OnCollision = function (other) {
-            if (other.tag == CosmicArkAdvanced.PhysicsTag.ALIEN) {
-                this.renderBeam();
-            }
         };
         /**
          * @Descirption Handles what should happen the imediate frame after a collision stops occurring.
@@ -198,25 +188,27 @@ var CosmicArkAdvanced;
          */
         Player.prototype.Abduct = function (a) {
             if (this.isMoving) {
-                this.stopAbducting();
+                this.stopAbducting(); // If the player is moving, we can't continue abducting
                 return; // If the player is moving, just go ahead and kick out of this.
             }
             // If the abductee is null (meaning we just "collided" with them) Calculate the height the "tractor" beam needs to be.
             if (this.alienAbductee == null) {
                 this.beamDrawHeight = a.worldPosition.y - this.worldPosition.y + this.body.height / 2;
             }
+            // If the alienAbductee exists, we must be in the middle of abducting something
             if (this.alienAbductee != null) {
+                // If that alien is now higher than the tractor beam, that alien should be considered captured.
                 if (this.alienAbductee.worldPosition.y <= this.worldPosition.y) {
-                    this.alienAbductee.x = (Math.random() * 1500) + 50;
-                    this.stopAbducting();
+                    this.alienAbductee.x = (Math.random() * 1500) + 50; // For testing right now, just release back into the wild at some world position (between 50-1550)
+                    this.stopAbducting(); // Tell the alien we have stopped abducting him
                     return;
                 }
             }
-            this.alienAbductee = a;
-            this.alienAbductee.startAbducting(this.abductionSpeed);
-            this.alienAbductee.mask = this.beamMask;
-            this.isAbudcting = true;
-            this.renderBeam();
+            this.alienAbductee = a; // Set the alien abductee property equal to the alien the ship collided with
+            this.alienAbductee.startAbducting(this.abductionSpeed); // Tell the alien that we have started to abduct it so that it can make changes to it's behaviour too
+            this.alienAbductee.mask = this.beamMask; // Set the alien's mask equal to the beam's bitmask
+            this.isAbudcting = true; // Set the isAbducting flag
+            this.renderBeam(); // Show the beam
         };
         // TODO: Find some way to draw the beam behind the ship
         /**

@@ -22,23 +22,31 @@
          * @param _y The starting world position's y-coordinate
          * @param _graphicKey The string key to pull the sprite out of memory
          * @param _name A unique identifer to the object
+         * @param _target Optional. What the gun should aim at
          */
-        constructor(_game: Phaser.Game, _x: number, _y: number, _graphicKey: string, _name: string) {
+        constructor(_game: Phaser.Game, _x: number, _y: number, _graphicKey: string, _name: string, _target?: Phaser.Sprite) {
             super(_game, _x, _y, _graphicKey);      // Pass all the nitty gritty parts to the Phaser.Sprite constructor and let it handle that.
             this.game = _game;                      // get game contex
+
+            this.game.add.existing(this);           // Add this object to the gamestate
 
             this.effectiveRange = 10000;            // Make a default value for the range. 10,000 gives plenty of headroom
 
             this.anchor.setTo(0.0, 1);              // Move the anchor point to the bottom-left
+            
+            // If the target exists, initialize the object pool, target, and range
+            if (_target != null) {
+                this.init_target(_target, 375);  // A range of 375 pixels feels right for right now
+            }
         }
 
         /**
         * @description Adds the bullet pool to the game, and adjust all the settings associated with the gun
         * @see {Overloading in typescript} Typescript requires all signitures, but only allows one implementation
         */
-        create(): void;
-        create(_target: Phaser.Sprite, _range: number): void;
-        create(_target?:Phaser.Sprite, _range?:number) {
+        init_target(): void;
+        init_target(_target: Phaser.Sprite, _range: number): void;
+        init_target(_target?:Phaser.Sprite, _range?:number) {
             this.bullets = this.game.add.weapon(10, "bullet");               // Create an object pool for 10 bullets
             this.bullets.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;         // Automatically "delete" the bullets after so many milliseconds
             this.bullets.bulletLifespan = 15000;                               // Set the bullet lifespan to 15000ms (15sec)
