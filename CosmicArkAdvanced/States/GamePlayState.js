@@ -40,6 +40,7 @@ var CosmicArkAdvanced;
             this.player = new CosmicArkAdvanced.Player(this.game, 0, 0, "player");
             this.gun1 = new CosmicArkAdvanced.Gun(this.game, 150, this.game.world.height - 50, "gun", "gun1", this.player);
             this.mine1 = new CosmicArkAdvanced.Mine(this.game, 200, 200, "mine1");
+            this.hook1 = new CosmicArkAdvanced.Hook(this.game, 400, this.game.world.height - 50, "gun", "hook1", this.player);
             // Aliens should always be created after the player so that they don't accidently render behind the tractor beam
             this.man1 = new CosmicArkAdvanced.Man(this.game, 50, this.game.world.height - 50, "man1"); // eventually, this creation should be in a loop. Don't forget to make the name unique!
             this.aliens.push(this.man1); // Man one is a test case, in reality, these would be made inside of a for loop.
@@ -50,15 +51,21 @@ var CosmicArkAdvanced;
          * @description Adds the background images to the gamestate and scales them appropriately
          */
         GamePlayState.prototype.makeBackgrounds = function () {
-            var bd1 = this.game.add.image(0, 0, "nightSky"); // Sky
-            var bd2 = this.game.add.image(0, this.game.world.height, "city"); // Left-half of city
-            var bd3 = this.game.add.image(this.game.width, this.game.world.height, "city"); // Right-half of city
+            var bd1 = new Phaser.Image(this.game, 0, 0, "nightSky"); // Sky
+            var bd2 = new Phaser.Image(this.game, 0, this.game.world.height, "city"); // Left-half of city
+            var bd3 = new Phaser.Image(this.game, this.game.width, this.game.world.height, "city"); // Right-half of city
             // Set scaling
             bd1.scale.setTo(this.game.world.width / bd1.width, this.game.world.height / bd1.height); // Scale it to fit the size of the screen
             bd2.anchor.setTo(0, 1);
             bd2.scale.setTo(this.game.width / bd2.width, this.game.height / bd2.height); // Scale it to fit the size of the screen
             bd3.anchor.setTo(0, 1);
             bd3.scale.setTo(this.game.width / bd3.width, this.game.height / bd3.height); // Scale it to fit the size of the screen
+            // Adding these to a group before the game state makes the render just a little bit faster 
+            // Only ~1% at time of writing, but it is important to use this technique where possible
+            // becuase later implementations could produce more significant results
+            // See this link for details: https://phaser.io/tutorials/advanced-rendering-tutorial/part2
+            var grp = this.game.add.group();
+            grp.addMultiple([bd1, bd2, bd3]);
         };
         // TODO: Move the collision stuff from the update function into it's own method, maybe two, idk at the moment. 
         /**
@@ -169,10 +176,13 @@ var CosmicArkAdvanced;
             //this.game.debug.body(this.player);
             //this.game.debug.body(this.man1, "rgba(255,0,0,0.4");
             //this.gun1.bullets.debug();
-            this.game.debug.body(this.mine1);
+            // this.game.debug.body(this.mine1);
+            if (this.hook1.rope != null) {
+                this.game.debug.ropeSegments(this.hook1.rope);
+            }
         };
         return GamePlayState;
-    })(Phaser.State);
+    }(Phaser.State));
     CosmicArkAdvanced.GamePlayState = GamePlayState;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=GamePlayState.js.map

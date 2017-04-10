@@ -151,7 +151,7 @@ var CosmicArkAdvanced;
         Man.prototype.OnCollisionExit = function (other) {
         };
         return Man;
-    })(Phaser.Sprite);
+    }(Phaser.Sprite));
     CosmicArkAdvanced.Man = Man;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=Man.js.map

@@ -65,7 +65,7 @@ var CosmicArkAdvanced;
             }
         };
         return MapSelectState;
-    })(Phaser.State);
+    }(Phaser.State));
     CosmicArkAdvanced.MapSelectState = MapSelectState;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=MapSelectState.js.map

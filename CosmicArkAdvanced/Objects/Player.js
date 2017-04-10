@@ -234,7 +234,7 @@ var CosmicArkAdvanced;
             this.beamMask.endFill();
         };
         return Player;
-    })(Phaser.Sprite);
+    }(Phaser.Sprite));
     CosmicArkAdvanced.Player = Player;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=Player.js.map

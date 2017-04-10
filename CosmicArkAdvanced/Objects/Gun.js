@@ -65,7 +65,7 @@ var CosmicArkAdvanced;
             }
         };
         return Gun;
-    })(Phaser.Sprite);
+    }(Phaser.Sprite));
     CosmicArkAdvanced.Gun = Gun;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=Gun.js.map
