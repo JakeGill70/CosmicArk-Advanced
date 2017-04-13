@@ -65,9 +65,9 @@
          */
         update() {
             if (this.target != null) {
-                if (Phaser.Point.distance(this.target.worldPosition, this.worldPosition) <= this.effectiveRange) {
-                    let deltaX = this.target.worldPosition.x - this.worldPosition.x;
-                    let deltaY = this.target.worldPosition.y - this.worldPosition.y;
+                if (Phaser.Point.distance(this.target.position, this.position) <= this.effectiveRange) {
+                    let deltaX = this.target.position.x - this.position.x;
+                    let deltaY = this.target.position.y - this.position.y;
                     let angle = Math.atan2(deltaY, deltaX);
                     this.rotation = angle;
                     //console.log(Phaser.Point.distance(this.target.worldPosition, this.worldPosition));

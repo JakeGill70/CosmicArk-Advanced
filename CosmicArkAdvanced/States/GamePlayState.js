@@ -80,6 +80,15 @@ var CosmicArkAdvanced;
                     console.log("OUCH!!!!!");
                 }
             }
+            // Collide the player's ship with the hooks
+            for (var i = 0; i <= this.hook1.hooks.bullets.length; i++) {
+                //console.log("GOTCHA!"+i);
+                if (this.game.physics.arcade.collide(this.player, this.hook1.hooks.bullets.getAt(i))) {
+                    var b = this.hook1.hooks.bullets.getAt(i);
+                    //this.hook1.hasTarget = true;
+                    this.hook1.targetHooked();
+                }
+            }
             // Collide the player's ship with the aliens
             for (var i = 0; i < this.aliens.length; i++) {
                 var alien = this.aliens[i];
@@ -182,7 +191,7 @@ var CosmicArkAdvanced;
             }
         };
         return GamePlayState;
-    }(Phaser.State));
+    })(Phaser.State);
     CosmicArkAdvanced.GamePlayState = GamePlayState;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=GamePlayState.js.map

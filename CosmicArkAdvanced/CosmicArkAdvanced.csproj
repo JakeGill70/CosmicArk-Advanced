@@ -30,10 +30,13 @@
     <Content Include="Graphics\Sprites\dinghy3.png" />
     <Content Include="Graphics\Sprites\bullet1.png" />
     <Content Include="Graphics\Sprites\gun1.png" />
+    <Content Include="Graphics\Sprites\hook2.png" />
+    <Content Include="Graphics\Sprites\hook1.png" />
     <Content Include="Graphics\Sprites\Mine3.png" />
     <Content Include="Graphics\Sprites\Mine2.png" />
     <Content Include="Graphics\Sprites\Mine.png" />
     <Content Include="Graphics\Sprites\rope1.png" />
+    <Content Include="Graphics\Sprites\rope3.png" />
     <Content Include="Graphics\Sprites\rope2.png" />
     <Content Include="Graphics\Statics\planet_1.png" />
     <Content Include="Graphics\Statics\planet_2.png" />

@@ -57,8 +57,15 @@ var CosmicArkAdvanced;
             if (!this.game.paused) {
                 this.body.velocity = new Phaser.Point(0, 0);
                 this.isMoving = false; // Turn this flag off. Movement will turn it back on if needed.
-                this.arrowKeyMovement();
-                this.touchMovement();
+                // If hooked, move with the hook instead of taking input
+                if (!this.isHooked) {
+                    this.arrowKeyMovement();
+                    this.touchMovement();
+                }
+                else {
+                    this.isMoving = true;
+                    this.body.velocity = this.hookedVelocity;
+                }
                 if (this.isMoving) {
                     this.stopAbducting();
                 }
@@ -68,6 +75,10 @@ var CosmicArkAdvanced;
                     }
                 }
             }
+        };
+        Player.prototype.hookShip = function (vel) {
+            this.isHooked = true;
+            this.hookedVelocity = vel;
         };
         /**
          * @description moves the ship's position according to touch/mouse input.
@@ -210,7 +221,6 @@ var CosmicArkAdvanced;
             this.isAbudcting = true; // Set the isAbducting flag
             this.renderBeam(); // Show the beam
         };
-        // TODO: Find some way to draw the beam behind the ship
         /**
          * @description Draws the beam according to "beamDrawHeight" property
          */
@@ -234,7 +244,7 @@ var CosmicArkAdvanced;
             this.beamMask.endFill();
         };
         return Player;
-    }(Phaser.Sprite));
+    })(Phaser.Sprite);
     CosmicArkAdvanced.Player = Player;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=Player.js.map

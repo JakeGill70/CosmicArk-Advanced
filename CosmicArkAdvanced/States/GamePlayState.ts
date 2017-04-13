@@ -97,6 +97,16 @@
                 }
             }
 
+            // Collide the player's ship with the hooks
+            for (let i = 0; i <= this.hook1.hooks.bullets.length; i++) {
+                //console.log("GOTCHA!"+i);
+                if (this.game.physics.arcade.collide(this.player, this.hook1.hooks.bullets.getAt(i))) {
+                    let b = this.hook1.hooks.bullets.getAt(i) as Phaser.Bullet;
+                    //this.hook1.hasTarget = true;
+                    this.hook1.targetHooked();
+                }
+            }
+
             // Collide the player's ship with the aliens
             for (let i = 0; i < this.aliens.length; i++) {
                 let alien = this.aliens[i];
