@@ -54,9 +54,9 @@ var CosmicArkAdvanced;
          */
         Gun.prototype.update = function () {
             if (this.target != null) {
-                if (Phaser.Point.distance(this.target.worldPosition, this.worldPosition) <= this.effectiveRange) {
-                    var deltaX = this.target.worldPosition.x - this.worldPosition.x;
-                    var deltaY = this.target.worldPosition.y - this.worldPosition.y;
+                if (Phaser.Point.distance(this.target.position, this.position) <= this.effectiveRange) {
+                    var deltaX = this.target.position.x - this.position.x;
+                    var deltaY = this.target.position.y - this.position.y;
                     var angle = Math.atan2(deltaY, deltaX);
                     this.rotation = angle;
                     //console.log(Phaser.Point.distance(this.target.worldPosition, this.worldPosition));

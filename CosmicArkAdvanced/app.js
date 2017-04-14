@@ -32,6 +32,8 @@ var CosmicArkAdvanced;
             this.game.load.image("bullet", "Graphics/Sprites/bullet1.png");
             this.game.load.spritesheet("ship", "Graphics/Sprites/dinghy4.png", 52, 24, 2);
             this.game.load.image("mine", "Graphics/Sprites/Mine3.png");
+            this.game.load.image("rope", "Graphics/Sprites/rope3.png");
+            this.game.load.image("hook", "Graphics/Sprites/hook2.png");
             // Static Sprites
             this.game.load.image("planet1", "Graphics/Statics/planet_1.png");
             this.game.load.image("planet2", "Graphics/Statics/planet_2.png");

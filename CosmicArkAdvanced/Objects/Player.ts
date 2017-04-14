@@ -13,6 +13,8 @@
      * @property tag {CosmicArkAdvanced.PhysicsTag}  - Used to help weed out possible collisions
      * @property isAbudcting {boolean}               - Flag for if the player should be abducting someone right now
      * @property isMoving {boolean}                  - Flag for if the user is moving the ship right now
+     * @property isHooked {boolean}                  - Flag for if the player is captured by a hook bullet/turret right now.
+     * @property hookedVelocity {Phaser.Point}       - X and Y velocity the ship should have while isHooked is set
      */
     export class Player extends Phaser.Sprite implements IPhysicsReady {
         game: Phaser.Game;              // Game Context
@@ -28,6 +30,8 @@
         tag: PhysicsTag;                // Used to help weed out possible collisions
         isAbudcting: boolean;           // Flag for if the player should be abducting someone right now
         isMoving: boolean;              // Flag for if the user is moving the ship right now
+        isHooked: boolean;              // Flag for if the player is captured by a hook bullet/turret right now.
+        hookedVelocity: Phaser.Point    // X and Y velocity the ship should have while isHooked is set
 
         /**
          * @description Constructor for the player's ship
@@ -79,12 +83,21 @@
                 this.body.velocity = new Phaser.Point(0, 0);
                 this.isMoving = false;  // Turn this flag off. Movement will turn it back on if needed.
 
-                this.arrowKeyMovement();
-                this.touchMovement();
+                // If hooked, move with the hook instead of taking input
+                if (!this.isHooked) {
+                    this.arrowKeyMovement();
+                    this.touchMovement();
+                }
+                else {
+                    this.isMoving = true;
+                    this.body.velocity = this.hookedVelocity;
+                }
+                
 
                 if (this.isMoving) {    // If the flag was set after moving, stop abducting
                     this.stopAbducting();
                 }
+
 
                 if (this.isAbudcting) {
                     if (this.alienAbductee.x != this.x) {
@@ -92,6 +105,16 @@
                     }
                 }
             }
+        }
+
+        /**
+         * @description Setter for hooked Velocity and sets the isHooked flag. This is called when colliding with the end of a hook.
+         * The ship and the hook must move at the same time, angle, and speed to make it look like the hook is pulling the ship.
+         * @param vel The new velocity of the hook.
+         */
+        public hookShip(vel:Phaser.Point) {
+            this.isHooked = true;
+            this.hookedVelocity = vel;
         }
 
         /**
@@ -259,8 +282,6 @@
 
             this.renderBeam();                                          // Show the beam
         }
-
-        // TODO: Find some way to draw the beam behind the ship
 
         /**
          * @description Draws the beam according to "beamDrawHeight" property

@@ -6,25 +6,30 @@
     <title>TypeScript HTML App</title>
     <link rel="stylesheet" href="app.css" type="text/css" />
 
-    <!-------------------------------->
-    <!-- LINK JAVASCRIPT FILES HERE -->
-    <!-------------------------------->
-	<script src="Phaser/phaser.js"></script>
-    <script src="Objects/Player.js"></script>
-    <script src="Objects/Man.js"></script>
-    <script src="Objects/Gun.js"></script>
-    <script src="Objects/Mine.js"></script>
-    <script src="Enums/PhysicsTag.js"></script>
-    <script src="States/GamePlayState.js"></script>
-    <script src="States/TitleScreenState.js"></script>
-    <script src="States/MapSelectState.js"></script>
-    <script src="app.js"></script>
-    <!-------------------------------->
+
 
 </head>
 <body>
     <h1>Phaser.io - Cosmic Ark Remake</h1>
 
     <div id="content"></div>
+
+    <!-- Loading js at the bottom of page will allow the page to load in faster-->
+    <!-- See Here for details: http://sixrevisions.com/web-development/decrease-webpage-load-times/ -->
+    <!-------------------------------->
+    <!-- LINK JAVASCRIPT FILES HERE -->
+    <!-------------------------------->
+    <script src="Phaser/phaser.js"></script>
+    <script src="Objects/Player.js"></script>
+    <script src="Objects/Man.js"></script>
+    <script src="Objects/Gun.js"></script>
+    <script src="Objects/Mine.js"></script>
+    <script src="Objects/Hook.js"></script>
+    <script src="Enums/PhysicsTag.js"></script>
+    <script src="States/GamePlayState.js"></script>
+    <script src="States/TitleScreenState.js"></script>
+    <script src="States/MapSelectState.js"></script>
+    <script src="app.js"></script>
+    <!-------------------------------->
 </body>
 </html>
