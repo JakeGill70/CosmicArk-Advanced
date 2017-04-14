@@ -85,7 +85,7 @@
 
         // TODO: Move the collision stuff from the update function into it's own method, maybe two, idk at the moment. 
         /**
-         * @Description Currently only used for checking collisions between object
+         * @Description Currently only used for checking collisions between objects
          */
         update() {
             // Collide the player's ship with the gun's bullets
@@ -99,10 +99,8 @@
 
             // Collide the player's ship with the hooks
             for (let i = 0; i <= this.hook1.hooks.bullets.length; i++) {
-                //console.log("GOTCHA!"+i);
                 if (this.game.physics.arcade.collide(this.player, this.hook1.hooks.bullets.getAt(i))) {
                     let b = this.hook1.hooks.bullets.getAt(i) as Phaser.Bullet;
-                    //this.hook1.hasTarget = true;
                     this.hook1.targetHooked();
                 }
             }

@@ -18,6 +18,8 @@ var CosmicArkAdvanced;
      * @property tag {CosmicArkAdvanced.PhysicsTag}  - Used to help weed out possible collisions
      * @property isAbudcting {boolean}               - Flag for if the player should be abducting someone right now
      * @property isMoving {boolean}                  - Flag for if the user is moving the ship right now
+     * @property isHooked {boolean}                  - Flag for if the player is captured by a hook bullet/turret right now.
+     * @property hookedVelocity {Phaser.Point}       - X and Y velocity the ship should have while isHooked is set
      */
     var Player = (function (_super) {
         __extends(Player, _super);
@@ -76,6 +78,11 @@ var CosmicArkAdvanced;
                 }
             }
         };
+        /**
+         * @description Setter for hooked Velocity and sets the isHooked flag. This is called when colliding with the end of a hook.
+         * The ship and the hook must move at the same time, angle, and speed to make it look like the hook is pulling the ship.
+         * @param vel The new velocity of the hook.
+         */
         Player.prototype.hookShip = function (vel) {
             this.isHooked = true;
             this.hookedVelocity = vel;
