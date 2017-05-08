@@ -14,7 +14,8 @@ var CosmicArkAdvanced;
      * @Property aliens {CosmicArkAdvance.IPhysicsReady[]}  - List of aliens in this scene that are capable of recieving physics calls
      * @Property dict {any[]}                               - A 2-keyed dictionary which maps 2 strings to a boolean value. Maps out physics collision states.
      * @Property gun1 {CosmicArkAdvanced.Gun}               - Test Gun
-     * @Property mine {CosmicArkAdvanced.Mine}              - Test Mine
+     * @Property mine1 {CosmicArkAdvanced.Mine}             - Test Mine
+     * @property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
      */
     var GamePlayState = (function (_super) {
         __extends(GamePlayState, _super);
@@ -37,6 +38,7 @@ var CosmicArkAdvanced;
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
             // Make the objects
             this.makeBackgrounds();
+            this.makeMotherShip();
             this.player = new CosmicArkAdvanced.Player(this.game, 0, 0, "player");
             this.gun1 = new CosmicArkAdvanced.Gun(this.game, 150, this.game.world.height - 50, "gun", "gun1", this.player);
             this.mine1 = new CosmicArkAdvanced.Mine(this.game, 200, 200, "mine1");
@@ -46,6 +48,21 @@ var CosmicArkAdvanced;
             this.aliens.push(this.man1); // Man one is a test case, in reality, these would be made inside of a for loop.
             // Set Camera settings
             this.game.camera.follow(this.player);
+            // UI
+            this.uiText = this.game.add.text(8, 0, "In Transit: " + this.player.aliensOnBoard.toString() +
+                "\nCaptured: " + this.player.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
+            this.uiText.fixedToCamera = true;
+            //this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
+        };
+        /**
+         * @descirption Creates the mothership sprite and adjust it's properties accordingly.
+         */
+        GamePlayState.prototype.makeMotherShip = function () {
+            this.mothership = this.game.add.sprite(0, 0, "mothership");
+            this.mothership.scale.set(1, 1);
+            this.mothership.position.set(this.game.world.width / 2 - this.mothership.width / 2, -this.mothership.height / 2);
+            this.game.physics.enable(this.mothership, Phaser.Physics.ARCADE);
+            this.mothership.body.setCircle(this.mothership.width * 0.75, this.mothership.width * -0.25, this.mothership.width * -1.15);
         };
         /**
          * @description Adds the background images to the gamestate and scales them appropriately
@@ -67,19 +84,28 @@ var CosmicArkAdvanced;
             var grp = this.game.add.group();
             grp.addMultiple([bd1, bd2, bd3]);
         };
-        // TODO: Move the collision stuff from the update function into it's own method, maybe two, idk at the moment. 
         /**
          * @Description Currently only used for checking collisions between objects
          */
         GamePlayState.prototype.update = function () {
+            this.collideObjects();
+            this.uiText.text = "In Transit: " + this.player.aliensOnBoard.toString() +
+                "\nCaptured: " + this.player.aliensCaptured.toString();
+        };
+        /**
+         * @Description Called ever frame through the update method. Place collision checks here.
+         */
+        GamePlayState.prototype.collideObjects = function () {
+            // TODO: Move this into a for loop for multiple guns
             // Collide the player's ship with the gun's bullets
             for (var i = 0; i < this.gun1.bullets.bullets.length; i++) {
-                if (this.game.physics.arcade.collide(this.player, this.gun1.bullets.bullets.getAt(i))) {
+                if (!this.player.isHooked && this.game.physics.arcade.collide(this.player, this.gun1.bullets.bullets.getAt(i))) {
                     var b = this.gun1.bullets.bullets.getAt(i);
                     b.kill();
                     console.log("OUCH!!!!!");
                 }
             }
+            // TODO: Move this into a for loop for multiple hooks
             // Collide the player's ship with the hooks
             for (var i = 0; i <= this.hook1.hooks.bullets.length; i++) {
                 if (this.game.physics.arcade.collide(this.player, this.hook1.hooks.bullets.getAt(i))) {
@@ -90,14 +116,14 @@ var CosmicArkAdvanced;
             // Collide the player's ship with the aliens
             for (var i = 0; i < this.aliens.length; i++) {
                 var alien = this.aliens[i];
-                //this.superCollider(this.player, alien); // Original
+                // TODO: Bugfix: Fix it so that the ship cannot abduct an alien if the ship is too low
                 // TODO: Changing animation shouldn't happen here, bad OOP practice. Move it to the OnCollision inside of player instead
                 if (this.game.physics.arcade.collide(this.player, alien)) {
-                    if (!this.player.isAbudcting) {
-                        this.player.animations.frame = 1;
+                    if (this.player.isAbudcting) {
+                        this.player.animations.frame = 0;
                     }
                     else {
-                        this.player.animations.frame = 0;
+                        this.player.animations.frame = 1;
                     }
                     this.player.Abduct(alien);
                 }
@@ -105,9 +131,19 @@ var CosmicArkAdvanced;
                     this.player.animations.frame = 0;
                 }
             }
+            // TODO: Change this to a for loop to check for multiple mines
             // Collide the player's ship with the mines
             if (this.game.physics.arcade.collide(this.player, this.mine1)) {
-                console.log("I HIT A MINE! OUCH!");
+                var spt = this.game.add.sprite(0, 0, "bang");
+                spt.scale.set(1.35, 1.35);
+                spt.position.setTo(this.mine1.x - spt.width / 2, this.mine1.y - spt.height / 2);
+                spt.animations.add("bang_anim", null, 20, false);
+                spt.animations.play("bang_anim", null, false, true);
+                this.mine1.destroy(true);
+            }
+            // Collide the player's ship with the mothership
+            if (this.game.physics.arcade.overlap(this.player, this.mothership)) {
+                this.player.Capture();
             }
         };
         /**
@@ -180,13 +216,12 @@ var CosmicArkAdvanced;
          */
         GamePlayState.prototype.render = function () {
             // Debug features...
-            //this.game.debug.body(this.player);
-            //this.game.debug.body(this.man1, "rgba(255,0,0,0.4");
-            //this.gun1.bullets.debug();
+            // this.game.debug.body(this.player);
+            // this.game.debug.body(this.man1, "rgba(255,0,0,0.4");
+            // this.gun1.bullets.debug();
             // this.game.debug.body(this.mine1);
-            if (this.hook1.rope != null) {
-                this.game.debug.ropeSegments(this.hook1.rope);
-            }
+            // this.game.debug.ropeSegments(this.hook1.rope);
+            // this.game.debug.body(this.mothership);
         };
         return GamePlayState;
     })(Phaser.State);

@@ -37,6 +37,7 @@
          * @Description Handles the "onTap" event. Just moves over to the mapSelectState state.
          */
         TitleClicked() {
+            //this.game.scale.startFullScreen(false);
             this.game.state.start("mapSelectState"); // Jump to the GamePlayState
         }
     }

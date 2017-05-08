@@ -29,18 +29,20 @@
          */
         preload() {
             // Backgrounds
-            this.game.load.image("title", "Graphics/Backgrounds/TitleCard.png");
-            this.game.load.image("nightSky", "Graphics/Backgrounds/NightSky.png");
-            this.game.load.image("city", "Graphics/Backgrounds/CityBackdrop.png");
+            this.game.load.image("title",       "Graphics/Backgrounds/TitleCard.png");
+            this.game.load.image("nightSky",    "Graphics/Backgrounds/NightSky.png");
+            this.game.load.image("city",        "Graphics/Backgrounds/CityBackdrop.png");
             // Sprites
-            this.game.load.image("man", "Graphics/Sprites/Man.png");
-            this.game.load.image("gun", "Graphics/Sprites/gun1.png");
-            this.game.load.image("bullet", "Graphics/Sprites/bullet1.png");
-            this.game.load.spritesheet("ship", "Graphics/Sprites/dinghy4.png", 52, 24, 2);
-            this.game.load.image("mine", "Graphics/Sprites/Mine3.png");
-            this.game.load.image("rope", "Graphics/Sprites/rope3.png");
-            this.game.load.image("hook", "Graphics/Sprites/hook2.png");
+            this.game.load.image("man",         "Graphics/Sprites/Man.png");
+            this.game.load.image("gun",         "Graphics/Sprites/gun1.png");
+            this.game.load.image("rope",        "Graphics/Sprites/rope3.png");
+            this.game.load.spritesheet("ship",  "Graphics/Sprites/dinghy4.png", 52, 24, 2);
+            this.game.load.spritesheet( "bang", "Graphics/Sprites/bang.png", 64, 64, 14);
             // Static Sprites
+            this.game.load.image("mothership",    "Graphics/Statics/mothership2.png");
+            this.game.load.image("hook",    "Graphics/Statics/hook2.png");
+            this.game.load.image("mine",    "Graphics/Statics/Mine3.png");
+            this.game.load.image("bullet",  "Graphics/Statics/bullet1.png");
             this.game.load.image("planet1", "Graphics/Statics/planet_1.png");
             this.game.load.image("planet2", "Graphics/Statics/planet_2.png");
             this.game.load.image("planet3", "Graphics/Statics/planet_3.png");
@@ -58,13 +60,15 @@
             this.game.state.add("titleScreenState", CosmicArkAdvanced.TitleScreenState, true);
             this.game.state.add("gamePlayState", CosmicArkAdvanced.GamePlayState, false);
             this.game.state.add("mapSelectState", CosmicArkAdvanced.MapSelectState, false);
+            console.log(MyGame.AUTO_SCALING);
             if (MyGame.AUTO_SCALING == true) {
                 this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
             }
 
             // If on a mobile device, Set the scale mode to be an exact fit
             if (!this.game.device.desktop) {
-                this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+                this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+               // this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
             }
         }
 

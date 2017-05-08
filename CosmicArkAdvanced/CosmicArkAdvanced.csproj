@@ -23,21 +23,27 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <Content Include="Audio\SFX\Death_22.wav" />
+    <Content Include="Audio\SFX\Laser_Shoot10.wav" />
+    <Content Include="Audio\SFX\Laser_Shoot10_loopable.wav" />
     <Content Include="Graphics\Backgrounds\CityBackdrop.png" />
+    <Content Include="Graphics\Sprites\bang.png" />
     <Content Include="Graphics\Sprites\dinghy.png" />
     <Content Include="Graphics\Sprites\dinghy2.png" />
     <Content Include="Graphics\Sprites\dinghy4.png" />
     <Content Include="Graphics\Sprites\dinghy3.png" />
-    <Content Include="Graphics\Sprites\bullet1.png" />
+    <Content Include="Graphics\Statics\bullet1.png" />
     <Content Include="Graphics\Sprites\gun1.png" />
-    <Content Include="Graphics\Sprites\hook2.png" />
-    <Content Include="Graphics\Sprites\hook1.png" />
-    <Content Include="Graphics\Sprites\Mine3.png" />
-    <Content Include="Graphics\Sprites\Mine2.png" />
-    <Content Include="Graphics\Sprites\Mine.png" />
+    <Content Include="Graphics\Statics\hook2.png" />
+    <Content Include="Graphics\Statics\hook1.png" />
+    <Content Include="Graphics\Statics\Mine3.png" />
+    <Content Include="Graphics\Statics\Mine2.png" />
+    <Content Include="Graphics\Statics\Mine.png" />
     <Content Include="Graphics\Sprites\rope1.png" />
     <Content Include="Graphics\Sprites\rope3.png" />
     <Content Include="Graphics\Sprites\rope2.png" />
+    <Content Include="Graphics\Statics\mothership1.png" />
+    <Content Include="Graphics\Statics\mothership2.png" />
     <Content Include="Graphics\Statics\planet_1.png" />
     <Content Include="Graphics\Statics\planet_2.png" />
     <Content Include="Graphics\Statics\planet_3.png" />
@@ -67,6 +73,8 @@
     <TypeScriptCompile Include="States\TitleScreenState.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Audio\SFX\Laser_Shoot10.bfxrsound" />
+    <Content Include="Audio\SFX\Death_22.bfxrsound" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -76,7 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Audio\Music\" />
-    <Folder Include="Audio\SFX\" />
     <Folder Include="Graphics\UI\" />
     <Folder Include="Scenes\" />
   </ItemGroup>

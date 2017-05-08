@@ -36,6 +36,8 @@ var CosmicArkAdvanced;
             _super.call(this, _game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
             this.game = _game; // get game context
             this.name = _name; // Set the objects unique name
+            this.aliensOnBoard = 0; // Reset score counters
+            this.aliensCaptured = 0;
             this.beam = this.game.add.graphics(0, 0); // Create and add the beam to the gamestate
             this.beamMask = this.game.add.graphics(0, 0); // Create and add the beam's bit mask to the gamestate
             this.beamMask.renderable = false;
@@ -201,6 +203,14 @@ var CosmicArkAdvanced;
             this.beamMask.clear(); // Destroy any graphic's artifacts of the beam's mask. This shouldn't make a difference since the mask isn't technically rendered, but do it anyway just in case of weirdness.
         };
         /**
+         * @Description Should be called when colliding with the mothership.
+         * This method resets the "In Transit" score to 0, and increases the "Captured" score appropriately
+         */
+        Player.prototype.Capture = function () {
+            this.aliensCaptured += this.aliensOnBoard;
+            this.aliensOnBoard = 0;
+        };
+        /**
          * @description Will exit imediately if the isMoving flag is set. Begins drawing the Tractor beam. Sets the isAbducting flag and the alienAbductee property.
          * @param a The alien the player will begin abducting
          */
@@ -217,6 +227,7 @@ var CosmicArkAdvanced;
             if (this.alienAbductee != null) {
                 // If that alien is now higher than the tractor beam, that alien should be considered captured.
                 if (this.alienAbductee.worldPosition.y <= this.worldPosition.y) {
+                    this.aliensOnBoard++;
                     this.alienAbductee.x = (Math.random() * 1500) + 50; // For testing right now, just release back into the wild at some world position (between 50-1550)
                     this.stopAbducting(); // Tell the alien we have stopped abducting him
                     return;
