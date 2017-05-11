@@ -285,7 +285,11 @@
                 // If that alien is now higher than the tractor beam, that alien should be considered captured.
                 if (this.alienAbductee.worldPosition.y <= this.worldPosition.y) {
                     this.aliensOnBoard++;
-                    this.alienAbductee.x = (Math.random() * 1500) + 50;                 // For testing right now, just release back into the wild at some world position (between 50-1550)
+                    let newXpos = (Math.random() * 1500) + 50;
+                    while (Phaser.Math.difference(newXpos, this.position.x) < 150) {
+                        newXpos = (Math.random() * 1500) + 50;
+                    }
+                    this.alienAbductee.x = newXpos;                 // For testing right now, just release back into the wild at some world position (between 50-1550)
                     this.stopAbducting();                                       // Tell the alien we have stopped abducting him
                     return;
                 }
@@ -313,7 +317,7 @@
             // r: 0-45          g: 75-150           b: 155-255
             let color: number = Phaser.Color.getColor(Math.random() * 45, Math.random() * 75 + 75, Math.random() * 100 + 155);
             // beamDrawHeight is calculated OnCollisionEnter()
-            let rect = new Phaser.Rectangle(this.x - (this.body.width / 2), this.y - (this.body.height / 2), this.body.width, this.beamDrawHeight);
+            let rect = new Phaser.Rectangle(this.x - (this.body.width / 2) + 2, this.y - (this.body.height / 2), this.body.width - 4, this.beamDrawHeight);
             this.beam.lineStyle(1, color, 0.75);
             this.beam.beginFill(color, 0.8);
             this.beam.drawRect(rect.x, rect.y, rect.width, rect.height);

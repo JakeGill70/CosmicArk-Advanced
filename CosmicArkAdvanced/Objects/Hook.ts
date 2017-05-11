@@ -6,7 +6,7 @@
      * @property target {Phaser.sprite}                     - What the gun will aim at
      * @property effectiveRange {number}                    - Minimum distance between the target and the gun before the gun will shoot
      * @property rope {Phaser.Rope}                         - Texture/colliders for the "link" connecting the hook to the base
-     * @property hooks {Phaser.weapon}                      - Object Pool of possible hooks (Should only ever have 1, but this class has other uses)
+     * @property hook {Phaser.weapon}                      - Object Pool of possible wep (Should only ever have 1, but this class has other uses)
      * @hasTarget hasTarget {boolean}                       - Flag for if the player's ship is currently "hooked" to this object
      * @see {Phaser.bullet, Phaser.Rope}
      */
@@ -15,7 +15,7 @@
         target: Phaser.Sprite;           // What the Gun should aim at
         effectiveRange: number;           // Minimum distance between the target and the gun before the gun will shoot
         rope: Phaser.Rope;              // Texture/colliders for the "link" connecting the hook to the base
-        hooks: Phaser.Weapon;          // Object Pool of Possible hooks
+        wep: Phaser.Weapon;          // Object Pool of Possible wep
         hasTarget: boolean;             // Determines if the player's ship has collided a hook
 
         /**
@@ -49,7 +49,7 @@
             this.rope = new Phaser.Rope(this.game, 0, 0, "rope", null, points);         // Make the rope object
             this.game.add.existing(this.rope);                                  // Add the rope to the game state
 
-            this.hooks.onKill.add(this.releaseHook, this);                      // Register the onKill event from the weapon class 
+            this.wep.onKill.add(this.releaseHook, this);                      // Register the onKill event from the weapon class 
         }
 
         
@@ -65,13 +65,13 @@
             this.target = (_target != null) ? _target : null;                       // If it exists, Set the target to the given value
             this.effectiveRange = (_range != null) ? _range : null;                 // If it exists, Set the range to the given value
 
-            this.hooks = this.game.add.weapon(1, "hook");                           // Add an object pool of just 1 hook object
-            this.hooks.bulletSpeed = 75;                                            // Set the hook's speed in px / sec
-            this.hooks.fireRate = (this.effectiveRange / this.hooks.bulletSpeed) * 1000 * 2;           // Fire rate is 2.5 times the time it takes the hook to reach the end of the effective range
-            this.hooks.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;                                    // Set the kill event to fire off if the object exists longer than it should
-            this.hooks.bulletLifespan = (this.effectiveRange / this.hooks.bulletSpeed) * 1000;      // Set the fire rate to be the time it takes the bullet to reach the end of its effective range
-            this.hooks.trackSprite(this, 0, 0, true);                               // Tell the object pool to rotate the hook's sprite to be the same as this object's rotation
-            this.hooks.autoExpandBulletsGroup = false;              // We only ever want to fire 1 hook at a time, this tells the object pool not to fire if the 1 hook is already in use.
+            this.wep = this.game.add.weapon(1, "hook");                           // Add an object pool of just 1 hook object
+            this.wep.bulletSpeed = 75;                                            // Set the hook's speed in px / sec
+            this.wep.fireRate = (this.effectiveRange / this.wep.bulletSpeed) * 1000 * 2;           // Fire rate is 2.5 times the time it takes the hook to reach the end of the effective range
+            this.wep.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;                                    // Set the kill event to fire off if the object exists longer than it should
+            this.wep.bulletLifespan = (this.effectiveRange / this.wep.bulletSpeed) * 1000;      // Set the fire rate to be the time it takes the bullet to reach the end of its effective range
+            this.wep.trackSprite(this, 0, 0, true);                               // Tell the object pool to rotate the hook's sprite to be the same as this object's rotation
+            this.wep.autoExpandBulletsGroup = false;              // We only ever want to fire 1 hook at a time, this tells the object pool not to fire if the 1 hook is already in use.
         }
 
         /**
@@ -88,9 +88,9 @@
                 // Set the rotation of the object
                 this.rotation = angle;
                 // Attempt to fire the weapon, this will do nothing if not enough time has passed
-                this.hooks.fire();
+                this.wep.fire();
             }
-            let mainHook = this.hooks.bullets.getFirstAlive(false) as Phaser.Sprite;            // If the hook exists, grab a copy of it
+            let mainHook = this.wep.bullets.getFirstAlive(false) as Phaser.Sprite;            // If the hook exists, grab a copy of it
             // Re-calculate the nodes of the rope to be evenly distributed between the base and the hook
             for (let i: number = 0; i < 20; i++) {
                 if (mainHook != null) {
@@ -115,15 +115,15 @@
 
         /**
          * @Description function which is called when the hook collides with the player's ship.
-         * Sets the hasTarget flag, inverts the hook's velocity, and call the hookShip function on the player's ship
-         * @see {CosmicArkAdvanced.Player.hookShip()}
+         * Sets the hasTarget flag, inverts the hook's velocity, and call the wephip function on the player's ship
+         * @see {CosmicArkAdvanced.Player.wephip()}
          */
         targetHooked() {
-            let mainHook = this.hooks.bullets.getFirstAlive(false) as Phaser.Sprite;        // If the hook exists, grab a copy of it
+            let mainHook = this.wep.bullets.getFirstAlive(false) as Phaser.Sprite;        // If the hook exists, grab a copy of it
             if (mainHook != null && !this.hasTarget) {
                 this.hasTarget = true;                                      // Set the hasTarget flag
-                mainHook.body.velocity = new Phaser.Point(-this.hooks.bulletSpeed * Math.cos(mainHook.rotation), -this.hooks.bulletSpeed * Math.sin(mainHook.rotation)); // Set the hook's velocity to return to the base
-                mainHook.lifespan = ((this.effectiveRange / this.hooks.bulletSpeed) * 1000) - mainHook.lifespan;        // Extend the hook's lifespan to last until it reaches the base
+                mainHook.body.velocity = new Phaser.Point(-this.wep.bulletSpeed * Math.cos(mainHook.rotation), -this.wep.bulletSpeed * Math.sin(mainHook.rotation)); // Set the hook's velocity to return to the base
+                mainHook.lifespan = ((this.effectiveRange / this.wep.bulletSpeed) * 1000) - mainHook.lifespan;        // Extend the hook's lifespan to last until it reaches the base
                 console.log("ha ha got 'em");                                                           // Debugging purposes for now.
                 (this.target as CosmicArkAdvanced.Player).hookShip(mainHook.body.velocity);             // Tell the ship it has been hooked
             }

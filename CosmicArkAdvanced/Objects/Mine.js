@@ -48,7 +48,7 @@ var CosmicArkAdvanced;
         Mine.prototype.OnCollisionExit = function (other) {
         };
         return Mine;
-    })(Phaser.Sprite);
+    }(Phaser.Sprite));
     CosmicArkAdvanced.Mine = Mine;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=Mine.js.map

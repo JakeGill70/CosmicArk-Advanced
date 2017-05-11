@@ -1,0 +1,21 @@
+{
+  "project": {
+    "currentBuildConfiguration": "WebApp",
+    "projectFiles": {},
+    "projectDirectories": {},
+    "projectSettingsVersion": "3.0.0"
+  },
+  "editorTab": {
+    "currentEditorMode": 0
+  },
+  "simulator": {
+    "cordova-simulate": {
+      "tinyhippos-geosettings": {
+        "id": "tinyhippos-geosettings",
+        "key": "geosettings",
+        "value": "{\"position\":{\"latitude\":43.465187,\"longitude\":-80.522372,\"altitude\":100,\"accuracy\":150,\"altitudeAccuracy\":80,\"heading\":0,\"speed\":0,\"timeStamp\":\"new Date(1492151719760)\"},\"delay\":\"0\",\"timeout\":false}",
+        "prefix": "tinyhippos-"
+      }
+    }
+  }
+}

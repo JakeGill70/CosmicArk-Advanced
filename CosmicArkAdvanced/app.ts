@@ -29,14 +29,15 @@
          */
         preload() {
             // Backgrounds
-            this.game.load.image("title",       "Graphics/Backgrounds/TitleCard.png");
+            this.game.load.image("title",       "Graphics/Backgrounds/TitleCard3-4.png");
             this.game.load.image("nightSky",    "Graphics/Backgrounds/NightSky.png");
-            this.game.load.image("city",        "Graphics/Backgrounds/CityBackdrop.png");
+            this.game.load.image("city", "Graphics/Backgrounds/CityBackdrop.png");
+            this.game.load.image("city1", "Graphics/Backgrounds/City1.png");
             // Sprites
             this.game.load.image("man",         "Graphics/Sprites/Man.png");
             this.game.load.image("gun",         "Graphics/Sprites/gun1.png");
             this.game.load.image("rope",        "Graphics/Sprites/rope3.png");
-            this.game.load.spritesheet("ship",  "Graphics/Sprites/dinghy4.png", 52, 24, 2);
+            this.game.load.spritesheet("ship",  "Graphics/Sprites/UFO_Glow.png", 48, 24, 2);
             this.game.load.spritesheet( "bang", "Graphics/Sprites/bang.png", 64, 64, 14);
             // Static Sprites
             this.game.load.image("mothership",    "Graphics/Statics/mothership2.png");

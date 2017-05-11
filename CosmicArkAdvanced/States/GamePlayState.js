@@ -26,12 +26,17 @@ var CosmicArkAdvanced;
         function GamePlayState() {
             _super.call(this);
             this.aliens = [];
+            this.guns = [];
+            this.mines = [];
+            this.hooks = [];
             this.dict = [];
         }
         /**
          * @description Creates the game world by both creating and initializing all the objects in the game state.
          */
         GamePlayState.prototype.create = function () {
+            // Use this for debugging to measure FPS
+            this.game.time.advancedTiming = true;
             // Set Level size
             this.game.world.setBounds(0, 0, 1600, 550);
             // Set Physics settings
@@ -41,8 +46,11 @@ var CosmicArkAdvanced;
             this.makeMotherShip();
             this.player = new CosmicArkAdvanced.Player(this.game, 0, 0, "player");
             this.gun1 = new CosmicArkAdvanced.Gun(this.game, 150, this.game.world.height - 50, "gun", "gun1", this.player);
+            this.guns.push(this.gun1);
             this.mine1 = new CosmicArkAdvanced.Mine(this.game, 200, 200, "mine1");
+            this.mines.push(this.mine1);
             this.hook1 = new CosmicArkAdvanced.Hook(this.game, 400, this.game.world.height - 50, "gun", "hook1", this.player);
+            this.hooks.push(this.hook1);
             // Aliens should always be created after the player so that they don't accidently render behind the tractor beam
             this.man1 = new CosmicArkAdvanced.Man(this.game, 50, this.game.world.height - 50, "man1"); // eventually, this creation should be in a loop. Don't forget to make the name unique!
             this.aliens.push(this.man1); // Man one is a test case, in reality, these would be made inside of a for loop.
@@ -68,21 +76,28 @@ var CosmicArkAdvanced;
          * @description Adds the background images to the gamestate and scales them appropriately
          */
         GamePlayState.prototype.makeBackgrounds = function () {
-            var bd1 = new Phaser.Image(this.game, 0, 0, "nightSky"); // Sky
-            var bd2 = new Phaser.Image(this.game, 0, this.game.world.height, "city"); // Left-half of city
-            var bd3 = new Phaser.Image(this.game, this.game.width, this.game.world.height, "city"); // Right-half of city
+            //let bd = new Phaser.Image(this.game, 0, this.game.world.height, "city1");
+            this.game.add.image(0, 0, "city1");
+            // Old Background Images
+            /*
+            let bd1 = new Phaser.Image(this.game, 0, 0, "nightSky");                                // Sky
+            let bd2 = new Phaser.Image(this.game,0, this.game.world.height, "city");                   // Left-half of city
+            let bd3 = new Phaser.Image(this.game, this.game.width, this.game.world.height, "city");     // Right-half of city
+
             // Set scaling
-            bd1.scale.setTo(this.game.world.width / bd1.width, this.game.world.height / bd1.height); // Scale it to fit the size of the screen
+            bd1.scale.setTo(this.game.world.width / bd1.width, this.game.world.height / bd1.height);  // Scale it to fit the size of the screen
             bd2.anchor.setTo(0, 1);
-            bd2.scale.setTo(this.game.width / bd2.width, this.game.height / bd2.height); // Scale it to fit the size of the screen
+            bd2.scale.setTo(this.game.width / bd2.width, this.game.height / bd2.height);        // Scale it to fit the size of the screen
             bd3.anchor.setTo(0, 1);
-            bd3.scale.setTo(this.game.width / bd3.width, this.game.height / bd3.height); // Scale it to fit the size of the screen
-            // Adding these to a group before the game state makes the render just a little bit faster 
+            bd3.scale.setTo(this.game.width / bd3.width, this.game.height / bd3.height);  // Scale it to fit the size of the screen
+
+            // Adding these to a group before the game state makes the render just a little bit faster
             // Only ~1% at time of writing, but it is important to use this technique where possible
             // becuase later implementations could produce more significant results
             // See this link for details: https://phaser.io/tutorials/advanced-rendering-tutorial/part2
-            var grp = this.game.add.group();
+            let grp = this.game.add.group();
             grp.addMultiple([bd1, bd2, bd3]);
+            */
         };
         /**
          * @Description Currently only used for checking collisions between objects
@@ -96,21 +111,23 @@ var CosmicArkAdvanced;
          * @Description Called ever frame through the update method. Place collision checks here.
          */
         GamePlayState.prototype.collideObjects = function () {
-            // TODO: Move this into a for loop for multiple guns
             // Collide the player's ship with the gun's bullets
-            for (var i = 0; i < this.gun1.bullets.bullets.length; i++) {
-                if (!this.player.isHooked && this.game.physics.arcade.collide(this.player, this.gun1.bullets.bullets.getAt(i))) {
-                    var b = this.gun1.bullets.bullets.getAt(i);
-                    b.kill();
-                    console.log("OUCH!!!!!");
+            for (var n = 0; n < this.guns.length; n++) {
+                for (var i = 0; i < this.guns[n].bullets.bullets.length; i++) {
+                    if (!this.player.isHooked && this.game.physics.arcade.overlap(this.player, this.guns[n].bullets.bullets.getAt(i))) {
+                        var b = this.guns[n].bullets.bullets.getAt(i);
+                        b.kill();
+                        console.log("OUCH!!!!!");
+                    }
                 }
             }
-            // TODO: Move this into a for loop for multiple hooks
             // Collide the player's ship with the hooks
-            for (var i = 0; i <= this.hook1.hooks.bullets.length; i++) {
-                if (this.game.physics.arcade.collide(this.player, this.hook1.hooks.bullets.getAt(i))) {
-                    var b = this.hook1.hooks.bullets.getAt(i);
-                    this.hook1.targetHooked();
+            for (var n = 0; n < this.hooks.length; n++) {
+                for (var i = 0; i <= this.hooks[n].wep.bullets.length; i++) {
+                    if (this.game.physics.arcade.overlap(this.player, this.hooks[n].wep.bullets.getAt(i))) {
+                        var b = this.hooks[n].wep.bullets.getAt(i);
+                        this.hooks[n].targetHooked();
+                    }
                 }
             }
             // Collide the player's ship with the aliens
@@ -118,7 +135,7 @@ var CosmicArkAdvanced;
                 var alien = this.aliens[i];
                 // TODO: Bugfix: Fix it so that the ship cannot abduct an alien if the ship is too low
                 // TODO: Changing animation shouldn't happen here, bad OOP practice. Move it to the OnCollision inside of player instead
-                if (this.game.physics.arcade.collide(this.player, alien)) {
+                if (this.game.physics.arcade.overlap(this.player, alien)) {
                     if (this.player.isAbudcting) {
                         this.player.animations.frame = 0;
                     }
@@ -131,15 +148,16 @@ var CosmicArkAdvanced;
                     this.player.animations.frame = 0;
                 }
             }
-            // TODO: Change this to a for loop to check for multiple mines
             // Collide the player's ship with the mines
-            if (this.game.physics.arcade.collide(this.player, this.mine1)) {
-                var spt = this.game.add.sprite(0, 0, "bang");
-                spt.scale.set(1.35, 1.35);
-                spt.position.setTo(this.mine1.x - spt.width / 2, this.mine1.y - spt.height / 2);
-                spt.animations.add("bang_anim", null, 20, false);
-                spt.animations.play("bang_anim", null, false, true);
-                this.mine1.destroy(true);
+            for (var n = 0; n < this.mines.length; n++) {
+                if (this.game.physics.arcade.overlap(this.player, this.mines[n])) {
+                    var spt = this.game.add.sprite(0, 0, "bang");
+                    spt.scale.set(1.35, 1.35);
+                    spt.position.setTo(this.mines[n].x - spt.width / 2, this.mines[n].y - spt.height / 2);
+                    spt.animations.add("bang_anim", null, 20, false);
+                    spt.animations.play("bang_anim", null, false, true);
+                    this.mines[n].destroy(true);
+                }
             }
             // Collide the player's ship with the mothership
             if (this.game.physics.arcade.overlap(this.player, this.mothership)) {
@@ -222,9 +240,10 @@ var CosmicArkAdvanced;
             // this.game.debug.body(this.mine1);
             // this.game.debug.ropeSegments(this.hook1.rope);
             // this.game.debug.body(this.mothership);
+            this.game.debug.text(this.game.time.fps.toString(), 8, 80);
         };
         return GamePlayState;
-    })(Phaser.State);
+    }(Phaser.State));
     CosmicArkAdvanced.GamePlayState = GamePlayState;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=GamePlayState.js.map
