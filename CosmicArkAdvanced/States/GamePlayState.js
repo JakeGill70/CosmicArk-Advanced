@@ -16,6 +16,7 @@ var CosmicArkAdvanced;
      * @Property gun1 {CosmicArkAdvanced.Gun}               - Test Gun
      * @Property mine1 {CosmicArkAdvanced.Mine}             - Test Mine
      * @property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
+     * @property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
      */
     var GamePlayState = (function (_super) {
         __extends(GamePlayState, _super);
@@ -52,13 +53,13 @@ var CosmicArkAdvanced;
             this.hook1 = new CosmicArkAdvanced.Hook(this.game, 400, this.game.world.height - 50, "gun", "hook1", this.player);
             this.hooks.push(this.hook1);
             // Aliens should always be created after the player so that they don't accidently render behind the tractor beam
-            this.man1 = new CosmicArkAdvanced.Man(this.game, 50, this.game.world.height - 50, "man1"); // eventually, this creation should be in a loop. Don't forget to make the name unique!
+            this.man1 = new CosmicArkAdvanced.Man(this.game, 50, this.game.world.height - 70, "man1"); // eventually, this creation should be in a loop. Don't forget to make the name unique!
             this.aliens.push(this.man1); // Man one is a test case, in reality, these would be made inside of a for loop.
             // Set Camera settings
             this.game.camera.follow(this.player);
             // UI
-            this.uiText = this.game.add.text(8, 0, "In Transit: " + this.player.aliensOnBoard.toString() +
-                "\nCaptured: " + this.player.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
+            this.uiText = this.game.add.bitmapText(8, 0, "EdoSZ", "IN TRANSIT " + this.player.aliensOnBoard.toString() +
+                "\nCAPTURED: " + this.player.aliensCaptured.toString());
             this.uiText.fixedToCamera = true;
             //this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
         };
@@ -68,9 +69,10 @@ var CosmicArkAdvanced;
         GamePlayState.prototype.makeMotherShip = function () {
             this.mothership = this.game.add.sprite(0, 0, "mothership");
             this.mothership.scale.set(1, 1);
-            this.mothership.position.set(this.game.world.width / 2 - this.mothership.width / 2, -this.mothership.height / 2);
+            // These numbers are largely abitrary. I did some trial and error and came up with these. -- Jake Gillenwater
+            this.mothership.position.set(this.game.world.width / 2 - this.mothership.width / 2, (-this.mothership.height / 2) + 32);
             this.game.physics.enable(this.mothership, Phaser.Physics.ARCADE);
-            this.mothership.body.setCircle(this.mothership.width * 0.75, this.mothership.width * -0.25, this.mothership.width * -1.15);
+            this.mothership.body.setCircle(this.mothership.width * 0.75, this.mothership.width * -0.25, this.mothership.width * -1.18);
         };
         /**
          * @description Adds the background images to the gamestate and scales them appropriately

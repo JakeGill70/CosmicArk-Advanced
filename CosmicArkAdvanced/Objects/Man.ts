@@ -61,6 +61,10 @@
 
             let offset = 75;                    // Offset is how much extra height should be added the alien's collider so the ship will collide at altitude
             this.body.setSize(this.width, this.height + offset, 0, -offset); // Extend the collision box upwards so it can hit the ship
+
+            // Set Walk Animation
+            this.animations.add("walk_anim", null, 12, true);
+            this.animations.play("walk_anim", 12, true, false);
         }
 
         /**

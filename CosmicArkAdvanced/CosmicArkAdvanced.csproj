@@ -26,7 +26,9 @@
     <Content Include="Audio\SFX\Death_22.wav" />
     <Content Include="Audio\SFX\Laser_Shoot10.wav" />
     <Content Include="Audio\SFX\Laser_Shoot10_loopable.wav" />
+    <Content Include="Fonts\EdoSZ.png" />
     <Content Include="Graphics\Backgrounds\City1.png" />
+    <Content Include="Graphics\Backgrounds\MainMenuScreen2.png" />
     <Content Include="Graphics\Backgrounds\TitleCard3-4.png" />
     <Content Include="Graphics\Backgrounds\CityBackdrop.png" />
     <Content Include="Graphics\Backgrounds\HelpScreen1.png" />
@@ -36,6 +38,7 @@
     <Content Include="Graphics\Sprites\dinghy4.png" />
     <Content Include="Graphics\Sprites\dinghy3.png" />
     <Content Include="Graphics\Sprites\UFO_Glow.png" />
+    <Content Include="Graphics\Sprites\walk5_sheet.png" />
     <Content Include="Graphics\Statics\bullet1.png" />
     <Content Include="Graphics\Sprites\gun1.png" />
     <Content Include="Graphics\Statics\hook2.png" />
@@ -46,6 +49,7 @@
     <Content Include="Graphics\Sprites\rope1.png" />
     <Content Include="Graphics\Sprites\rope3.png" />
     <Content Include="Graphics\Sprites\rope2.png" />
+    <Content Include="Graphics\Statics\mothership3.png" />
     <Content Include="Graphics\Statics\mothership1.png" />
     <Content Include="Graphics\Statics\mothership2.png" />
     <Content Include="Graphics\Statics\planet_1.png" />
@@ -73,12 +77,15 @@
     <TypeScriptCompile Include="Phaser\phaser.d.ts" />
     <TypeScriptCompile Include="Phaser\pixi.d.ts" />
     <TypeScriptCompile Include="States\GamePlayState.ts" />
+    <TypeScriptCompile Include="States\HelpScreenState.ts" />
+    <TypeScriptCompile Include="States\MainMenuState.ts" />
     <TypeScriptCompile Include="States\MapSelectState.ts" />
     <TypeScriptCompile Include="States\TitleScreenState.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Audio\SFX\Laser_Shoot10.bfxrsound" />
     <Content Include="Audio\SFX\Death_22.bfxrsound" />
+    <Content Include="Fonts\EdoSZ.xml" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
