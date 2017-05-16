@@ -34,8 +34,6 @@
 
             // Register Event Handlers
             this.input.onTap.add(this.PlanetClicked, this, 0, this.input.position);
-
-            this.input.onTap.add(this.PlanetClicked, this, 0, this.input.position);
         }
 
         /**
@@ -46,7 +44,6 @@
             if (this.selectedPlanet != null) { // If we have selected a planet before
                 if (this.selectedPlanet.getBounds().contains(pos.x, pos.y)){ // Did we click it again?
                     // Get Game Data from the selected planet
-                    
                     this.game.state.start("gamePlayState"); // Jump to the GamePlayState
                 }
                 else { // We clicked something different
