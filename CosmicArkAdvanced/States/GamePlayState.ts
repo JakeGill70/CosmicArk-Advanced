@@ -11,32 +11,34 @@
      * @Property dict {any[]}                               - A 2-keyed dictionary which maps 2 strings to a boolean value. Maps out physics collision states.
      * @Property gun1 {CosmicArkAdvanced.Gun}               - Test Gun
      * @Property mine1 {CosmicArkAdvanced.Mine}             - Test Mine
-     * @property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
-     * @property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
+     * @Property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
+     * @Property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
+     * @Property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
      */
     export class GamePlayState extends Phaser.State {
         game: Phaser.Game;                  // Game Refence
         player: CosmicArkAdvanced.Player;   // Player object
         man1: CosmicArkAdvanced.Man;        // Test Alien
-        aliens: CosmicArkAdvanced.IPhysicsReady[];            // List of aliens in this scene that are capable of recieving physics calls
+        aliens: CosmicArkAdvanced.IPhysicsReady[];          // List of aliens in this scene that are capable of recieving physics calls
 
-        guns: CosmicArkAdvanced.Gun[];
-        mines: CosmicArkAdvanced.Mine[];
-        hooks: CosmicArkAdvanced.Hook[];
+        guns: CosmicArkAdvanced.Gun[];      // Collection of guns  in the game <edf>
+        mines: CosmicArkAdvanced.Mine[];    // Collection of mines in the game <edf>
+        hooks: CosmicArkAdvanced.Hook[];    // Collection of hooks in the game <edf>
 
         mothership: Phaser.Sprite;          // Mothership object
 
         dict: any[];                        // 2 key dictionary of IPhysicsReady object's names which define a boolean value for if the two objects were colliding as of the previous frame.
 
         gun1: CosmicArkAdvanced.Gun;        // Test gun
-        mine1: CosmicArkAdvanced.Mine;       // Test mine
+        mine1: CosmicArkAdvanced.Mine;      // Test mine
         hook1: CosmicArkAdvanced.Hook;      // Test hook
 
-        uiText: Phaser.BitmapText;                // UI Text for updating score information
+        uiText: Phaser.BitmapText;          // UI Text for updating score information
+        uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
 
         /**
-         * @description Mostly empty. Does initialize the aliens list and the dictionary.
-         * @constructor
+         * @Description Mostly empty. Does initialize the aliens list and the dictionary.
+         * @Constructor
          */
         constructor() {
             super();
@@ -49,7 +51,7 @@
 
 
         /**
-         * @description Creates the game world by both creating and initializing all the objects in the game state.
+         * @Description Creates the game world by both creating and initializing all the objects in the game state.
          */
         create() {
             // Use this for debugging to measure FPS
@@ -83,11 +85,18 @@
                 "IN TRANSIT " + this.player.aliensOnBoard.toString() +
                 "\nCAPTURED: " + this.player.aliensCaptured.toString());
             this.uiText.fixedToCamera = true;
+
+            this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ",
+                "Score: ");
+
+            this.uiText_Score.fixedToCamera = true;
+
+
             //this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
         }
 
         /**
-         * @descirption Creates the mothership sprite and adjust it's properties accordingly.
+         * @Descirption Creates the mothership sprite and adjust it's properties accordingly.
          */
         makeMotherShip() {
             this.mothership = this.game.add.sprite(0, 0, "mothership");
@@ -99,7 +108,7 @@
         }
 
         /**
-         * @description Adds the background images to the gamestate and scales them appropriately
+         * @Description Adds the background images to the gamestate and scales them appropriately
          */
         makeBackgrounds() {
             //let bd = new Phaser.Image(this.game, 0, this.game.world.height, "city1");
@@ -132,7 +141,10 @@
         update() {
             this.collideObjects();
             this.uiText.text = "In Transit: " + this.player.aliensOnBoard.toString() +
+                //"\tSCORE: " +
                 "\nCaptured: " + this.player.aliensCaptured.toString();
+
+            this.uiText_Score.text = "Score: ";
         }
 
         /**
@@ -203,9 +215,9 @@
         }
 
         /**
-         * @description This is the super in-depth version of collision checking I (Jake) created. Checks for collisions between two objects and triggers the appropriate events on the object.
-         * @param obj1  The first object to check collision against
-         * @param obj2  The second object to check collision against
+         * @Description This is the super in-depth version of collision checking I (Jake) created. Checks for collisions between two objects and triggers the appropriate events on the object.
+         * @Param obj1  The first object to check collision against
+         * @Param obj2  The second object to check collision against
          */
         superCollider(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             if (this.game.physics.arcade.collide(obj1, obj2, this.OnCollisionCaller, this.OnCollisionProposalCaller)) {        
@@ -238,18 +250,18 @@
         }
 
         /**
-         * @descirption Calls the OnCollisionProposal events on both objects, and return their answer. Both objects must accept the proposal before continueing.
-         * @param obj1
-         * @param obj2
+         * @Descirption Calls the OnCollisionProposal events on both objects, and return their answer. Both objects must accept the proposal before continueing.
+         * @Param obj1
+         * @Param obj2
          */
         OnCollisionProposalCaller(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             return (obj1.OnCollisionProposal(obj2) && obj2.OnCollisionProposal(obj1));
         }
 
         /**
-         * @descirption Calls the OnCollisionEnter events on both objects
-         * @param obj1
-         * @param obj2
+         * @Descirption Calls the OnCollisionEnter events on both objects
+         * @Param obj1
+         * @Param obj2
          */
         OnCollisionEnterCaller(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             obj1.OnCollisionEnter(obj2);
@@ -257,9 +269,9 @@
         }
 
         /**
-         * @description Calls the OnCollision events on both objects
-         * @param obj1
-         * @param obj2
+         * @Description Calls the OnCollision events on both objects
+         * @Param obj1
+         * @Param obj2
          */
         OnCollisionCaller(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             obj1.OnCollision(obj2);
@@ -267,9 +279,9 @@
         }
 
         /**
-         * @description Calls the OnCollisionExit events on both objects
-         * @param obj1
-         * @param obj2
+         * @Description Calls the OnCollisionExit events on both objects
+         * @Param obj1
+         * @Param obj2
          */
         OnCollisionExitCaller(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             obj1.OnCollisionExit(obj2);
@@ -277,7 +289,7 @@
         }
 
         /**
-         * @description Post rendering effects.
+         * @Description Post rendering effects.
          */
         render() {
             // Debug features...
