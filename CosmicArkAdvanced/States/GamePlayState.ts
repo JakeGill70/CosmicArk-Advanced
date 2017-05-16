@@ -3,17 +3,17 @@
     // TODO: Is supercollider still needed? Can IPhysics ready be gutted? How much of this code is dead now?
 
     /**
-     * @Description The meat and potatoes of the game. This is where the actual "game" part lives.
-     * @Property game {Phaser.Game}                         - The game context
-     * @Property player {Phaser.Sprite}                     - The player object 
-     * @Property man1 {CosmicArkAdvanced.Man}               - Test Alien
-     * @Property aliens {CosmicArkAdvance.IPhysicsReady[]}  - List of aliens in this scene that are capable of recieving physics calls
-     * @Property dict {any[]}                               - A 2-keyed dictionary which maps 2 strings to a boolean value. Maps out physics collision states.
-     * @Property gun1 {CosmicArkAdvanced.Gun}               - Test Gun
-     * @Property mine1 {CosmicArkAdvanced.Mine}             - Test Mine
-     * @Property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
-     * @Property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
-     * @Property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
+     * @description The meat and potatoes of the game. This is where the actual "game" part lives.
+     * @property game {Phaser.Game}                         - The game context
+     * @property player {Phaser.Sprite}                     - The player object 
+     * @property man1 {CosmicArkAdvanced.Man}               - Test Alien
+     * @property aliens {CosmicArkAdvance.IPhysicsReady[]}  - List of aliens in this scene that are capable of recieving physics calls
+     * @property dict {any[]}                               - A 2-keyed dictionary which maps 2 strings to a boolean value. Maps out physics collision states.
+     * @property gun1 {CosmicArkAdvanced.Gun}               - Test Gun
+     * @property mine1 {CosmicArkAdvanced.Mine}             - Test Mine
+     * @property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
+     * @property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
+     * @property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
      */
     export class GamePlayState extends Phaser.State {
         game: Phaser.Game;                  // Game Refence
@@ -37,8 +37,8 @@
         uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
 
         /**
-         * @Description Mostly empty. Does initialize the aliens list and the dictionary.
-         * @Constructor
+         * @description Mostly empty. Does initialize the aliens list and the dictionary.
+         * @constructor
          */
         constructor() {
             super();
@@ -51,7 +51,7 @@
 
 
         /**
-         * @Description Creates the game world by both creating and initializing all the objects in the game state.
+         * @description Creates the game world by both creating and initializing all the objects in the game state.
          */
         create() {
             // Use this for debugging to measure FPS
@@ -96,7 +96,7 @@
         }
 
         /**
-         * @Descirption Creates the mothership sprite and adjust it's properties accordingly.
+         * @descirption Creates the mothership sprite and adjust it's properties accordingly.
          */
         makeMotherShip() {
             this.mothership = this.game.add.sprite(0, 0, "mothership");
@@ -108,7 +108,7 @@
         }
 
         /**
-         * @Description Adds the background images to the gamestate and scales them appropriately
+         * @description Adds the background images to the gamestate and scales them appropriately
          */
         makeBackgrounds() {
             //let bd = new Phaser.Image(this.game, 0, this.game.world.height, "city1");
@@ -136,7 +136,7 @@
         }
 
         /**
-         * @Description Currently only used for checking collisions between objects
+         * @description Currently only used for checking collisions between objects
          */
         update() {
             this.collideObjects();
@@ -144,11 +144,11 @@
                 //"\tSCORE: " +
                 "\nCaptured: " + this.player.aliensCaptured.toString();
 
-            this.uiText_Score.text = "Score: ";
+            this.uiText_Score.text = "Score: "; // <edf>
         }
 
         /**
-         * @Description Called ever frame through the update method. Place collision checks here.
+         * @description Called ever frame through the update method. Place collision checks here.
          */
         collideObjects() {
             // Collide the player's ship with the gun's bullets
@@ -215,9 +215,9 @@
         }
 
         /**
-         * @Description This is the super in-depth version of collision checking I (Jake) created. Checks for collisions between two objects and triggers the appropriate events on the object.
-         * @Param obj1  The first object to check collision against
-         * @Param obj2  The second object to check collision against
+         * @description This is the super in-depth version of collision checking I (Jake) created. Checks for collisions between two objects and triggers the appropriate events on the object.
+         * @param obj1  The first object to check collision against
+         * @param obj2  The second object to check collision against
          */
         superCollider(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             if (this.game.physics.arcade.collide(obj1, obj2, this.OnCollisionCaller, this.OnCollisionProposalCaller)) {        
@@ -250,18 +250,18 @@
         }
 
         /**
-         * @Descirption Calls the OnCollisionProposal events on both objects, and return their answer. Both objects must accept the proposal before continueing.
-         * @Param obj1
-         * @Param obj2
+         * @descirption Calls the OnCollisionProposal events on both objects, and return their answer. Both objects must accept the proposal before continueing.
+         * @param obj1
+         * @param obj2
          */
         OnCollisionProposalCaller(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             return (obj1.OnCollisionProposal(obj2) && obj2.OnCollisionProposal(obj1));
         }
 
         /**
-         * @Descirption Calls the OnCollisionEnter events on both objects
-         * @Param obj1
-         * @Param obj2
+         * @descirption Calls the OnCollisionEnter events on both objects
+         * @param obj1
+         * @param obj2
          */
         OnCollisionEnterCaller(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             obj1.OnCollisionEnter(obj2);
@@ -269,9 +269,9 @@
         }
 
         /**
-         * @Description Calls the OnCollision events on both objects
-         * @Param obj1
-         * @Param obj2
+         * @description Calls the OnCollision events on both objects
+         * @param obj1
+         * @param obj2
          */
         OnCollisionCaller(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             obj1.OnCollision(obj2);
@@ -279,9 +279,9 @@
         }
 
         /**
-         * @Description Calls the OnCollisionExit events on both objects
-         * @Param obj1
-         * @Param obj2
+         * @description Calls the OnCollisionExit events on both objects
+         * @param obj1
+         * @param obj2
          */
         OnCollisionExitCaller(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             obj1.OnCollisionExit(obj2);
@@ -289,7 +289,7 @@
         }
 
         /**
-         * @Description Post rendering effects.
+         * @description Post rendering effects.
          */
         render() {
             // Debug features...

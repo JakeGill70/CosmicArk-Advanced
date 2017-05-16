@@ -45,7 +45,14 @@
          */
         PlanetClicked(pos: Phaser.Point) {
             if (this.btn_Play.getBounds().contains(pos.x, pos.y)) { 
-                this.game.state.start("gamePlayState"); // Jump to the GamePlayState
+
+                //this.game.state.start("levelStartState"); // Jump to the levelStartState
+                //if (this.btn_Play.getBounds().contains(pos.x, pos.y)) { // if user clicks on the level start screen
+                //    this.game.state.start("gamePlayState"); // Jump to the GamePlayState
+                //}
+
+                //this.game.state.start("gamePlayState"); // Jump to the GamePlayState
+                this.game.state.start("levelStartState"); // Jump to the LevelStartState
             }
             else if (this.btn_Help.getBounds().contains(pos.x, pos.y)) { 
                 // Get Game Data from the selected planet

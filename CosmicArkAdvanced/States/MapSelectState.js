@@ -32,6 +32,7 @@ var CosmicArkAdvanced;
             this.planet3 = this.add.sprite(248, 15, "planet3"); // Pull the image out of memory
             // Register Event Handlers
             this.input.onTap.add(this.PlanetClicked, this, 0, this.input.position);
+            this.input.onTap.add(this.PlanetClicked, this, 0, this.input.position);
         };
         /**
          * @description Handles "onTap" event. Will grow and shink planets when tapped. Also handles movement into the next gameplay state.

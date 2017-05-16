@@ -78,6 +78,7 @@
     <TypeScriptCompile Include="Phaser\pixi.d.ts" />
     <TypeScriptCompile Include="States\GamePlayState.ts" />
     <TypeScriptCompile Include="States\HelpScreenState.ts" />
+    <TypeScriptCompile Include="States\LevelStartState.ts" />
     <TypeScriptCompile Include="States\MainMenuState.ts" />
     <TypeScriptCompile Include="States\MapSelectState.ts" />
     <TypeScriptCompile Include="States\TitleScreenState.ts" />
