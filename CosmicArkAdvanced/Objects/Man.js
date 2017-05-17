@@ -26,10 +26,10 @@ var CosmicArkAdvanced;
          * @param _y this intial world y coordinate
          * @param _name The unique identifer to this object
          */
-        function Man(_game, _x, _y, _name) {
+        function Man(_game, _x, _y) {
             _super.call(this, _game, _x, _y, "man"); // Create the sprite at the x,y coordinate in game
             this.game = _game; // get game context
-            this.name = _name; // Set the objects unique name
+            //this.name = _name; // Set the objects unique name
             this.game.add.existing(this); // Add this object to the gamestate
             this.moveSpeed = 5; // Set current walking speed
             this.tag = CosmicArkAdvanced.PhysicsTag.ALIEN; // Physics tag to determine how other sections of code should interact with it.
@@ -49,17 +49,20 @@ var CosmicArkAdvanced;
          * Moves the ship depending on the canMove and isBeingAbucted flags
          */
         Man.prototype.update = function () {
-            // OR this with other flags as needed
-            this.canMove = !this.isBeingAbducted; // We can move if we are not being abducted
-            //console.log(this.startY + ", " + this.worldPosition.y);
-            if (this.canMove) {
-                this.autoMovement();
-            }
-            else {
-                if (this.isBeingAbducted) {
-                    this.y -= this.realAbductionSpeed();
-                }
-            }
+            //  // OR this with other flags as needed
+            //  this.canMove = !this.isBeingAbducted; // We can move if we are not being abducted
+            //  
+            //  //console.log(this.startY + ", " + this.worldPosition.y);
+            // 
+            this.world.x += 1;
+            //if (this.canMove) {
+            //  this.autoMovement();
+            // }
+            //  else {
+            //      if (this.isBeingAbducted) {
+            //          this.y -= this.realAbductionSpeed();
+            //      }
+            //  }
         };
         /**
          * @description Checks if this alien is too close to the edge of the screen, then faces it towards the center of the world.
@@ -78,7 +81,7 @@ var CosmicArkAdvanced;
          * @Description Flips the object's scale to simulate mirror the sprite so it will always face the direction it is walking
          */
         Man.prototype.turnToFaceCenter = function () {
-            if (this.x > this.game.world.width * 0.5) {
+            if (this.world.x > this.game.world.width * 0.5) {
                 this.moveSpeedCurr = this.moveSpeed * -1.0;
                 this.scale.setTo(-1, 1);
             }

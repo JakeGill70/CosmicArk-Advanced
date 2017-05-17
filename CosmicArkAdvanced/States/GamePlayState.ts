@@ -21,6 +21,10 @@
         man1: CosmicArkAdvanced.Man;        // Test Alien
         aliens: CosmicArkAdvanced.IPhysicsReady[];          // List of aliens in this scene that are capable of recieving physics calls
 
+        men: Phaser.Group;
+
+        myBatch: Phaser.SpriteBatch;
+
         guns: CosmicArkAdvanced.Gun[];      // Collection of guns  in the game <edf>
         mines: CosmicArkAdvanced.Mine[];    // Collection of mines in the game <edf>
         hooks: CosmicArkAdvanced.Hook[];    // Collection of hooks in the game <edf>
@@ -49,11 +53,27 @@
             this.dict = [];
         }
 
+        addMan(x: number = (-1), y: number = (this.game.world.height - 70)) {
+            console.log(this.myBatch);
+            if (x == -1) {
+                x = Math.random() * 1000 + 150;
+                x = Math.round(x);
+            }
+            let m = new Man(this.game, x, y);    // eventually, this creation should be in a loop. Don't forget to make the name unique!
+            //this.men.add(m);
+            //this.aliens.push(m);        // Man one is a test case, in reality, these would be made inside of a for loop.
+            this.myBatch.add(m);
+        }
 
         /**
          * @description Creates the game world by both creating and initializing all the objects in the game state.
          */
         create() {
+
+            this.men = this.game.add.group();
+
+            
+
             // Use this for debugging to measure FPS
             this.game.time.advancedTiming = true;
 
@@ -74,15 +94,24 @@
             this.hooks.push(this.hook1);
 
             // Aliens should always be created after the player so that they don't accidently render behind the tractor beam
-            this.man1 = new Man(this.game, 50, this.game.world.height - 70, "man1");    // eventually, this creation should be in a loop. Don't forget to make the name unique!
-            this.aliens.push(this.man1);        // Man one is a test case, in reality, these would be made inside of a for loop.
+            this.myBatch = this.game.add.spriteBatch(this.game.add.image(0,0));
+            this.addMan(50); 
+            this.addMan(100); 
+            this.addMan(150); 
+            this.addMan(200); 
+            this.addMan(250);
+            this.addMan();
+            this.addMan();
+            this.addMan();
+            this.addMan();
+            this.addMan();
 
             // Set Camera settings
             this.game.camera.follow(this.player);
 
             // UI
             this.uiText = this.game.add.bitmapText(8, 0, "EdoSZ",
-                "IN TRANSIT " + this.player.aliensOnBoard.toString() +
+                "IN TRANSIT: " + this.player.aliensOnBoard.toString() +
                 "\nCAPTURED: " + this.player.aliensCaptured.toString());
             this.uiText.fixedToCamera = true;
 
@@ -113,26 +142,6 @@
         makeBackgrounds() {
             //let bd = new Phaser.Image(this.game, 0, this.game.world.height, "city1");
             this.game.add.image(0, 0, "city1");
-            // Old Background Images
-            /*
-            let bd1 = new Phaser.Image(this.game, 0, 0, "nightSky");                                // Sky
-            let bd2 = new Phaser.Image(this.game,0, this.game.world.height, "city");                   // Left-half of city
-            let bd3 = new Phaser.Image(this.game, this.game.width, this.game.world.height, "city");     // Right-half of city
-
-            // Set scaling
-            bd1.scale.setTo(this.game.world.width / bd1.width, this.game.world.height / bd1.height);  // Scale it to fit the size of the screen
-            bd2.anchor.setTo(0, 1);
-            bd2.scale.setTo(this.game.width / bd2.width, this.game.height / bd2.height);        // Scale it to fit the size of the screen
-            bd3.anchor.setTo(0, 1);
-            bd3.scale.setTo(this.game.width / bd3.width, this.game.height / bd3.height);  // Scale it to fit the size of the screen
-
-            // Adding these to a group before the game state makes the render just a little bit faster 
-            // Only ~1% at time of writing, but it is important to use this technique where possible
-            // becuase later implementations could produce more significant results
-            // See this link for details: https://phaser.io/tutorials/advanced-rendering-tutorial/part2
-            let grp = this.game.add.group();
-            grp.addMultiple([bd1, bd2, bd3]);
-            */
         }
 
         /**
@@ -140,6 +149,22 @@
          */
         update() {
             this.collideObjects();
+
+
+            for (let n = 0; n < this.myBatch.hash.length; n++) {
+                (this.myBatch.hash[n] as CosmicArkAdvanced.Man).update();
+            }
+
+
+            // For testing purposes only
+            let alienPos = [];
+            for (let i = 0; i < this.myBatch.length; i++) {
+                alienPos.push("Hello");
+            }
+            console.log(alienPos);
+
+
+
             this.uiText.text = "In Transit: " + this.player.aliensOnBoard.toString() +
                 //"\tSCORE: " +
                 "\nCaptured: " + this.player.aliensCaptured.toString();

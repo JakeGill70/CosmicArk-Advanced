@@ -38,10 +38,10 @@
          * @param _y this intial world y coordinate
          * @param _name The unique identifer to this object
          */
-        constructor(_game: Phaser.Game, _x: number, _y: number, _name: string) {
+        constructor(_game: Phaser.Game, _x: number, _y: number) {
             super(_game, _x, _y, "man"); // Create the sprite at the x,y coordinate in game
             this.game = _game; // get game context
-            this.name = _name; // Set the objects unique name
+            //this.name = _name; // Set the objects unique name
 
             this.game.add.existing(this);           // Add this object to the gamestate
 
@@ -72,19 +72,20 @@
          * Moves the ship depending on the canMove and isBeingAbucted flags
          */
         update() {
-            // OR this with other flags as needed
-            this.canMove = !this.isBeingAbducted; // We can move if we are not being abducted
-
-            //console.log(this.startY + ", " + this.worldPosition.y);
-
-            if (this.canMove) {
-                this.autoMovement();
-            }
-            else {
-                if (this.isBeingAbducted) {
-                    this.y -= this.realAbductionSpeed();
-                }
-            }
+           //  // OR this with other flags as needed
+           //  this.canMove = !this.isBeingAbducted; // We can move if we are not being abducted
+           //  
+           //  //console.log(this.startY + ", " + this.worldPosition.y);
+           // 
+           this.world.x += 1;
+             //if (this.canMove) {
+               //  this.autoMovement();
+            // }
+           //  else {
+           //      if (this.isBeingAbducted) {
+           //          this.y -= this.realAbductionSpeed();
+           //      }
+           //  }
         }
 
         /**
@@ -108,7 +109,7 @@
          * @Description Flips the object's scale to simulate mirror the sprite so it will always face the direction it is walking
          */
         turnToFaceCenter() {
-            if (this.x > this.game.world.width * 0.5) {
+            if (this.world.x > this.game.world.width * 0.5) {
                 this.moveSpeedCurr = this.moveSpeed * -1.0;
                 this.scale.setTo(-1, 1);
             }
