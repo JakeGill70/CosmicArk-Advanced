@@ -68,7 +68,6 @@
             this.game.state.add("mapSelectState", CosmicArkAdvanced.MapSelectState, false);
             this.game.state.add("mainMenuState", CosmicArkAdvanced.MainMenuState, false);
             this.game.state.add("helpScreenState", CosmicArkAdvanced.HelpScreenState, false);
-            this.game.state.add("levelStartState", CosmicArkAdvanced.LevelStartState, false);
             this.game.state.add("titleScreenState", CosmicArkAdvanced.TitleScreenState, true);
             console.log(MyGame.AUTO_SCALING);
             if (MyGame.AUTO_SCALING == true) {
