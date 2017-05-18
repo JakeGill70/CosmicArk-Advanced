@@ -5,6 +5,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
+    // Yo yo yo this be ethan dawg!
     // TODO: Is supercollider still needed? Can IPhysics ready be gutted? How much of this code is dead now?
     /**
      * @Description The meat and potatoes of the game. This is where the actual "game" part lives.
