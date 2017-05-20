@@ -28,8 +28,6 @@
         * event handlers needed for touch/mouse input
         */
         create() {
-            console.log("the LevelStartState has started!"); // testing
-
             this.planet1 = this.add.sprite(0  , 15, "planet1"); // Pull the image out of memory
             this.planet2 = this.add.sprite(124, 15, "planet2"); // Pull the image out of memory
             this.planet3 = this.add.sprite(248, 15, "planet3"); // Pull the image out of memory
@@ -47,8 +45,6 @@
                 if (this.selectedPlanet.getBounds().contains(pos.x, pos.y)){ // Did we click it again?
                     // Get Game Data from the selected planet
                     this.game.state.start("gamePlayState"); // Jump to the GamePlayState
-                    this.game.state.start("levelStartState"); // Jump to the LevelStartState
-
                 }
                 else { // We clicked something different
                     this.add.tween(this.selectedPlanet.scale).to({ x: 1.0, y: 1.0}, 1500, Phaser.Easing.Elastic.InOut, true);

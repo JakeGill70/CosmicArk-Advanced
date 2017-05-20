@@ -38,7 +38,7 @@
          */
         TitleClicked() {
             //this.game.scale.startFullScreen(false);
-            this.game.state.start("mainMenuState"); // Jump to the MainMenuState
+            this.game.state.start("mainMenuState"); // Jump to the GamePlayState
         }
     }
 }
