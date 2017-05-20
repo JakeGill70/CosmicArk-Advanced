@@ -54,25 +54,43 @@
         }
 
         addMan(x: number = (-1), y: number = (this.game.world.height - 70)) {
-            console.log(this.myBatch);
+            // Establish a random position
             if (x == -1) {
-                x = Math.random() * 1000 + 150;
-                x = Math.round(x);
+                x = (Math.random() * 1472) + 64;            // Creates a Range between 64 and (1600-64)
+                while (Phaser.Math.difference(x, this.player.x) < 150) {
+                    x = (Math.random() * 1472) + 64;
+                }
             }
-            let m = new Man(this.game, x, y);    // eventually, this creation should be in a loop. Don't forget to make the name unique!
-            //this.men.add(m);
-            //this.aliens.push(m);        // Man one is a test case, in reality, these would be made inside of a for loop.
-            this.myBatch.add(m);
+            // Create the alien
+            let m = this.myBatch.create(x, y, "man") as Phaser.Sprite;
+            m.data = new CosmicArkAdvanced.AlienProperties();               // Holds additional info about the alien
+            m.anchor.setTo(0.5, 1.0);
+            (m.data as AlienProperties).initialY = y;                       // Save a copy of the initial y position in case it needs to be respawned
+            
+            // Calculate the speed and direction this alien will start with
+            let spd = Math.floor(Math.random() * 35) + 40; // Creates a random integer between 40 and 80
+            m.data.speed = spd;
+
+            m.animations.add("walk", null, 12 * (spd/60), true);
+            m.animations.play("walk");
+            
+            spd = (Math.random() - 0.5 >= 0) ? -spd : spd;  // Assign it to a random direction
+            if (spd < 0) { m.scale.setTo(-1, 1) };          // If the speed if now negative, flip the sprite visuals to match
+
+            // Enable Physics and set physics attributes
+            this.game.physics.enable(m, Phaser.Physics.ARCADE);         // Activate physics
+            m.body.setSize(Math.abs(m.width), m.height * 2, 0, m.height * -1); // Extend the collision box upwards so it can hit the ship
+            // (m.body as Phaser.Physics.Arcade.Body).setSize(w, h, x, y);
+            m.body.velocity.set(spd, 0);                                  // Set the initial velocity to be it's speed with the random direction
+
+            // TODO: Delete this debugging feature
+            console.log(m.data.initialY);
         }
 
         /**
          * @Description Creates the game world by both creating and initializing all the objects in the game state.
          */
         create() {
-
-            this.men = this.game.add.group();
-
-            
 
             // Use this for debugging to measure FPS
             this.game.time.advancedTiming = true;
@@ -94,12 +112,12 @@
             this.hooks.push(this.hook1);
 
             // Aliens should always be created after the player so that they don't accidently render behind the tractor beam
-            this.myBatch = this.game.add.spriteBatch(this.game.add.image(0,0));
-            this.addMan(50); 
-            this.addMan(100); 
-            this.addMan(150); 
-            this.addMan(200); 
-            this.addMan(250);
+            this.myBatch = this.game.add.spriteBatch(this.game.world); // Create the man sprite batch so they will all be rendered at once
+            this.addMan(65); 
+            this.addMan(); 
+            this.addMan(); 
+            this.addMan();
+            this.addMan();
             this.addMan();
             this.addMan();
             this.addMan();
@@ -121,7 +139,7 @@
             this.uiText_Score.fixedToCamera = true;
 
 
-            //this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
+            // this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
         }
 
         /**
@@ -140,7 +158,7 @@
          * @Description Adds the background images to the gamestate and scales them appropriately
          */
         makeBackgrounds() {
-            //let bd = new Phaser.Image(this.game, 0, this.game.world.height, "city1");
+            // let bd = new Phaser.Image(this.game, 0, this.game.world.height, "city1");
             this.game.add.image(0, 0, "city1");
         }
 
@@ -148,25 +166,19 @@
          * @Description Currently only used for checking collisions between objects
          */
         update() {
-            this.collideObjects();
+            this.collideObjects();      // Check for collisions
+            this.moveMen();             // Move the men along the bottom of the screen
 
 
             for (let n = 0; n < this.myBatch.hash.length; n++) {
                 (this.myBatch.hash[n] as CosmicArkAdvanced.Man).update();
             }
-
-
-            // For testing purposes only
-            let alienPos = [];
-            for (let i = 0; i < this.myBatch.length; i++) {
-                alienPos.push("Hello");
-            }
-            console.log(alienPos);
+            
 
 
 
             this.uiText.text = "In Transit: " + this.player.aliensOnBoard.toString() +
-                //"\tSCORE: " +
+                // "\tSCORE: " +
                 "\nCaptured: " + this.player.aliensCaptured.toString();
 
             this.uiText_Score.text = "Score: ";
@@ -197,27 +209,19 @@
                     }
                 }
             }
-            
+
 
             // Collide the player's ship with the aliens
-            for (let i = 0; i < this.aliens.length; i++) {
-                let alien = this.aliens[i];
-                
+            let atLeastOne = false;                     // Flag meaning "At least one alien is availble to be abducted"
+            this.myBatch.forEachAlive(function (alien: Phaser.Sprite) {
                 // TODO: Bugfix: Fix it so that the ship cannot abduct an alien if the ship is too low
-                // TODO: Changing animation shouldn't happen here, bad OOP practice. Move it to the OnCollision inside of player instead
                 if (this.game.physics.arcade.overlap(this.player, alien)) {
-                    if (this.player.isAbudcting) {
-                        this.player.animations.frame = 0;
-                    }
-                    else {
-                        this.player.animations.frame = 1;
-                    }
-
-                    this.player.Abduct(alien as Man);
+                    atLeastOne = true;
+                    this.player.Abduct(alien);
                 }
-                else {
-                    this.player.animations.frame = 0;
-                }
+            }, this);
+            if (!atLeastOne) {
+                this.player.animations.frame = 0;       // TODO: Fix this so it doesn't laugh in the face of every OOP practice I've learned over the years
             }
 
             // Collide the player's ship with the mines
@@ -237,6 +241,22 @@
             if (this.game.physics.arcade.overlap(this.player, this.mothership)) {
                 this.player.Capture();
             }
+        }
+
+        /**
+         * @Description Helper function which cycles through the sprite batch of men along the bottom the screen and applies logic into how they should move.
+         */
+        moveMen() {
+            this.myBatch.forEach(function (alien: Phaser.Sprite) {
+                if (alien.x > this.game.world.width - Math.abs(alien.width)) {
+                    alien.body.velocity.setTo(-alien.data.speed, 0);
+                    alien.scale.set(-1, 1);
+                }
+                else if (alien.x < Math.abs(alien.width)) {
+                    alien.body.velocity.setTo(alien.data.speed, 0);
+                    alien.scale.set(1, 1);
+                }
+            }, this);
         }
 
         /**
@@ -325,7 +345,7 @@
             // this.game.debug.ropeSegments(this.hook1.rope);
             // this.game.debug.body(this.mothership);
             this.game.debug.text(this.game.time.fps.toString(), 8, 80);
-
+            //this.game.debug.body(this.myBatch.getFirstExists(true));
         }
     }
 }

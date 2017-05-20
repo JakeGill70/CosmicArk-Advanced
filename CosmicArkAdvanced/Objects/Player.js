@@ -46,7 +46,7 @@ var CosmicArkAdvanced;
             this.moveDistThreshold = 5; // Set threshold for moving the ship based on tapping the screen
             this.tag = CosmicArkAdvanced.PhysicsTag.PLAYER; // Physics tag to determine how other sections of code should interact with it.
             this.isAbudcting = false; // is the player abduction someone right now?
-            this.abductionSpeed = 10; // Set the speed which aliens are abducted at.
+            this.abductionSpeed = 45; // Set the speed which aliens are abducted at. (px / sec)
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
             this.animations.add("flash", [0, 1], 5, true); // Add the animation which makes the ship glow
             this.game.physics.enable(this, Phaser.Physics.ARCADE); // Enable physics for the ship
@@ -71,10 +71,10 @@ var CosmicArkAdvanced;
                     this.body.velocity = this.hookedVelocity;
                 }
                 if (this.isMoving) {
-                    this.stopAbducting();
+                    this.stopAbducting(false);
                 }
                 if (this.isAbudcting) {
-                    if (this.alienAbductee.x != this.x) {
+                    if (this.alienAbductee.x !== this.x) {
                         this.alienAbductee.x = Phaser.Math.bezierInterpolation([this.alienAbductee.x, this.x], 0.085); // 0.085 felt like a good speed. No significant meaning.
                     }
                 }
@@ -132,7 +132,7 @@ var CosmicArkAdvanced;
                 // Stop abducting when moving
                 this.isMoving = true;
             }
-            //Vertical movement
+            // Vertical movement
             if (this.cursor.up.isDown == true) {
                 this.y -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
                 // Stop abducting when moving
@@ -187,16 +187,24 @@ var CosmicArkAdvanced;
          * @param other The object the player's ship collided with
          */
         Player.prototype.OnCollisionExit = function (other) {
-            this.stopAbducting();
+            this.stopAbducting(false);
         };
         /**
          * @description Clears the alienAbductee property, and isAbducting flag. Also destroys any graphical artifacts associated with the "tractor beam".
+         * @param caught Set to true if the abduction is stopping because you caught the alien. Set to false if it got away or you moved
          */
-        Player.prototype.stopAbducting = function () {
+        Player.prototype.stopAbducting = function (caught) {
             if (this.alienAbductee != null) {
-                this.alienAbductee.stopAbducting();
-                this.alienAbductee.mask = null;
-                this.alienAbductee = null;
+                if (caught) {
+                    this.alienAbductee.kill(); // If caught by the player's ship, "destroy" it
+                    console.log("I died");
+                }
+                var ab = this.alienAbductee.body; // Get a copy of it's physics body
+                ab.velocity = new Phaser.Point(this.alienAbductee.data.speed * this.alienAbductee.scale.x, 0); // Reset it's speed
+                this.alienAbductee.position = new Phaser.Point(this.alienAbductee.x, Math.abs(this.alienAbductee.data.initialY)); // Reset it's y-coordinate
+                this.alienAbductee.mask = null; // Clear it's render mask
+                this.alienAbductee = null; // Clear it from it's abducting duties ;)
+                console.log(ab.position);
             }
             this.isAbudcting = false;
             this.beam.clear(); // Destroy any graphic's artifacts of the beam
@@ -215,11 +223,17 @@ var CosmicArkAdvanced;
          * @param a The alien the player will begin abducting
          */
         Player.prototype.Abduct = function (a) {
+            // Only abduct 1 alien at a time
+            if (this.alienAbductee != null && this.alienAbductee != a) {
+                return;
+            }
             if (this.isMoving) {
-                this.stopAbducting(); // If the player is moving, we can't continue abducting
+                this.animations.frame = 1; // Turn on the blue glow
+                this.stopAbducting(false); // If the player is moving, we can't continue abducting
                 return; // If the player is moving, just go ahead and kick out of this.
             }
-            // If the abductee is null (meaning we just "collided" with them) Calculate the height the "tractor" beam needs to be.
+            this.animations.frame = 0; // If we haven't returned yet, then we "have a live one". Turn off the ufo glow
+            // If the abductee is null (meaning we just hit with them) Calculate the height the "tractor" beam needs to be.
             if (this.alienAbductee == null) {
                 this.beamDrawHeight = a.worldPosition.y - this.worldPosition.y + this.body.height / 2;
             }
@@ -228,17 +242,14 @@ var CosmicArkAdvanced;
                 // If that alien is now higher than the tractor beam, that alien should be considered captured.
                 if (this.alienAbductee.worldPosition.y <= this.worldPosition.y) {
                     this.aliensOnBoard++;
-                    var newXpos = (Math.random() * 1500) + 50;
-                    while (Phaser.Math.difference(newXpos, this.position.x) < 150) {
-                        newXpos = (Math.random() * 1500) + 50;
-                    }
-                    this.alienAbductee.x = newXpos; // For testing right now, just release back into the wild at some world position (between 50-1550)
-                    this.stopAbducting(); // Tell the alien we have stopped abducting him
+                    this.stopAbducting(true); // Tell the alien we have stopped abducting him
                     return;
                 }
             }
             this.alienAbductee = a; // Set the alien abductee property equal to the alien the ship collided with
-            this.alienAbductee.startAbducting(this.abductionSpeed); // Tell the alien that we have started to abduct it so that it can make changes to it's behaviour too
+            // TODO: Tell the alien that we have started to abduct it so that it can make changes to it's behaviour too
+            var ab = this.alienAbductee.body;
+            ab.velocity = new Phaser.Point(0, this.abductionSpeed * -1);
             this.alienAbductee.mask = this.beamMask; // Set the alien's mask equal to the beam's bitmask
             this.isAbudcting = true; // Set the isAbducting flag
             this.renderBeam(); // Show the beam
@@ -249,8 +260,8 @@ var CosmicArkAdvanced;
         Player.prototype.renderBeam = function () {
             this.beam.clear(); // Destroy the beam from the previous frame
             this.beamMask.clear(); // Destroy the beam Mask from the previous frame
-            //this.beam.x = this.x;
-            //this.beam.y = this.y;
+            // this.beam.x = this.x;
+            // this.beam.y = this.y;
             // Pick a random color, favoriting blue, with the ranges like so:
             // r: 0-45          g: 75-150           b: 155-255
             var color = Phaser.Color.getColor(Math.random() * 45, Math.random() * 75 + 75, Math.random() * 100 + 155);
