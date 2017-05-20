@@ -29,26 +29,33 @@
          */
         preload() {
             // Backgrounds
-            this.game.load.image("title",   "Graphics/Backgrounds/TitleCard3-4.png");
-            this.game.load.image("help",    "Graphics/Backgrounds/HelpScreen1.png");
-            this.game.load.image("main",    "Graphics/Backgrounds/MainMenuScreen2.png");
-            this.game.load.image("nightSky","Graphics/Backgrounds/NightSky.png");
-            this.game.load.image("city",    "Graphics/Backgrounds/CityBackdrop.png");
-            this.game.load.image("city1",   "Graphics/Backgrounds/City1.png");
-            // Sprites
-            this.game.load.spritesheet("man",   "Graphics/Sprites/walk5_sheet.png", 64, 64, 8);
-            this.game.load.image("gun",         "Graphics/Sprites/gun1.png");
-            this.game.load.image("rope",        "Graphics/Sprites/rope3.png");
-            this.game.load.spritesheet("ship",  "Graphics/Sprites/UFO_Glow.png", 48, 24, 2);
-            this.game.load.spritesheet( "bang", "Graphics/Sprites/bang.png", 64, 64, 14);
-            // Static Sprites
-            this.game.load.image("mothership",    "Graphics/Statics/mothership3.png");
-            this.game.load.image("hook",    "Graphics/Statics/hook2.png");
-            this.game.load.image("mine",    "Graphics/Statics/Mine3.png");
-            this.game.load.image("bullet",  "Graphics/Statics/bullet1.png");
-            this.game.load.image("planet1", "Graphics/Statics/planet_1.png");
-            this.game.load.image("planet2", "Graphics/Statics/planet_2.png");
-            this.game.load.image("planet3", "Graphics/Statics/planet_3.png");
+            this.game.load.image("title", "Graphics/Backgrounds/TitleCard3-4.png");
+
+            // Most of the loading will now be done in the "TitleScreenState", which will now double as a loading screen.
+            // Some things will still need to be preloaded, such as fonts, loading music, and the title screen itself.
+
+            // Backgrounds
+            // this.game.load.image("help",    "Graphics/Backgrounds/HelpScreen1.png");
+            // this.game.load.image("main",    "Graphics/Backgrounds/MainMenuScreen2.png");
+            // this.game.load.image("nightSky","Graphics/Backgrounds/NightSky.png");
+            // this.game.load.image("city",    "Graphics/Backgrounds/CityBackdrop.png");
+            // this.game.load.image("city1",   "Graphics/Backgrounds/City1.png");
+            // // Sprites
+            // this.game.load.spritesheet("man",   "Graphics/Sprites/walk5_sheet.png", 64, 64, 8);
+            // this.game.load.image("gun",         "Graphics/Sprites/gun1.png");
+            // this.game.load.image("rope",        "Graphics/Sprites/rope3.png");
+            // this.game.load.spritesheet("ship",  "Graphics/Sprites/UFO_Glow.png", 48, 24, 2);
+            // this.game.load.spritesheet( "bang", "Graphics/Sprites/bang.png", 64, 64, 14);
+            // // Static Sprites
+            // this.game.load.image("mothership",    "Graphics/Statics/mothership3.png");
+            // this.game.load.image("hook",    "Graphics/Statics/hook2.png");
+            // this.game.load.image("mine",    "Graphics/Statics/Mine3.png");
+            // this.game.load.image("bullet",  "Graphics/Statics/bullet1.png");
+            // this.game.load.image("planet1", "Graphics/Statics/planet_1.png");
+            // this.game.load.image("planet2", "Graphics/Statics/planet_2.png");
+            // this.game.load.image("planet3", "Graphics/Statics/planet_3.png");
+
+
             // Fonts
             // To make a bitmap font, use littera. It is an online flash tool.
             this.game.load.image("edo", "Fonts/EdoSZ.png");
@@ -56,6 +63,7 @@
 
             // Audio
             // Use game.load.audio for music
+            this.game.load.audio("ThereminsBeat", "Audio/Music/ThereminsBeatShort.wav");
             // Use game.load.audiosprite for SFX
         }
 

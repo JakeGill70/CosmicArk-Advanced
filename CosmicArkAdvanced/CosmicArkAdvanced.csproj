@@ -24,6 +24,12 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Audio\Music\Like Paper.wav" />
+    <Content Include="Audio\Music\Run Trip and Fall.wav" />
+    <Content Include="Audio\Music\Slide Whistle Blues - Double.wav" />
+    <Content Include="Audio\Music\Slide Whistle Blues.wav" />
+    <Content Include="Audio\Music\ThereminsBeatShort.wav" />
+    <Content Include="Audio\Music\ThereminsBeat.wav" />
     <Content Include="Audio\SFX\Death_22.wav" />
     <Content Include="Audio\SFX\Laser_Shoot10.wav" />
     <Content Include="Audio\SFX\Laser_Shoot10_loopable.wav" />
@@ -88,6 +94,11 @@
     <Content Include="Audio\SFX\Laser_Shoot10.bfxrsound" />
     <Content Include="Audio\SFX\Death_22.bfxrsound" />
     <Content Include="Fonts\EdoSZ.xml" />
+    <Content Include="Audio\Music\Like Paper.json" />
+    <Content Include="Audio\Music\Run Trip and Fall.json" />
+    <Content Include="Audio\Music\Slide Whistle Blues.json" />
+    <Content Include="Audio\Music\Theremins Beat Short.json" />
+    <Content Include="Audio\Music\Theremins Beat.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -96,7 +107,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Audio\Music\" />
     <Folder Include="Graphics\UI\" />
     <Folder Include="Scenes\" />
   </ItemGroup>
