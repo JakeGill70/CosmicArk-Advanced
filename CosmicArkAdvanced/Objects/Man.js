@@ -29,7 +29,7 @@ var CosmicArkAdvanced;
         function Man(_game, _x, _y) {
             _super.call(this, _game, _x, _y, "man"); // Create the sprite at the x,y coordinate in game
             this.game = _game; // get game context
-            //this.name = _name; // Set the objects unique name
+            // this.name = _name; // Set the objects unique name
             this.game.add.existing(this); // Add this object to the gamestate
             this.moveSpeed = 5; // Set current walking speed
             this.tag = CosmicArkAdvanced.PhysicsTag.ALIEN; // Physics tag to determine how other sections of code should interact with it.
@@ -55,7 +55,7 @@ var CosmicArkAdvanced;
             //  //console.log(this.startY + ", " + this.worldPosition.y);
             // 
             this.world.x += 1;
-            //if (this.canMove) {
+            // if (this.canMove) {
             //  this.autoMovement();
             // }
             //  else {

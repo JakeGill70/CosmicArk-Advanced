@@ -69,6 +69,7 @@
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="Enums\PhysicsTag.ts" />
     <TypeScriptCompile Include="Interfaces\IPhysicsReady.ts" />
+    <TypeScriptCompile Include="Objects\AlienProperties.ts" />
     <TypeScriptCompile Include="Objects\Hook.ts" />
     <TypeScriptCompile Include="Objects\Gun.ts" />
     <TypeScriptCompile Include="Objects\Man.ts" />

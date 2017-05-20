@@ -41,7 +41,7 @@
         constructor(_game: Phaser.Game, _x: number, _y: number) {
             super(_game, _x, _y, "man"); // Create the sprite at the x,y coordinate in game
             this.game = _game; // get game context
-            //this.name = _name; // Set the objects unique name
+            // this.name = _name; // Set the objects unique name
 
             this.game.add.existing(this);           // Add this object to the gamestate
 
@@ -78,7 +78,7 @@
            //  //console.log(this.startY + ", " + this.worldPosition.y);
            // 
            this.world.x += 1;
-             //if (this.canMove) {
+             // if (this.canMove) {
                //  this.autoMovement();
             // }
            //  else {
