@@ -3,7 +3,11 @@
      * @desription Main Menu which only holds UI elements and lets the user navigate the program
      * @property {Phaser.Game} game                   - The game context
      * @property {Phaser.Sound} music                 - The SFX player
-     * @property {Phaser.Sprite} selectedPlanet       - The planet the user has currently selected
+     * @property titleScreenImage {Phaser.Sprite}     - The actual splash screen image to display
+     * @property {Phaser.Bitmap.Text} btn_Help        - A button to show details on how to play
+     * @property {Phaser.Bitmap.Text} btn_Play        - A button that takes you to the level selection screen.
+     * @property {Phaser.Bitmap.Text} btn_Music       - A button to mute or play music
+     * @property {Phaser.Bitmap.Text} btn_Back        - A button to allow the user to go back to the previous screen
      * @see {Phaser.State} */
     export class MainMenuState extends Phaser.State {
         game: Phaser.Game;
@@ -61,7 +65,7 @@
                     this.counter += 1;
                     console.log("Clicked to turn off music");
                     console.log(this.counter);
-                    //alert("Under Construction...");
+                    alert("Under Construction...");
                     //turn off music
                     //this.tss.music.pause(); // this doesn't work
                     //this.tss.music.volume = 0;
@@ -71,13 +75,16 @@
                     this.counter += 1;
                     console.log("Clicked to turn on music");
                     console.log(this.counter);
+                    alert("Under Construction...");
                     //turn on music
                     //this.tss.music.resume(); // this doesn't work
                     //this.tss.music.volume = 100;
                 }
             }
-            else if (this.btn_Back.getBounds().contains(pos.x, pos.y)){
-                this.game.state.start("titleScreenState"); // Jump to TitleScreenState
+            else if (this.btn_Back.getBounds().contains(pos.x, pos.y)) {
+                // This causes another instance of the song to play overtop of the existing instances/instance
+                //this.game.state.start("titleScreenState"); // Jump to TitleScreenState
+                alert("Under Construction...");
             }
         }
     }

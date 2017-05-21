@@ -52,7 +52,7 @@
             if (this.btn_Resume.getBounds().contains(pos.x, pos.y)) {
                 // Resume the game
                 //this.game.state.start("mapSelectState");  // Jump to MapSelectState
-                // UNDER CONSTRUCTION
+                alert("Under Construction...");
             }
             else if (this.btn_Restart.getBounds().contains(pos.x, pos.y)) {
                 // Get Game Data from the selected planet

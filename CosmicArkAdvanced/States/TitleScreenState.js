@@ -10,7 +10,8 @@ var CosmicArkAdvanced;
      * @property game {Phaser.Game}             - The game context
      * @property music {Phaser.Sound}           - The SFX player
      * @property game {Phaser.Sprite}           - The actual splash screen image to display
-     * @property finishedLoading {boolean}
+     * @property finishedLoading {boolean}      - Tells if the game has finished loading or not
+     * @property text {Phaser.BitmapText}       - This will tell the user to click anywhere to begin
      */
     var TitleScreenState = (function (_super) {
         __extends(TitleScreenState, _super);

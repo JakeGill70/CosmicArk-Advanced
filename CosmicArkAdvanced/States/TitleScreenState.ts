@@ -4,7 +4,8 @@
      * @property game {Phaser.Game}             - The game context
      * @property music {Phaser.Sound}           - The SFX player
      * @property game {Phaser.Sprite}           - The actual splash screen image to display
-     * @property finishedLoading {boolean}
+     * @property finishedLoading {boolean}      - Tells if the game has finished loading or not
+     * @property text {Phaser.BitmapText}       - This will tell the user to click anywhere to begin
      */
     export class TitleScreenState extends Phaser.State {
         game: Phaser.Game;
@@ -37,7 +38,7 @@
             // Begin music
             let music = this.game.add.audio("ThereminsBeat", 90, true);
             music.play();
-
+           
             // Register loading events
             this.finishedLoading = false;
             this.game.load.onFileComplete.add(this.fileComplete, this); // Register the file complete event

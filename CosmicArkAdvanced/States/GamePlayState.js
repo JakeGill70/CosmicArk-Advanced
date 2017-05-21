@@ -18,7 +18,7 @@ var CosmicArkAdvanced;
      * @Property mine1 {CosmicArkAdvanced.Mine}             - Test Mine
      * @Property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
      * @Property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
-     * @Property lbl_Pause                                  - Label to be used as a pause button <edf>
+     * @Property btn_Pause {Phaser.BitmapText}              - Button to be used to pause
      * @Property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
      */
     var GamePlayState = (function (_super) {
