@@ -34,7 +34,7 @@ var CosmicArkAdvanced;
             this.text.setText("click to begin");
             // Begin music
             var music = this.game.add.audio("ThereminsBeat", 90, true);
-            music.play();
+            music.resume();
             // Register loading events
             this.finishedLoading = false;
             this.game.load.onFileComplete.add(this.fileComplete, this); // Register the file complete event
