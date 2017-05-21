@@ -4475,7 +4475,7 @@ declare module Phaser {
         fadeTo(duration?: number, volume?: number): void;
         loopFull(volume?: number): Phaser.Sound;
         pause(): void;
-        resume(marker?: string, position?: number, volume?: number, loop?: boolean, forceRestart?: boolean): Phaser.Sound;
+        play(marker?: string, position?: number, volume?: number, loop?: boolean, forceRestart?: boolean): Phaser.Sound;
         removeMarker(name: string): void;
         restart(marker: string, position: number, volume?: number, loop?: boolean): void;
         resume(): void;
