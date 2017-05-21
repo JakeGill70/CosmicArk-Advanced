@@ -44,7 +44,8 @@
             if (this.selectedPlanet != null) { // If we have selected a planet before
                 if (this.selectedPlanet.getBounds().contains(pos.x, pos.y)){ // Did we click it again?
                     // Get Game Data from the selected planet
-                    this.game.state.start("gamePlayState"); // Jump to the GamePlayState
+                    //this.game.state.start("gamePlayState"); // Jump to the GamePlayState
+                    this.game.state.start("levelStartState"); // Jump to the levelStartState
                 }
                 else { // We clicked something different
                     this.add.tween(this.selectedPlanet.scale).to({ x: 1.0, y: 1.0}, 1500, Phaser.Easing.Elastic.InOut, true);

@@ -41,7 +41,8 @@ var CosmicArkAdvanced;
             if (this.selectedPlanet != null) {
                 if (this.selectedPlanet.getBounds().contains(pos.x, pos.y)) {
                     // Get Game Data from the selected planet
-                    this.game.state.start("gamePlayState"); // Jump to the GamePlayState
+                    //this.game.state.start("gamePlayState"); // Jump to the GamePlayState
+                    this.game.state.start("levelStartState"); // Jump to the levelStartState
                 }
                 else {
                     this.add.tween(this.selectedPlanet.scale).to({ x: 1.0, y: 1.0 }, 1500, Phaser.Easing.Elastic.InOut, true);
