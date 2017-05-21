@@ -11,6 +11,7 @@
     export class MapSelectState extends Phaser.State {
         game: Phaser.Game;
         music: Phaser.Sound;
+        titleScreenImage: Phaser.Sprite;
         planet1: Phaser.Sprite;
         planet2: Phaser.Sprite;
         planet3: Phaser.Sprite;
@@ -28,9 +29,13 @@
         * event handlers needed for touch/mouse input
         */
         create() {
-            this.planet1 = this.add.sprite(0  , 15, "planet1"); // Pull the image out of memory
-            this.planet2 = this.add.sprite(124, 15, "planet2"); // Pull the image out of memory
-            this.planet3 = this.add.sprite(248, 15, "planet3"); // Pull the image out of memory
+            // Background
+            this.titleScreenImage = this.add.sprite(0, 0, "main"); // Pull the image out of memory
+            this.titleScreenImage.scale.setTo(this.game.width / this.titleScreenImage.width, this.game.height / this.titleScreenImage.height);  // Scale it to fit the size of the screen
+
+            this.planet1 = this.add.sprite(0, 150, "planet1"); // Pull the image out of memory
+            this.planet2 = this.add.sprite(124, 150, "planet2"); // Pull the image out of memory
+            this.planet3 = this.add.sprite(248, 150, "planet3"); // Pull the image out of memory
 
             // Register Event Handlers
             this.input.onTap.add(this.PlanetClicked, this, 0, this.input.position);

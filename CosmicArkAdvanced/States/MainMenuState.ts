@@ -11,6 +11,7 @@
         titleScreenImage: Phaser.Sprite
         btn_Help: Phaser.BitmapText;
         btn_Play: Phaser.BitmapText;
+        btn_Music: Phaser.BitmapText;
 
         /**
         * Default constructor, only calls the Phaser.State instructor for now.
@@ -32,8 +33,7 @@
             // Make Buttons
             this.btn_Play = this.add.bitmapText(250, 160, "EdoSZ", "PLAY NOW");
             this.btn_Help = this.add.bitmapText(250, 200, "EdoSZ", "HOW TO PLAY");
-
-
+            this.btn_Music = this.add.bitmapText(700, 0, "EdoSZ", "MUSIC ON/OFF");
 
             // Register Event Handlers
             this.input.onTap.add(this.PlanetClicked, this, 0, this.input.position);
@@ -44,12 +44,21 @@
          * @param {Phaser.point} pos The x,y coordinates of where the user touched/clicked
          */
         PlanetClicked(pos: Phaser.Point) {
-            if (this.btn_Play.getBounds().contains(pos.x, pos.y)) { 
+            var counter = 0;
+            if (this.btn_Play.getBounds().contains(pos.x, pos.y)) {
                 this.game.state.start("mapSelectState");  // Jump to MapSelectState
             }
-            else if (this.btn_Help.getBounds().contains(pos.x, pos.y)) { 
+            else if (this.btn_Help.getBounds().contains(pos.x, pos.y)) {
                 // Get Game Data from the selected planet
                 this.game.state.start("helpScreenState"); // Jump to the HelpScreenState
+            }
+            else if (this.btn_Music.getBounds().contains(pos.x, pos.y)) {
+                if (counter % 2 == 0) {
+                    //turn off music
+                }
+                else {
+                    //turn on music
+                }
             }
         }
     }

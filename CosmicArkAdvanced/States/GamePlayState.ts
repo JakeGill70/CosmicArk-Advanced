@@ -15,6 +15,7 @@
      * @Property mine1 {CosmicArkAdvanced.Mine}             - Test Mine
      * @Property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
      * @Property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
+     * @Property lbl_Pause                                  - Label to be used as a pause button <edf>
      * @Property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
      */
     export class GamePlayState extends Phaser.State {
@@ -40,7 +41,10 @@
         hook1: CosmicArkAdvanced.Hook;      // Test hook
 
         uiText: Phaser.BitmapText;          // UI Text for updating score information
-        uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
+        btn_Pause: Phaser.BitmapText;       // Button for pausing the game
+        pause_label: Phaser.Text;           // Label for pause button
+        //uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
+
 
         /**
          * @Description Mostly empty. Does initialize the aliens list and the dictionary.
@@ -101,7 +105,7 @@
             this.game.world.setBounds(0, 0, 1600, 550);
             // Set Physics settings
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
-            
+
             // Make the objects
             this.makeBackgrounds();
             this.makeMotherShip();
@@ -115,9 +119,9 @@
 
             // Aliens should always be created after the player so that they don't accidently render behind the tractor beam
             this.myBatch = this.game.add.spriteBatch(this.game.world); // Create the man sprite batch so they will all be rendered at once
-            this.addMan(65); 
-            this.addMan(); 
-            this.addMan(); 
+            this.addMan(65);
+            this.addMan();
+            this.addMan();
             this.addMan();
             this.addMan();
             this.addMan();
@@ -135,13 +139,26 @@
                 "\nCAPTURED: " + this.player.aliensCaptured.toString());
             this.uiText.fixedToCamera = true;
 
-            this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ",
-                "Score: ");
+            //this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ", "Score: ");
+            this.btn_Pause = this.add.bitmapText(700, 0, "EdoSZ", "PAUSE");
+            this.btn_Pause.fixedToCamera = true;
+            //this.uiText_Score.fixedToCamera = true;
 
-            this.uiText_Score.fixedToCamera = true;
-
+            // Register Event Handlers
+            this.input.onTap.add(this.PauseClicked, this, 0, this.input.position);
 
             // this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
+        }
+
+        /**
+         * @description Handles "onTap" event. Pauses the game
+         * @param {Phaser.point} pos The x,y coordinates of where the user touched/clicked
+         */
+        PauseClicked(pos: Phaser.Point) {
+            if (this.btn_Pause.getBounds().contains(pos.x, pos.y)) {
+                console.log("Pause button was clicked..."); // testing
+                this.game.state.start("pauseMenuState");  // Jump to PauseMenuState
+            }
         }
 
         /**
@@ -175,15 +192,15 @@
             for (let n = 0; n < this.myBatch.hash.length; n++) {
                 (this.myBatch.hash[n] as CosmicArkAdvanced.Man).update();
             }
-            
-
-
 
             this.uiText.text = "In Transit: " + this.player.aliensOnBoard.toString() +
                 // "\tSCORE: " +
                 "\nCaptured: " + this.player.aliensCaptured.toString();
 
-            this.uiText_Score.text = "Score: ";
+            //this.uiText_Score.text = "Score: ";
+            //this.btn_Pause = this.add.bitmapText(650, 0, "EdoSZ", "PAUSE");
+            //this.btn_Pause.fixedToCamera = true;
+
         }
 
         /**

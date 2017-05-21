@@ -18,10 +18,12 @@ var CosmicArkAdvanced;
      * @Property mine1 {CosmicArkAdvanced.Mine}             - Test Mine
      * @Property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
      * @Property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
+     * @Property lbl_Pause                                  - Label to be used as a pause button <edf>
      * @Property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
      */
     var GamePlayState = (function (_super) {
         __extends(GamePlayState, _super);
+        //uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
         /**
          * @Description Mostly empty. Does initialize the aliens list and the dictionary.
          * @Constructor
@@ -105,9 +107,23 @@ var CosmicArkAdvanced;
             this.uiText = this.game.add.bitmapText(8, 0, "EdoSZ", "IN TRANSIT: " + this.player.aliensOnBoard.toString() +
                 "\nCAPTURED: " + this.player.aliensCaptured.toString());
             this.uiText.fixedToCamera = true;
-            this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ", "Score: ");
-            this.uiText_Score.fixedToCamera = true;
+            //this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ", "Score: ");
+            this.btn_Pause = this.add.bitmapText(700, 0, "EdoSZ", "PAUSE");
+            this.btn_Pause.fixedToCamera = true;
+            //this.uiText_Score.fixedToCamera = true;
+            // Register Event Handlers
+            this.input.onTap.add(this.PauseClicked, this, 0, this.input.position);
             // this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
+        };
+        /**
+         * @description Handles "onTap" event. Pauses the game
+         * @param {Phaser.point} pos The x,y coordinates of where the user touched/clicked
+         */
+        GamePlayState.prototype.PauseClicked = function (pos) {
+            if (this.btn_Pause.getBounds().contains(pos.x, pos.y)) {
+                console.log("Pause button was clicked..."); // testing
+                this.game.state.start("pauseMenuState"); // Jump to PauseMenuState
+            }
         };
         /**
          * @Descirption Creates the mothership sprite and adjust it's properties accordingly.
@@ -139,7 +155,9 @@ var CosmicArkAdvanced;
             this.uiText.text = "In Transit: " + this.player.aliensOnBoard.toString() +
                 // "\tSCORE: " +
                 "\nCaptured: " + this.player.aliensCaptured.toString();
-            this.uiText_Score.text = "Score: ";
+            //this.uiText_Score.text = "Score: ";
+            //this.btn_Pause = this.add.bitmapText(650, 0, "EdoSZ", "PAUSE");
+            //this.btn_Pause.fixedToCamera = true;
         };
         /**
          * @Description Called ever frame through the update method. Place collision checks here.
