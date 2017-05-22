@@ -54,11 +54,11 @@
          */
         MenuOptionsSelected(pos: Phaser.Point) {
             if (this.btn_Play.getBounds().contains(pos.x, pos.y)) {
-                this.game.state.start("mapSelectState");  // Jump to MapSelectState
+                this.game.state.start("mapSelectState",true,false);  // Jump to MapSelectState
             }
             else if (this.btn_Help.getBounds().contains(pos.x, pos.y)) {
                 // Get Game Data from the selected planet
-                this.game.state.start("helpScreenState"); // Jump to the HelpScreenState
+                this.game.state.start("helpScreenState",true,false); // Jump to the HelpScreenState
             }
             else if (this.btn_Music.getBounds().contains(pos.x, pos.y)) {
                 if (this.counter % 2 == 0) {

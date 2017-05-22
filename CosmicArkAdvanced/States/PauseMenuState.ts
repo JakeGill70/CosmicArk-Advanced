@@ -55,7 +55,6 @@
                 alert("Under Construction...");
             }
             else if (this.btn_Restart.getBounds().contains(pos.x, pos.y)) {
-                // Get Game Data from the selected planet
                 this.game.state.start("gamePlayState"); // Jump to the GamePlayState
             }
             else if (this.btn_ReturnToMenu.getBounds().contains(pos.x, pos.y)) {
