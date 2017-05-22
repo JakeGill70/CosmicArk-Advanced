@@ -15,6 +15,7 @@
         planet2: Phaser.Sprite;
         planet3: Phaser.Sprite;
         selectedPlanet: Phaser.Sprite;
+        difficulty: number;
 
         /**
         * Default constructor, only calls the Phaser.State instructor for now.
@@ -42,32 +43,44 @@
          */
         PlanetClicked(pos: Phaser.Point) {
             if (this.selectedPlanet != null) { // If we have selected a planet before
-                if (this.selectedPlanet.getBounds().contains(pos.x, pos.y)){ // Did we click it again?
-                    // Get Game Data from the selected planet
-                    //this.game.state.start("gamePlayState"); // Jump to the GamePlayState
-                    this.game.state.start("levelStartState"); // Jump to the levelStartState
-                }
-                else { // We clicked something different
-                    this.add.tween(this.selectedPlanet.scale).to({ x: 1.0, y: 1.0}, 1500, Phaser.Easing.Elastic.InOut, true);
+                // Did the user click on that same planet?
+                if (this.selectedPlanet.getBounds().contains(pos.x, pos.y)) {
+                    this.game.state.start("levelStartState", true, false, this.difficulty);     // If yes, then load that level
+                    return;     // And exit this method
                 }
             }
 
             // Get the next seleceted planet
             if (this.planet1.getBounds().contains(pos.x, pos.y)) {
-                this.selectedPlanet = this.planet1;
+                this.difficulty = 1;
+                this.selectPlanet(this.planet1);
             }
             else if (this.planet2.getBounds().contains(pos.x, pos.y)) {
-                this.selectedPlanet = this.planet2;
+                this.difficulty = 2;
+                this.selectPlanet(this.planet2);
             }
             else if (this.planet3.getBounds().contains(pos.x, pos.y)) {
-                this.selectedPlanet = this.planet3;
+                this.difficulty = 3;
+                this.selectPlanet(this.planet3);
             }
             else {
-                this.selectedPlanet = null;
+                this.selectPlanet(null);
+                this.difficulty = 0;
+            }
+        }
+
+        selectPlanet(p?: Phaser.Sprite) {
+            // Shrink the scale of the old planet
+            if (this.selectedPlanet != null) { 
+                this.selectedPlanet.scale.setTo(1, 1);
             }
 
-            if (this.selectedPlanet != null) { // If we actually selected a new planet
-                this.add.tween(this.selectedPlanet.scale).to({ x: 1.25, y: 1.25 }, 1500, Phaser.Easing.Elastic.InOut, true);
+            // Set the selected planet
+            this.selectedPlanet = p
+
+            // Grow the scale of the new planet
+            if (this.selectedPlanet != null) {
+                this.selectedPlanet.scale.setTo(1.25, 1.25);
             }
         }
     }

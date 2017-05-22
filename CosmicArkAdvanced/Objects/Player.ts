@@ -67,7 +67,7 @@
 
             this.isAbudcting = false;   // is the player abduction someone right now?
 
-            this.abductionSpeed = 45;   // Set the speed which aliens are abducted at. (px / sec)
+            this.abductionSpeed = 70;   // Set the speed which aliens are abducted at. (px / sec)
 
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
 
