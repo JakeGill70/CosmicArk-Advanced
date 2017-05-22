@@ -7,7 +7,7 @@
     * @property uiText {Phaser.BitmapText}     - Temp UI element for displaying score information
     */
           export class LevelStartState extends Phaser.State {
-       game: Phaser.Game;
+            game: Phaser.Game;
             music: Phaser.Sound;
             titleScreenImage: Phaser.Sprite;
             uiText: Phaser.BitmapText;          // UI Text for updating score information
@@ -36,10 +36,12 @@
        
                        // UI
                        this.uiText = this.game.add.bitmapText(40, 150, "EdoSZ", // maybe x = 50 would look better
-                               "TIME ALOTTED: " /*+ this.player.aliensOnBoard.toString()*/ +
-                               "\nHUMANS NEEDED: " /*+ this.player.aliensCaptured.toString()*/ +
-                               "\nLIVES PROVIDED: ");
-       
+                          "TIME ALOTTED: " /*+ this.player.aliensOnBoard.toString()*/ +
+                          "\nHUMANS NEEDED: " /*+ this.player.aliensCaptured.toString()*/ +
+                          "\nLIVES PROVIDED: " +
+                           "\n\n\n\n" +
+                          "CLICK ANYWHERE TO CONTINUE...");
+                   
                        // Register the "TitleClicked" even handler
                        this.input.onTap.addOnce(this.LevelStartClicked, this);
                }

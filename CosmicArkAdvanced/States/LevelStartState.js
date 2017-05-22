@@ -36,7 +36,9 @@ var CosmicArkAdvanced;
             this.uiText = this.game.add.bitmapText(40, 150, "EdoSZ", // maybe x = 50 would look better
             "TIME ALOTTED: " /*+ this.player.aliensOnBoard.toString()*/ +
                 "\nHUMANS NEEDED: " /*+ this.player.aliensCaptured.toString()*/ +
-                "\nLIVES PROVIDED: ");
+                "\nLIVES PROVIDED: " +
+                "\n\n\n\n" +
+                "CLICK ANYWHERE TO CONTINUE...");
             // Register the "TitleClicked" even handler
             this.input.onTap.addOnce(this.LevelStartClicked, this);
         };

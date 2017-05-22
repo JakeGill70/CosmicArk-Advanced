@@ -15,6 +15,7 @@
      * @Property mine1 {CosmicArkAdvanced.Mine}             - Test Mine
      * @Property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
      * @Property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
+     * @Property btn_Pause {Phaser.BitmapText}              - Button to be used to pause
      * @Property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
      */
     export class GamePlayState extends Phaser.State {
@@ -40,7 +41,13 @@
         hook1: CosmicArkAdvanced.Hook;      // Test hook
 
         uiText: Phaser.BitmapText;          // UI Text for updating score information
-        uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
+        btn_Pause: Phaser.BitmapText;       // Button for pausing the game
+        btn_Resume: Phaser.BitmapText;
+        btn_Restart: Phaser.BitmapText;
+        btn_ReturnToMenu: Phaser.BitmapText;
+        //uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
+        boo = false;
+
 
         /**
          * @Description Mostly empty. Does initialize the aliens list and the dictionary.
@@ -101,7 +108,7 @@
             this.game.world.setBounds(0, 0, 1600, 550);
             // Set Physics settings
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
-            
+
             // Make the objects
             this.makeBackgrounds();
             this.makeMotherShip();
@@ -115,9 +122,9 @@
 
             // Aliens should always be created after the player so that they don't accidently render behind the tractor beam
             this.myBatch = this.game.add.spriteBatch(this.game.world); // Create the man sprite batch so they will all be rendered at once
-            this.addMan(65); 
-            this.addMan(); 
-            this.addMan(); 
+            this.addMan(65);
+            this.addMan();
+            this.addMan();
             this.addMan();
             this.addMan();
             this.addMan();
@@ -135,13 +142,86 @@
                 "\nCAPTURED: " + this.player.aliensCaptured.toString());
             this.uiText.fixedToCamera = true;
 
-            this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ",
-                "Score: ");
+            //this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ", "Score: ");
+            this.btn_Pause = this.add.bitmapText(700, 0, "EdoSZ", "PAUSE");
+            this.btn_Pause.fixedToCamera = true;
+            //this.uiText_Score.fixedToCamera = true;
 
-            this.uiText_Score.fixedToCamera = true;
-
+            // Register Event Handlers
+            this.input.onTap.add(this.PauseClicked, this, 0, this.input.position);
 
             // this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
+        }
+
+        /**
+         * @description Handles "onTap" event. Pauses the game
+         * @param {Phaser.point} pos The x,y coordinates of where the user touched/clicked
+         */
+        PauseClicked(pos: Phaser.Point) {
+            if (this.btn_Pause.getBounds().contains(pos.x, pos.y)) {
+                if (this.boo == false) {
+                    this.boo = true;
+                    this.game.gamePaused(PauseMenuState);
+                    // Make Buttons
+                    //this.btn_Resume = this.add.bitmapText(40, 150, "EdoSZ", "RESUME GAME");
+                    this.btn_Resume = this.add.bitmapText(this.game.width/2, this.game.height/2, "EdoSZ", "RESUME GAME");
+                    this.btn_Resume.align = "center";
+                    this.btn_Resume.anchor.setTo(0.5, 1);
+                    this.btn_Resume.fixedToCamera = true;
+                    //this.btn_Resume.align. = "center";
+                    //this.btn_Restart = this.add.bitmapText(40, 200, "EdoSZ", "RESTART GAME");
+                    this.btn_Restart = this.add.bitmapText(this.game.width/2, (this.game.height/2)+50, "EdoSZ", "RESTART GAME");
+                    this.btn_Restart.align = "center";
+                    this.btn_Restart.anchor.setTo(0.5, 1);
+                    this.btn_Restart.fixedToCamera = true;
+                    //this.btn_Restart.align = "center";
+                    //this.btn_ReturnToMenu = this.add.bitmapText(40, 250, "EdoSZ", "RETURN TO MENU (Under Construction)");
+                    this.btn_ReturnToMenu = this.add.bitmapText(this.game.width/2, (this.game.height/2)+100, "EdoSZ", "RETURN TO MENU (Under Construction)");
+                    this.btn_ReturnToMenu.align = "center";
+                    this.btn_ReturnToMenu.anchor.setTo(0.5, 1);
+                    this.btn_ReturnToMenu.fixedToCamera = true;
+                    //this.btn_ReturnToMenu.align = "center";
+                    // Register Event Handlers
+                    this.input.onTap.add(this.PauseOptionClicked, this, 0, this.input.position);
+                }
+                else {
+                    this.boo = false;
+                    this.btn_Resume.destroy();
+                    this.btn_Restart.destroy();
+                    this.btn_ReturnToMenu.destroy();
+                    this.game.gameResumed(GamePlayState);
+                }
+
+                //this.game.state.start("pauseMenuState");  // Jump to PauseMenuState
+            }
+        }
+
+        /**
+         * @description Handles "onTap" event. Do a particular thing depending on the option selected
+         * @param {Phaser.point} pos The x,y coordinates of where the user touched/clicked
+         */
+        PauseOptionClicked(pos: Phaser.Point) {
+            if (this.btn_Resume.getBounds().contains(pos.x, pos.y)) {
+                this.boo = false;
+                this.btn_Resume.destroy();
+                this.btn_Restart.destroy();
+                this.btn_ReturnToMenu.destroy();
+                this.game.gameResumed(GamePlayState);
+            }
+            else if (this.btn_Restart.getBounds().contains(pos.x, pos.y)) {
+                this.game.state.start("gamePlayState",true,false); // Jump to the GamePlayState
+                this.btn_Resume.destroy();
+                this.btn_Restart.destroy();
+                this.btn_ReturnToMenu.destroy();
+                this.game.gameResumed(GamePlayState);
+            }
+            else if (this.btn_ReturnToMenu.getBounds().contains(pos.x, pos.y)) {
+                //alert("Under Construction...")
+                this.game.gameResumed(MainMenuState);
+                this.game.state.start("mainMenuState",true,false); // Jump to the MainMenuState
+                //var current = this.game.state.getCurrentState();
+                //current.game.state.restart(true);
+            }
         }
 
         /**
@@ -175,15 +255,15 @@
             for (let n = 0; n < this.myBatch.hash.length; n++) {
                 (this.myBatch.hash[n] as CosmicArkAdvanced.Man).update();
             }
-            
-
-
 
             this.uiText.text = "In Transit: " + this.player.aliensOnBoard.toString() +
                 // "\tSCORE: " +
                 "\nCaptured: " + this.player.aliensCaptured.toString();
 
-            this.uiText_Score.text = "Score: ";
+            //this.uiText_Score.text = "Score: ";
+            //this.btn_Pause = this.add.bitmapText(650, 0, "EdoSZ", "PAUSE");
+            //this.btn_Pause.fixedToCamera = true;
+
         }
 
         /**

@@ -9,10 +9,12 @@ var CosmicArkAdvanced;
      * @desription This can be used as either a level select or a difficulty select screen. Depends on what direction we want to go.
      * @property {Phaser.Game} game                   - The game context
      * @property {Phaser.Sound} music                 - The SFX player
+     * @property titleScreenImage {Phaser.Sprite}     - The actual splash screen image to display
      * @property {Phaser.Sprite} planet1              - A possible planet the user can click on
      * @property {Phaser.Sprite} planet2              - A possible planet the user can click on
      * @property {Phaser.Sprite} planet3              - A possible planet the user can click on
      * @property {Phaser.Sprite} selectedPlanet       - The planet the user has currently selected
+     * @property {Phaser.BitmapText} btn_Back         - A button to allow a user to return to the previous screen
      * @see {Phaser.State} */
     var MapSelectState = (function (_super) {
         __extends(MapSelectState, _super);
@@ -27,9 +29,13 @@ var CosmicArkAdvanced;
         * event handlers needed for touch/mouse input
         */
         MapSelectState.prototype.create = function () {
-            this.planet1 = this.add.sprite(0, 15, "planet1"); // Pull the image out of memory
-            this.planet2 = this.add.sprite(124, 15, "planet2"); // Pull the image out of memory
-            this.planet3 = this.add.sprite(248, 15, "planet3"); // Pull the image out of memory
+            // Background
+            this.titleScreenImage = this.add.sprite(0, 0, "main"); // Pull the image out of memory
+            this.titleScreenImage.scale.setTo(this.game.width / this.titleScreenImage.width, this.game.height / this.titleScreenImage.height); // Scale it to fit the size of the screen
+            this.planet1 = this.add.sprite(0, 150, "planet1"); // Pull the image out of memory
+            this.planet2 = this.add.sprite(124, 150, "planet2"); // Pull the image out of memory
+            this.planet3 = this.add.sprite(248, 150, "planet3"); // Pull the image out of memory
+            this.btn_Back = this.add.bitmapText(30, 400, "EdoSZ", "BACK");
             // Register Event Handlers
             this.input.onTap.add(this.PlanetClicked, this, 0, this.input.position);
         };
@@ -47,6 +53,10 @@ var CosmicArkAdvanced;
                 else {
                     this.add.tween(this.selectedPlanet.scale).to({ x: 1.0, y: 1.0 }, 1500, Phaser.Easing.Elastic.InOut, true);
                 }
+            }
+            else if (this.btn_Back.getBounds().contains(pos.x, pos.y)) {
+                // This causes another instance of the song to play overtop of the existing instances/instance
+                this.game.state.start("mainMenuState"); // Jump to MainMenuState
             }
             // Get the next seleceted planet
             if (this.planet1.getBounds().contains(pos.x, pos.y)) {
