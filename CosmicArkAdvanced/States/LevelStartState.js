@@ -20,8 +20,9 @@ var CosmicArkAdvanced;
         function LevelStartState() {
             _super.call(this);
         }
-        LevelStartState.prototype.init = function (difficulty) {
+        LevelStartState.prototype.init = function (difficulty, score) {
             this.difficulty = difficulty;
+            this.score = score;
             if (difficulty == 1) {
                 this.numberToCapture = Math.floor(Math.random() * 3) + 3; // Random number from 3 to 5
                 this.timeToCapture = 15 + (this.numberToCapture * 15); // 15 seconds + 7 seconds for every person you need to abduct
@@ -53,13 +54,18 @@ var CosmicArkAdvanced;
             "TIME ALOTTED: " + this.timeToCapture.toString() + " seconds" +
                 "\nHUMANS NEEDED: " + this.numberToCapture.toString());
             // Register the "TitleClicked" even handler
-            this.input.onTap.addOnce(this.LevelStartClicked, this);
+            this.input.onTap.add(this.LevelStartClicked, this);
         };
         /**
         * @description Handles the "onTap" event. Just moves over to the gamePlayState state.
         */
         LevelStartState.prototype.LevelStartClicked = function () {
-            this.game.state.start("gamePlayState", true, false, this.difficulty, this.timeToCapture, this.numberToCapture); // Jump to the GamePlayState
+            console.log("I'm over here!");
+            this.game.state.start("gamePlayState", true, false, this.difficulty, this.timeToCapture, this.numberToCapture, this.score); // Jump to the GamePlayState
+        };
+        LevelStartState.prototype.shutdown = function () {
+            this.titleScreenImage.destroy(true);
+            this.uiText.destroy(true);
         };
         return LevelStartState;
     }(Phaser.State));

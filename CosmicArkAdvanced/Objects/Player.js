@@ -23,6 +23,8 @@ var CosmicArkAdvanced;
      */
     var Player = (function (_super) {
         __extends(Player, _super);
+        // This translates to the lowests point the player can go on the screen. 
+        // So it can also be thought of as the min height for the player, and still be correct.
         /**
          * @description Constructor for the player's ship
          * @constructor
@@ -34,6 +36,7 @@ var CosmicArkAdvanced;
          */
         function Player(_game, _x, _y, _name) {
             _super.call(this, _game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
+            this.maxHeight = 400; // Max height is the highest the y value can be. 
             this.game = _game; // get game context
             this.name = _name; // Set the objects unique name
             this.aliensOnBoard = 0; // Reset score counters
@@ -58,25 +61,27 @@ var CosmicArkAdvanced;
          * Also, if abducting, will LERP the abductee's x-coordinate to match the player's.
          */
         Player.prototype.update = function () {
-            if (!this.game.paused) {
+            this.body.velocity = new Phaser.Point(0, 0);
+            this.isMoving = false; // Turn this flag off. Movement will turn it back on if needed.
+            // If hooked, move with the hook instead of taking input
+            if (!this.isHooked) {
+                this.arrowKeyMovement();
+                this.touchMovement();
+            }
+            else {
+                this.isMoving = true;
+                this.body.velocity = this.hookedVelocity;
+            }
+            if (this.body.y > 420) {
                 this.body.velocity = new Phaser.Point(0, 0);
-                this.isMoving = false; // Turn this flag off. Movement will turn it back on if needed.
-                // If hooked, move with the hook instead of taking input
-                if (!this.isHooked) {
-                    this.arrowKeyMovement();
-                    this.touchMovement();
-                }
-                else {
-                    this.isMoving = true;
-                    this.body.velocity = this.hookedVelocity;
-                }
-                if (this.isMoving) {
-                    this.stopAbducting(false);
-                }
-                if (this.isAbudcting) {
-                    if (this.alienAbductee.x !== this.x) {
-                        this.alienAbductee.x = Phaser.Math.bezierInterpolation([this.alienAbductee.x, this.x], 0.085); // 0.085 felt like a good speed. No significant meaning.
-                    }
+                this.body.y = 420;
+            }
+            if (this.isMoving) {
+                this.stopAbducting(false);
+            }
+            if (this.isAbudcting) {
+                if (this.alienAbductee.x !== this.x) {
+                    this.alienAbductee.x = Phaser.Math.bezierInterpolation([this.alienAbductee.x, this.x], 0.085); // 0.085 felt like a good speed. No significant meaning.
                 }
             }
         };
@@ -101,13 +106,13 @@ var CosmicArkAdvanced;
                 if (Phaser.Point.distance(this.position, pos) > this.moveDistThreshold) {
                     // Move along the X-axis
                     if (Phaser.Math.difference(this.position.x, pos.x) > this.moveDistThreshold) {
-                        this.x += moveAmtX;
+                        this.body.x += moveAmtX;
                         // Stop abducting when moving
                         this.isMoving = true;
                     }
                     // Move along the Y-Axis
                     if (Phaser.Math.difference(this.position.y, pos.y) > this.moveDistThreshold) {
-                        this.y += moveAmtY;
+                        this.body.y += moveAmtY;
                         // Stop abducting when moving
                         this.isMoving = true;
                     }
@@ -123,23 +128,23 @@ var CosmicArkAdvanced;
             var isDiagonal = ((this.cursor.right.isDown || this.cursor.left.isDown) && (this.cursor.up.isDown || this.cursor.down.isDown));
             // Horizontal movement
             if (this.cursor.right.isDown == true) {
-                this.x += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
+                this.body.x += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
                 // Stop abducting when moving
                 this.isMoving = true;
             }
             else if (this.cursor.left.isDown == true) {
-                this.x -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
+                this.body.x -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
                 // Stop abducting when moving
                 this.isMoving = true;
             }
             // Vertical movement
             if (this.cursor.up.isDown == true) {
-                this.y -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
+                this.body.y -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
                 // Stop abducting when moving
                 this.isMoving = true;
             }
             else if (this.cursor.down.isDown == true) {
-                this.y += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
+                this.body.y += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
                 // Stop abducting when moving
                 this.isMoving = true;
             }
@@ -204,7 +209,6 @@ var CosmicArkAdvanced;
                 this.alienAbductee.position = new Phaser.Point(this.alienAbductee.x, Math.abs(this.alienAbductee.data.initialY)); // Reset it's y-coordinate
                 this.alienAbductee.mask = null; // Clear it's render mask
                 this.alienAbductee = null; // Clear it from it's abducting duties ;)
-                console.log(ab.position);
             }
             this.isAbudcting = false;
             this.beam.clear(); // Destroy any graphic's artifacts of the beam

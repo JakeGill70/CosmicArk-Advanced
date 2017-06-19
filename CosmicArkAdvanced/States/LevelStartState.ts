@@ -14,7 +14,7 @@
         timeToCapture;                       // Timer in seconds
         numberToCapture: number;              // Number of aliens needed to be captured to complete the level
         difficulty: number;             // Difficulty rating of the selected level
-    
+        score: number;
        /**
         * @constructor Default.
         */
@@ -22,8 +22,9 @@
             super();
         }
 
-        init(difficulty: number) {
+        init(difficulty: number, score: number) {
             this.difficulty = difficulty;
+            this.score = score;
             if (difficulty == 1) {
                 this.numberToCapture = Math.floor(Math.random() * 3) + 3; // Random number from 3 to 5
                 this.timeToCapture = 15 + (this.numberToCapture * 15);   // 15 seconds + 7 seconds for every person you need to abduct
@@ -61,14 +62,20 @@
                     "\nHUMANS NEEDED: " + this.numberToCapture.toString());
        
             // Register the "TitleClicked" even handler
-            this.input.onTap.addOnce(this.LevelStartClicked, this);
+            this.input.onTap.add(this.LevelStartClicked, this);
         }
     
         /**
         * @description Handles the "onTap" event. Just moves over to the gamePlayState state.
         */
-            LevelStartClicked() {
-                this.game.state.start("gamePlayState", true, false, this.difficulty, this.timeToCapture, this.numberToCapture); // Jump to the GamePlayState
-            }
+        LevelStartClicked() {
+            console.log("I'm over here!");
+            this.game.state.start("gamePlayState", true, false, this.difficulty, this.timeToCapture, this.numberToCapture, this.score); // Jump to the GamePlayState
+       }
+
+        shutdown() {
+            this.titleScreenImage.destroy(true);
+            this.uiText.destroy(true);
         }
+    }
 }

@@ -41,7 +41,8 @@ var CosmicArkAdvanced;
             if (this.selectedPlanet != null) {
                 // Did the user click on that same planet?
                 if (this.selectedPlanet.getBounds().contains(pos.x, pos.y)) {
-                    this.game.state.start("levelStartState", true, false, this.difficulty); // If yes, then load that level
+                    this.game.state.start("levelStartState", true, false, this.difficulty, 0); // If yes, then load that level
+                    // Send the difficulty and reset the score to 0
                     return; // And exit this method
                 }
             }

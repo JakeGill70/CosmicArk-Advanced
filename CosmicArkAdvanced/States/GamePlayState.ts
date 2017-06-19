@@ -24,11 +24,11 @@
 
         men: Phaser.Group;
 
-        myBatch: Phaser.SpriteBatch;
+        alienBatch: Phaser.SpriteBatch;     // Collection of aliens in the game 
 
-        guns: CosmicArkAdvanced.Gun[];      // Collection of guns  in the game <edf>
-        mines: CosmicArkAdvanced.Mine[];    // Collection of mines in the game <edf>
-        hooks: CosmicArkAdvanced.Hook[];    // Collection of hooks in the game <edf>
+        guns: CosmicArkAdvanced.Gun[];      // Collection of guns  in the game
+        mines: CosmicArkAdvanced.Mine[];    // Collection of mines in the game
+        hooks: CosmicArkAdvanced.Hook[];    // Collection of hooks in the game
 
         mothership: Phaser.Sprite;          // Mothership object
 
@@ -37,11 +37,14 @@
         uiText: Phaser.BitmapText;          // UI Text for updating score information
         uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
 
-        // TODO: document these
-        difficulty: number;
-        numberToCapture:number;
-        
+        difficulty: number;                 // Value 1-3 which assists in level generation
+        numberToCapture: number;            // Number of aliens needed 
+        alienTotal: number;                 // Total number of aliens walking along the ground
 
+        timeToCapture: number;              // Number of seconds the player has to finish the level
+        levelTimer: Phaser.Timer;           // Timer object that counts down the number of seconds the player has left to complete the level
+
+        score: number;                 // Holds the current score to carry it over to the LevelFinishState
 
         /**
          * @Description Mostly empty. Does initialize the aliens list and the dictionary.
@@ -49,17 +52,26 @@
          */
         constructor() {
             super();
+            
+        }
+
+        // Todo: document this
+        init(difficulty:number, timeToCapture:number, numberToCapture:number, score:number) {
+            this.difficulty = difficulty;
+            this.numberToCapture = numberToCapture;
+            this.timeToCapture = timeToCapture;
+            this.score = score;
+
+            // Make the level timer
+            this.levelTimer = this.game.time.create(false);
+            this.levelTimer.loop(timeToCapture * 1000, this.OutOfTime, this);
+
+            // Initialize arrays
             this.aliens = [];
             this.guns = [];
             this.mines = [];
             this.hooks = [];
             this.dict = [];
-        }
-
-        // Todo: document this
-        init(difficulty:number, timeToCapture:number, numberToCapture:number) {
-            this.difficulty = difficulty;
-            this.numberToCapture = numberToCapture;
         }
 
         // Todo: document this
@@ -104,10 +116,8 @@
                     // Default formula for calculating speed based on difficulty
                     spd = 100 * (this.difficulty / 2.5);
                 }
-                console.log(spd);
                 this.game.paused
             }
-            console.log(spd);
 
             let gun = new Gun(this.game, x, y, "gun", spd, this.player);
             // 2000ms was the original testing speed
@@ -135,7 +145,12 @@
          * @param x Start X position, default is random (keyed as -1, if you want -1, use something like -1.000000001)
          * @param y Start Y position, default is 70px from the bottom of the world
          */
-        addMan(x: number = (-1), y: number = (this.game.world.height - 70)) {
+        addMan(isRespawn: boolean = false, x: number = (-1), y: number = (this.game.world.height - 70)) {
+
+            if (!isRespawn) {
+                this.alienTotal++;
+            }
+
             // Establish a random position
             if (x == -1) {
                 x = (Math.random() * 1472) + 64;            // Creates a Range between 64 and (1600-64)
@@ -144,7 +159,7 @@
                 }
             }
             // Create the alien
-            let m = this.myBatch.create(x, y, "man") as Phaser.Sprite;
+            let m = this.alienBatch.create(x, y, "man") as Phaser.Sprite;
             m.data = new CosmicArkAdvanced.AlienProperties();               // Holds additional info about the alien
             m.anchor.setTo(0.5, 1.0);
             (m.data as AlienProperties).initialY = y;                       // Save a copy of the initial y position in case it needs to be respawned
@@ -166,24 +181,35 @@
             m.body.velocity.set(spd, 0);                                  // Set the initial velocity to be it's speed with the random direction
         }
 
+        // TODO: Document this
+        OutOfTime() {
+            let capt = this.player.aliensCaptured;
+            this.game.state.start("levelFinishState", true, false, this.difficulty, this.score, this.GetTimeRemaining(), this.numberToCapture, capt); // Jump to the Level Finish State
+        }
+
         /**
          * @Description Creates the game world by both creating and initializing all the objects in the game state.
          */
         create() {
 
+            console.log("GamePlayState has started");
+
             // Use this for debugging to measure FPS
             this.game.time.advancedTiming = true;
-
             // Set Level size
             this.game.world.setBounds(0, 0, 1600, 550);
             // Set Physics settings
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
-            
+
+            // Start the level timer
+            this.levelTimer.start();
+
             // Make the objects
             this.makeBackgrounds();
             this.makeMotherShip();
             this.player = new Player(this.game, 0, 0, "player");
 
+            // Always start with at least ( 3 + Difficulty ) guns
             this.addGun();
             this.addGun();
             this.addGun();
@@ -202,7 +228,7 @@
             //this.hooks.push(this.hook1);
 
             // Aliens should always be created after the player so that they don't accidently render behind the tractor beam
-            this.myBatch = this.game.add.spriteBatch(this.game.world); // Create the man sprite batch so they will all be rendered at once
+            this.alienBatch = this.game.add.spriteBatch(this.game.world); // Create the man sprite batch so they will all be rendered at once
 
             for (let i = this.numberToCapture; i > 0; i--) {
                 this.addMan();
@@ -250,29 +276,36 @@
         }
 
         /**
-         * @Description Currently only used for checking collisions between objects
+         * @Description Check for collisions between objects, update the UI and coordinate AI movements
          */
         update() {
             this.collideObjects();      // Check for collisions
             this.moveMen();             // Move the men along the bottom of the screen
-
-
-            for (let n = 0; n < this.myBatch.hash.length; n++) {
-                (this.myBatch.hash[n] as CosmicArkAdvanced.Man).update();
-            }
             
-
-
+            for (let n = 0; n < this.alienBatch.hash.length; n++) {
+                (this.alienBatch.hash[n] as CosmicArkAdvanced.Man).update();
+            }
 
             this.uiText.text = "In Transit: " + this.player.aliensOnBoard.toString() +
-                // "\tSCORE: " +
                 "\nCaptured: " + this.player.aliensCaptured.toString() + " / " + this.numberToCapture.toString();
 
-            this.uiText_Score.text = "Score: ";
+            this.uiText_Score.text = (this.levelTimer.duration / 1000).toFixed(2);
 
             if (this.player.aliensCaptured >= this.numberToCapture) {
-                this.uiText_Score.text = "YOU WIN!!!!";
+                let capt = this.player.aliensCaptured;
+                console.log("DebugInfo:");
+                console.log(this.difficulty);
+                console.log(this.score);
+                console.log(this.GetTimeRemaining());
+                console.log(this.numberToCapture);
+                console.log(capt);
+                this.game.state.start("levelFinishState", true, false, this.difficulty, this.score, this.GetTimeRemaining(), this.numberToCapture, capt); // Jump to the Level Finished State
             }
+        }
+
+        //TODO: Document this
+        GetTimeRemaining() {
+            return (this.timeToCapture - (this.levelTimer.ms / 1000));
         }
 
         /**
@@ -304,7 +337,7 @@
 
             // Collide the player's ship with the aliens
             let atLeastOne = false;                     // Flag meaning "At least one alien is availble to be abducted"
-            this.myBatch.forEachAlive(function (alien: Phaser.Sprite) {
+            this.alienBatch.forEachAlive(function (alien: Phaser.Sprite) {
                 // TODO: Bugfix: Fix it so that the ship cannot abduct an alien if the ship is too low
                 if (this.game.physics.arcade.overlap(this.player, alien)) {
                     atLeastOne = true;
@@ -338,7 +371,7 @@
          * @Description Helper function which cycles through the sprite batch of men along the bottom the screen and applies logic into how they should move.
          */
         moveMen() {
-            this.myBatch.forEach(function (alien: Phaser.Sprite) {
+            this.alienBatch.forEach(function (alien: Phaser.Sprite) {
                 if (alien.x > this.game.world.width - Math.abs(alien.width)) {
                     alien.body.velocity.setTo(-alien.data.speed, 0);
                     alien.scale.set(-1, 1);
@@ -437,6 +470,20 @@
             // this.game.debug.body(this.mothership);
             this.game.debug.text(this.game.time.fps.toString(), 8, 80);
             //this.game.debug.body(this.myBatch.getFirstExists(true));
+        }
+
+        shutdown() {
+            this.player.destroy(true);
+            this.aliens = null;
+            this.alienBatch.destroy(true);
+            this.guns = null;
+            this.mines = null;
+            this.hooks = null;
+            this.mothership.destroy();
+            this.uiText.destroy();
+            this.uiText_Score.destroy();
+            this.levelTimer.destroy();
+            
         }
     }
 }
