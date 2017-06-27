@@ -30,6 +30,8 @@
     <Content Include="Audio\Music\Slide Whistle Blues.wav" />
     <Content Include="Audio\Music\ThereminsBeatShort.wav" />
     <Content Include="Audio\Music\ThereminsBeat.wav" />
+    <Content Include="Audio\Music\Victory-Song.wav" />
+    <Content Include="Audio\SFX\Beep.wav" />
     <Content Include="Audio\SFX\Death_22.wav" />
     <Content Include="Audio\SFX\Laser_Shoot10.wav" />
     <Content Include="Audio\SFX\Laser_Shoot10_loopable.wav" />
@@ -101,6 +103,7 @@
     <Content Include="Audio\Music\Slide Whistle Blues.json" />
     <Content Include="Audio\Music\Theremins Beat Short.json" />
     <Content Include="Audio\Music\Theremins Beat.json" />
+    <Content Include="Audio\Music\Victory-Song.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

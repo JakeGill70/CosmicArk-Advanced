@@ -35,8 +35,8 @@
             this.text.setText("click to begin");
 
             // Begin music
-            let music = this.game.add.audio("ThereminsBeat", 90, true);
-            // music.play();
+            this.game.music = this.game.add.audio("ThereminsBeat", 0.9 , true);
+            this.game.music.play();
 
             // Register loading events
             this.finishedLoading = false;
@@ -92,6 +92,12 @@
             this.game.load.image("planet1", "Graphics/Statics/planet_1.png");
             this.game.load.image("planet2", "Graphics/Statics/planet_2.png");
             this.game.load.image("planet3", "Graphics/Statics/planet_3.png");
+            // Audio
+            this.game.load.audio("beep", "Audio/SFX/Beep.wav");
+            this.game.load.audio("victory", "Audio/Music/Victory-Song.wav");
+            this.game.load.audio("abduction", "Audio/SFX/Laser_Shoot10_loopable.wav");
+            this.game.load.audio("SlideWhistleBlues", "Audio/Music/Slide Whistle Blues.wav");
+            this.game.load.audio("RunTripAndFall", "Audio/Music/Run Trip and Fall.wav");
             this.game.load.start();
         }
     }

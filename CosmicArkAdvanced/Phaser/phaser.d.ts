@@ -1465,6 +1465,7 @@ declare module Phaser {
         updatesThisFrame: number;
         width: number;
         world: Phaser.World;
+        music: Phaser.Sound;
 
         boot(): void;
         destroy(): void;

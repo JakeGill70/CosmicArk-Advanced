@@ -18,6 +18,12 @@
         difficulty: number;             // Difficulty rating of the selected level
 
         score: number;              // Currently running score
+        timeBonus: number;
+        captureBonus: number; 
+
+        timr: Phaser.Timer;
+
+        sfx: Phaser.Sound;
 
         /**
          * @constructor Default.
@@ -40,30 +46,38 @@
         * @description Displays the splash image and scales it appropriately. Also registers the "onTap" event
         */
         create() {
+            // Text Animation Timer
+            this.timr = this.game.time.create(false);
+            this.timr.loop(100, this.updateText, this);
+            this.timr.start(2000);
 
-            console.log("the LevelFinishState has started!"); // testing
-
-            console.log("DebugInfo:");
-            console.log(this.difficulty);
-            console.log(this.score);
-            console.log(this.timeRemaining);
-            console.log(this.numberToCapture);
-            console.log(this.numberCaught);
-
+            // Set background images
             this.titleScreenImage = this.add.sprite(0, 0, "main"); // Pull the image out of memory
             this.titleScreenImage.scale.setTo(this.game.width / this.titleScreenImage.width, this.game.height / this.titleScreenImage.height);  // Scale it to fit the size of the screen
 
-            // Calculate the new score value
-            this.score += (this.numberToCapture * 1000) + ((this.numberCaught - this.numberToCapture) * 100) + (this.timeRemaining * 5);
-            this.score = Math.floor(this.score);
+            // Add Audio
+            this.sfx = this.game.add.audio("beep", 0.75);
+            this.sfx.allowMultiple = true;
+
+            // Change music
+            let oldSong = this.game.music.key;
+            this.game.music.stop();
+            this.game.music = this.game.add.audio("victory", 0.9);
+            this.game.music.loop = false;
+            this.game.music.play();
+            this.game.music = this.game.add.audio(oldSong, 0.9);
+
+            // Calculate the new score values
+            this.timeBonus = Math.floor(this.timeRemaining) * 5;
+            this.captureBonus = (this.numberToCapture * 500) + (this.numberCaught - this.numberToCapture) * 800;
 
             // UI
             // TODO: Is there a way to animate these numbers appearing?
             this.uiText = this.game.add.bitmapText(40, 150, "EdoSZ", // maybe x = 50 would look better
                 "Humans Abducted: " + this.numberCaught.toString() + " / " + this.numberToCapture +
-                "\nAbduction Bonus: +" + ((this.numberCaught - this.numberToCapture) * 100).toString() +
+                "\nAbduction Bonus: +" + this.captureBonus.toString() +
                 "\nTime Remaining: " + this.timeRemaining.toFixed(2) + " sec" + 
-                "\nTime Bonus: +" + (Math.floor(this.timeRemaining) * 5).toString() +
+                "\nTime Bonus: +" + this.timeBonus.toString() +
                 "\n\nScore: " + this.score);
 
             // Register the "TitleClicked" even handler
@@ -75,6 +89,51 @@
         */
         LevelStartClicked() {
             this.game.state.start("levelStartState", true, false, this.difficulty, this.score); // Go load the next level            }
+        }
+
+        updateText() {
+            if (this.captureBonus > 0) {
+                // Add capture bonus
+                this.captureBonus -= 200;
+                this.score += 200;
+
+                // Correct if the score moves too much
+                if (this.captureBonus < 0) {
+                    this.score += this.captureBonus;
+                    this.captureBonus = 0;  // Reset to 0 for displaying
+                }
+
+                this.sfx.play();
+
+                if (this.captureBonus == 0) {
+                    // Put a slight pause in the score calculation once the capture bonus is finished
+                    this.timr.stop(false);
+                    this.timr.start(500);
+                }
+            }
+            else {
+                // Add time Bonus
+                if (this.timeBonus > 0) {
+                    this.timeBonus -= 15;
+                    this.score += 15;
+
+                    // Correct if the score moves too much
+                    if (this.timeBonus < 0) {
+                        this.score += this.timeBonus;
+                        this.timeBonus = 0;  // Reset to 0 for displaying
+                    }
+
+                    this.sfx.play();
+                }
+            }
+
+            // Update the text
+            this.uiText.text = "Humans Abducted: " + this.numberCaught.toString() + " / " + this.numberToCapture +
+                "\nAbduction Bonus: +" + this.captureBonus.toString() +
+                "\nTime Remaining: " + this.timeRemaining.toFixed(2) + " sec" +
+                "\nTime Bonus: +" + this.timeBonus.toString() +
+                "\n\nScore: " + this.score.toString();
+            this.uiText.updateText();
         }
 
         shutdown() {

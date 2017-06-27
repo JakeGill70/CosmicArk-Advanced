@@ -46,6 +46,8 @@
 
         score: number;                 // Holds the current score to carry it over to the LevelFinishState
 
+
+
         /**
          * @Description Mostly empty. Does initialize the aliens list and the dictionary.
          * @Constructor

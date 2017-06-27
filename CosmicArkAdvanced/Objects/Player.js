@@ -23,8 +23,6 @@ var CosmicArkAdvanced;
      */
     var Player = (function (_super) {
         __extends(Player, _super);
-        // This translates to the lowests point the player can go on the screen. 
-        // So it can also be thought of as the min height for the player, and still be correct.
         /**
          * @description Constructor for the player's ship
          * @constructor
@@ -55,6 +53,7 @@ var CosmicArkAdvanced;
             this.game.physics.enable(this, Phaser.Physics.ARCADE); // Enable physics for the ship
             this.body.collideWorldBounds = true; // Automatically lock the players sprite into the world so they cannot move off screen.
             this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
+            this.abductionSound = this.game.add.sound("abduction", 0.05, true);
         }
         /**
          * @description Called every frame. Handles moving the player and sets the "isMoving" flag.
@@ -210,6 +209,7 @@ var CosmicArkAdvanced;
                 this.alienAbductee.mask = null; // Clear it's render mask
                 this.alienAbductee = null; // Clear it from it's abducting duties ;)
             }
+            this.abductionSound.stop(); // Stop the annoying noise
             this.isAbudcting = false;
             this.beam.clear(); // Destroy any graphic's artifacts of the beam
             this.beamMask.clear(); // Destroy any graphic's artifacts of the beam's mask. This shouldn't make a difference since the mask isn't technically rendered, but do it anyway just in case of weirdness.
@@ -230,6 +230,9 @@ var CosmicArkAdvanced;
             // Only abduct 1 alien at a time
             if (this.alienAbductee != null && this.alienAbductee != a) {
                 return;
+            }
+            if (!this.abductionSound.isPlaying) {
+                this.abductionSound.play();
             }
             if (this.isMoving) {
                 this.animations.frame = 1; // Turn on the blue glow

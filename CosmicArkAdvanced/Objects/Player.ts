@@ -40,6 +40,8 @@
                                     // This translates to the lowests point the player can go on the screen. 
                                     // So it can also be thought of as the min height for the player, and still be correct.
 
+        abductionSound: Phaser.Sound;
+
         /**
          * @description Constructor for the player's ship
          * @constructor
@@ -82,6 +84,8 @@
             this.body.collideWorldBounds = true;     // Automatically lock the players sprite into the world so they cannot move off screen.
 
             this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
+
+            this.abductionSound = this.game.add.sound("abduction", 0.05, true);
         }
 
         /**
@@ -264,6 +268,7 @@
                 this.alienAbductee = null;                              // Clear it from it's abducting duties ;)
             }
 
+            this.abductionSound.stop(); // Stop the annoying noise
             this.isAbudcting = false;
             this.beam.clear();  // Destroy any graphic's artifacts of the beam
             this.beamMask.clear();  // Destroy any graphic's artifacts of the beam's mask. This shouldn't make a difference since the mask isn't technically rendered, but do it anyway just in case of weirdness.
@@ -288,6 +293,9 @@
                 return;
             }
 
+            if (!this.abductionSound.isPlaying) {
+                this.abductionSound.play();
+            }
 
             if (this.isMoving) {
                 this.animations.frame = 1;     // Turn on the blue glow

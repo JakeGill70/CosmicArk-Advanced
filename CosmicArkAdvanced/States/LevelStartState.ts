@@ -50,8 +50,24 @@
         * @description Displays the splash image and scales it appropriately. Also registers the "onTap" event
         */
        create() {
-           
-            console.log("the LevelStartState has started!"); // testing
+
+           // Start Music
+           if (!this.game.music.isPlaying) {
+               switch (this.game.music.key) {
+                   case "ThereminsBeat":
+                       this.game.music = this.game.add.sound("SlideWhistleBlues", 0.9, true);
+                       break;
+                   case "SlideWhistleBlues":
+                       this.game.music = this.game.add.sound("RunTripAndFall", 0.9, true);
+                       break;
+                   case "RunTripAndFall":
+                   default:
+                       this.game.music = this.game.add.sound("ThereminsBeat", 0.9, true);
+                       break;
+               }
+               this.game.music.play();
+           }
+           console.log("Song Name: " + this.game.music.key);
        
             this.titleScreenImage = this.add.sprite(0, 0, "main"); // Pull the image out of memory
             this.titleScreenImage.scale.setTo(this.game.width / this.titleScreenImage.width, this.game.height / this.titleScreenImage.height);  // Scale it to fit the size of the screen
