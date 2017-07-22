@@ -53,7 +53,7 @@ var CosmicArkAdvanced;
             this.game.physics.enable(this, Phaser.Physics.ARCADE); // Enable physics for the ship
             this.body.collideWorldBounds = true; // Automatically lock the players sprite into the world so they cannot move off screen.
             this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
-            this.abductionSound = this.game.add.sound("abduction", 0.05, true);
+            this.abductionSound = this.game.add.sound("abduction", 0.06 * this.game.music.volume, true);
         }
         /**
          * @description Called every frame. Handles moving the player and sets the "isMoving" flag.
@@ -71,9 +71,9 @@ var CosmicArkAdvanced;
                 this.isMoving = true;
                 this.body.velocity = this.hookedVelocity;
             }
-            if (this.body.y > 420) {
+            if (this.body.y > 400) {
                 this.body.velocity = new Phaser.Point(0, 0);
-                this.body.y = 420;
+                this.body.y = 400;
             }
             if (this.isMoving) {
                 this.stopAbducting(false);

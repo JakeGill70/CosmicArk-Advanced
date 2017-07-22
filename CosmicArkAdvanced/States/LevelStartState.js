@@ -23,24 +23,34 @@ var CosmicArkAdvanced;
         LevelStartState.prototype.init = function (difficulty, score) {
             this.difficulty = difficulty;
             this.score = score;
+            var d2 = this.difficulty ^ 2;
+            var lowerBounds = 3.6 * this.difficulty - 1.4;
+            var upperBounds = 4.3 * this.difficulty + 0.3;
+            var boundRange = upperBounds - lowerBounds + 1;
+            var time = (7 * d2) + (7 * this.difficulty) + 15;
+            var perPersonTime = (this.difficulty < 5) ? 8 - this.difficulty : 3;
+            this.numberToCapture = Math.round(Math.random() * boundRange + lowerBounds);
+            this.timeToCapture = time + (this.numberToCapture * perPersonTime);
+            /*
             if (difficulty == 1) {
                 this.numberToCapture = Math.floor(Math.random() * 3) + 3; // Random number from 3 to 5
-                this.timeToCapture = 15 + (this.numberToCapture * 15); // 15 seconds + 7 seconds for every person you need to abduct
+                this.timeToCapture = 15 + (this.numberToCapture * 15);   // 15 seconds + 7 seconds for every person you need to abduct
             }
             else if (difficulty == 2) {
                 this.numberToCapture = Math.floor(Math.random() * 4) + 5; // Random number from 5 to 8
-                this.timeToCapture = 15 + (this.numberToCapture * 14); // 15 seconds + 7 seconds for every person you need to abduct
+                this.timeToCapture = 15 + (this.numberToCapture * 14);   // 15 seconds + 7 seconds for every person you need to abduct
             }
             else if (difficulty == 3) {
                 this.numberToCapture = Math.floor(Math.random() * 6) + 9; // Random number from 9 to 14
-                this.timeToCapture = 12 + (this.numberToCapture * 12); // 15 seconds + 7 seconds for every person you need to abduct
+                this.timeToCapture = 12 + (this.numberToCapture * 12);   // 15 seconds + 7 seconds for every person you need to abduct
             }
             else {
                 console.error("Unknown difficulty selected. Hardest will be selected instead >:)");
                 this.numberToCapture = Math.floor(Math.random() * 6) + 9; // Random number from 9 to 14
-                this.timeToCapture = 12 + (this.numberToCapture * 12); // 15 seconds + 7 seconds for every person you need to abduct
+                this.timeToCapture = 12 + (this.numberToCapture * 12);   // 15 seconds + 7 seconds for every person you need to abduct
                 this.difficulty = 3;
             }
+            */
         };
         /**
         * @description Displays the splash image and scales it appropriately. Also registers the "onTap" event
@@ -50,14 +60,14 @@ var CosmicArkAdvanced;
             if (!this.game.music.isPlaying) {
                 switch (this.game.music.key) {
                     case "ThereminsBeat":
-                        this.game.music = this.game.add.sound("SlideWhistleBlues", 0.9, true);
+                        this.game.music = this.game.add.sound("SlideWhistleBlues", this.game.music.volume, true);
                         break;
                     case "SlideWhistleBlues":
-                        this.game.music = this.game.add.sound("RunTripAndFall", 0.9, true);
+                        this.game.music = this.game.add.sound("RunTripAndFall", this.game.music.volume, true);
                         break;
                     case "RunTripAndFall":
                     default:
-                        this.game.music = this.game.add.sound("ThereminsBeat", 0.9, true);
+                        this.game.music = this.game.add.sound("ThereminsBeat", this.game.music.volume, true);
                         break;
                 }
                 this.game.music.play();

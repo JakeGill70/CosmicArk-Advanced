@@ -29,9 +29,21 @@
         * event handlers needed for touch/mouse input
         */
         create() {
-            this.planet1 = this.add.sprite(0  , 15, "planet1"); // Pull the image out of memory
-            this.planet2 = this.add.sprite(124, 15, "planet2"); // Pull the image out of memory
-            this.planet3 = this.add.sprite(248, 15, "planet3"); // Pull the image out of memory
+            // Add the difficulty/level select text
+            let txt_explain = this.game.add.bitmapText(0, 15, "EdoSZ", "Choose Your Planet");
+            txt_explain.position.setTo(this.game.width/2 - txt_explain.textWidth/2, 15);
+            txt_explain.tint = 0xFF0000;
+
+            // Add the text labeling in difficulty
+            let txt_easy = this.game.add.bitmapText(20,                             120, "EdoSZ", "Easy");
+            let txt_medium = this.game.add.bitmapText(this.game.width / 3 + 10,     120, "EdoSZ", "Normal");
+            let txt_hard = this.game.add.bitmapText(this.game.width * 2 / 3 + 10, 120, "EdoSZ", "Hard");
+            // TODO : Make this screen look pretty
+            let txt_note = this.game.add.bitmapText(15, this.game.height - 45, "EdoSZ", "TODO: Make this screen look pretty");
+
+            this.planet1 = this.add.sprite(5,   160, "planet1"); // Pull the image out of memory
+            this.planet2 = this.add.sprite(this.game.width/3, 160, "planet2"); // Pull the image out of memory
+            this.planet3 = this.add.sprite(this.game.width * 2 / 3, 160, "planet3"); // Pull the image out of memory
 
             // Register Event Handlers
             this.input.onTap.add(this.PlanetClicked, this, 0, this.input.position);
@@ -73,6 +85,14 @@
         selectPlanet(p?: Phaser.Sprite) {
             // Shrink the scale of the old planet
             if (this.selectedPlanet != null) { 
+
+                // Move the planet to re-center it (25% / 2) aka 12.5%
+                // Remember to move it while still 25% larger, since it was move is relative size
+                // and it was moved after being made larger
+                this.selectedPlanet.position.x += this.selectedPlanet.width / 8;
+                this.selectedPlanet.position.y += this.selectedPlanet.height / 8;
+
+
                 this.selectedPlanet.scale.setTo(1, 1);
             }
 
@@ -81,7 +101,12 @@
 
             // Grow the scale of the new planet
             if (this.selectedPlanet != null) {
+                // 25% increase feels right to be responsive enough
                 this.selectedPlanet.scale.setTo(1.25, 1.25);
+
+                // Move the planet to re-center it (25% / 2) aka 12.5%
+                this.selectedPlanet.position.x -= this.selectedPlanet.width / 8;
+                this.selectedPlanet.position.y -= this.selectedPlanet.height / 8;
             }
         }
     }

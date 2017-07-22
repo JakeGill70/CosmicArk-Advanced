@@ -85,7 +85,7 @@
 
             this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
 
-            this.abductionSound = this.game.add.sound("abduction", 0.05, true);
+            this.abductionSound = this.game.add.sound("abduction", 0.06 * this.game.music.volume, true);
         }
 
         /**
@@ -106,9 +106,9 @@
                 this.body.velocity = this.hookedVelocity;
             }
 
-            if (this.body.y > 420) {
+            if (this.body.y > 400) {
                 this.body.velocity = new Phaser.Point(0, 0);
-                this.body.y = 420;
+                this.body.y = 400;
             }
 
             if (this.isMoving) {    // If the flag was set after moving, stop abducting

@@ -39,15 +39,15 @@ var CosmicArkAdvanced;
             this.titleScreenImage = this.add.sprite(0, 0, "main"); // Pull the image out of memory
             this.titleScreenImage.scale.setTo(this.game.width / this.titleScreenImage.width, this.game.height / this.titleScreenImage.height); // Scale it to fit the size of the screen
             // Add Audio
-            this.sfx = this.game.add.audio("beep", 0.75);
+            this.sfx = this.game.add.audio("beep", 0.8 * this.game.music.volume);
             this.sfx.allowMultiple = true;
             // Change music
             var oldSong = this.game.music.key;
             this.game.music.stop();
-            this.game.music = this.game.add.audio("victory", 0.9);
+            this.game.music = this.game.add.audio("victory", this.game.music.volume);
             this.game.music.loop = false;
             this.game.music.play();
-            this.game.music = this.game.add.audio(oldSong, 0.9);
+            this.game.music = this.game.add.audio(oldSong, this.game.music.volume);
             // Calculate the new score values
             this.timeBonus = Math.floor(this.timeRemaining) * 5;
             this.captureBonus = (this.numberToCapture * 500) + (this.numberCaught - this.numberToCapture) * 800;
@@ -66,6 +66,8 @@ var CosmicArkAdvanced;
         * @description Handles the "onTap" event. Just moves over to the gamePlayState state.
         */
         LevelFinishState.prototype.LevelStartClicked = function () {
+            // Increase the difficulty for the next round
+            this.difficulty += 0.25;
             this.game.state.start("levelStartState", true, false, this.difficulty, this.score); // Go load the next level            }
         };
         LevelFinishState.prototype.updateText = function () {

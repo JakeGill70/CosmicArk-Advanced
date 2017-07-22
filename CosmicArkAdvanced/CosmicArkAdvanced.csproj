@@ -33,6 +33,7 @@
     <Content Include="Audio\Music\Victory-Song.wav" />
     <Content Include="Audio\SFX\Beep.wav" />
     <Content Include="Audio\SFX\Death_22.wav" />
+    <Content Include="Audio\SFX\Explosion.wav" />
     <Content Include="Audio\SFX\Laser_Shoot10.wav" />
     <Content Include="Audio\SFX\Laser_Shoot10_loopable.wav" />
     <Content Include="Fonts\EdoSZ.png" />
@@ -104,6 +105,7 @@
     <Content Include="Audio\Music\Theremins Beat Short.json" />
     <Content Include="Audio\Music\Theremins Beat.json" />
     <Content Include="Audio\Music\Victory-Song.json" />
+    <Content Include="Audio\SFX\Explosion.bfxrsound" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

@@ -98,6 +98,7 @@
             this.game.load.audio("abduction", "Audio/SFX/Laser_Shoot10_loopable.wav");
             this.game.load.audio("SlideWhistleBlues", "Audio/Music/Slide Whistle Blues.wav");
             this.game.load.audio("RunTripAndFall", "Audio/Music/Run Trip and Fall.wav");
+            this.game.load.audio("explosion", "Audio/SFX/Explosion.wav");
             this.game.load.start();
         }
     }

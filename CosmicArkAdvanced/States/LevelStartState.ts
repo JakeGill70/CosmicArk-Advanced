@@ -25,6 +25,18 @@
         init(difficulty: number, score: number) {
             this.difficulty = difficulty;
             this.score = score;
+
+            let d2 = this.difficulty ^ 2;
+            let lowerBounds = 3.6 * this.difficulty - 1.4;
+            let upperBounds = 4.3 * this.difficulty + 0.3;
+            let boundRange = upperBounds - lowerBounds + 1;
+            let time = (7 * d2) + (7 * this.difficulty) + 15;
+            let perPersonTime = (this.difficulty < 5) ? 8 - this.difficulty : 3;
+
+            this.numberToCapture = Math.round(Math.random() * boundRange + lowerBounds);
+            this.timeToCapture = time + (this.numberToCapture * perPersonTime);  
+
+            /*
             if (difficulty == 1) {
                 this.numberToCapture = Math.floor(Math.random() * 3) + 3; // Random number from 3 to 5
                 this.timeToCapture = 15 + (this.numberToCapture * 15);   // 15 seconds + 7 seconds for every person you need to abduct
@@ -43,6 +55,7 @@
                 this.timeToCapture = 12 + (this.numberToCapture * 12);   // 15 seconds + 7 seconds for every person you need to abduct
                 this.difficulty = 3;
             }
+            */
         }
 
     
@@ -55,14 +68,14 @@
            if (!this.game.music.isPlaying) {
                switch (this.game.music.key) {
                    case "ThereminsBeat":
-                       this.game.music = this.game.add.sound("SlideWhistleBlues", 0.9, true);
+                       this.game.music = this.game.add.sound("SlideWhistleBlues", this.game.music.volume, true);
                        break;
                    case "SlideWhistleBlues":
-                       this.game.music = this.game.add.sound("RunTripAndFall", 0.9, true);
+                       this.game.music = this.game.add.sound("RunTripAndFall", this.game.music.volume, true);
                        break;
                    case "RunTripAndFall":
                    default:
-                       this.game.music = this.game.add.sound("ThereminsBeat", 0.9, true);
+                       this.game.music = this.game.add.sound("ThereminsBeat", this.game.music.volume, true);
                        break;
                }
                this.game.music.play();
