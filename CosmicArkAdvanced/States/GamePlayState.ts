@@ -37,6 +37,9 @@
         uiText: Phaser.BitmapText;          // UI Text for updating score information
         uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
 
+        tweenSize: Phaser.Tween;
+        tweenColor: Phaser.Tween;
+
         difficulty: number;                 // Value 1-3 which assists in level generation
         numberToCapture: number;            // Number of aliens needed 
         alienTotal: number;                 // Total number of aliens walking along the ground
@@ -307,10 +310,13 @@
                 "\nCAPTURED: " + this.player.aliensCaptured.toString());
             this.uiText.fixedToCamera = true;
 
-            this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ",
-                "Score: ");
+            this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ", "Score: ");
 
             this.uiText_Score.fixedToCamera = true;
+
+            // Add tweens to UI for when hit
+            this.tweenSize = this.game.add.tween(this.uiText_Score.scale).to({ x: [1.75, 1], y: [1.75, 1] }, 500, Phaser.Easing.Linear.None, false, 0);
+            this.tweenColor = this.game.add.tween(this.uiText_Score).to({ tint: [0xFF1122, 0xFF1122, 0xFF1122, 0xFFFFFF] }, 500, Phaser.Easing.Linear.None, false, 0);
 
 
             // this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
@@ -403,6 +409,10 @@
 
                         // Reduce Time
                         this.addTime(-5000);
+
+                        // Change UI
+                        this.tweenSize.start();
+                        this.tweenColor.start();
                     }
                 }
             }
@@ -422,7 +432,6 @@
             // Collide the player's ship with the aliens
             let atLeastOne = false;                     // Flag meaning "At least one alien is availble to be abducted"
             this.alienBatch.forEachAlive(function (alien: Phaser.Sprite) {
-                // TODO: Bugfix: Fix it so that the ship cannot abduct an alien if the ship is too low
                 if (this.game.physics.arcade.overlap(this.player, alien)) {
                     atLeastOne = true;
                     this.player.Abduct(alien);
@@ -449,6 +458,10 @@
                     // Reduce Time
                     this.addTime(-10000);
 
+                    // Change UI
+                    this.tweenSize.start();
+                    this.tweenColor.start();
+
                     // Destroy mine
                     this.mines[n].destroy(true);
                 }
@@ -457,8 +470,34 @@
 
             // Collide the player's ship with the mothership
             if (this.game.physics.arcade.overlap(this.player, this.mothership)) {
-                this.player.Capture();
+
+                if (this.player.aliensOnBoard > 0) {
+                    this.player.aliensCaptured += this.player.aliensOnBoard;
+
+                    // Only play the SFX if this isn't the end of the level
+                    if (this.player.aliensCaptured < this.numberToCapture) {
+                        this.sfxRepeater("transport", this.player.aliensOnBoard, this.game.music.volume * 0.70);
+                    }
+
+                    this.player.aliensOnBoard = 0;
+                }
+
             }
+        }
+
+        sfxRepeater(key: string, numberOfPlays: number, volume = 0.7) {
+
+            let sfx = this.game.sound.play(key, volume, false);
+
+            // Create Timer
+            let sfxRepeatTimer = this.game.time.create(true);
+
+            sfxRepeatTimer.repeat(sfx.durationMS, numberOfPlays-1, function () {
+                sfx.play();
+            }, this);
+
+            sfxRepeatTimer.start();
+
         }
 
         /**
@@ -556,7 +595,7 @@
          */
         render() {
             // Debug features...
-            // this.game.debug.body(this.player);
+            //this.game.debug.body(this.player);
             // this.game.debug.body(this.man1, "rgba(255,0,0,0.4");
             // this.gun1.bullets.debug();
             // this.game.debug.body(this.mine1);
@@ -577,8 +616,7 @@
             this.uiText.destroy();
             this.uiText_Score.destroy();
             this.levelTimer.destroy();
-
-            // TODO: Run a check to stop all sounds
+            this.game.sound.stopAll();
         }
     }
 }

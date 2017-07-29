@@ -35,6 +35,11 @@
             this.btn_Help = this.add.bitmapText(250, 200, "EdoSZ", "HOW TO PLAY");
             this.btn_Mute = this.add.bitmapText(250, 240, "EdoSZ", "MUTE");
 
+            // Play some theme music!
+            if (!this.game.music.isPlaying) {
+                this.game.music = this.game.add.sound("ThereminsBeat", this.game.music.volume, true);
+                this.game.music.play();
+            }
 
             // Register Event Handlers
             this.input.onTap.add(this.ButtonClicked, this, 0, this.input.position);

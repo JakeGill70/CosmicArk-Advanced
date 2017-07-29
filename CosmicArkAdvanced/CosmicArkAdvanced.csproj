@@ -24,6 +24,7 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Audio\Music\Groove88.wav" />
     <Content Include="Audio\Music\Like Paper.wav" />
     <Content Include="Audio\Music\Run Trip and Fall.wav" />
     <Content Include="Audio\Music\Slide Whistle Blues - Double.wav" />
@@ -34,8 +35,11 @@
     <Content Include="Audio\SFX\Beep.wav" />
     <Content Include="Audio\SFX\Death_22.wav" />
     <Content Include="Audio\SFX\Explosion.wav" />
+    <Content Include="Audio\SFX\Intro_Flyin.wav" />
     <Content Include="Audio\SFX\Laser_Shoot10.wav" />
     <Content Include="Audio\SFX\Laser_Shoot10_loopable.wav" />
+    <Content Include="Audio\SFX\Transport.wav" />
+    <Content Include="Audio\SFX\Transport_short.wav" />
     <Content Include="Fonts\EdoSZ.png" />
     <Content Include="Graphics\Backgrounds\City1.png" />
     <Content Include="Graphics\Backgrounds\MainMenuScreen2.png" />
@@ -106,6 +110,9 @@
     <Content Include="Audio\Music\Theremins Beat.json" />
     <Content Include="Audio\Music\Victory-Song.json" />
     <Content Include="Audio\SFX\Explosion.bfxrsound" />
+    <Content Include="Audio\SFX\Intro_Flyin.bfxrsound" />
+    <Content Include="Audio\SFX\Transport.bfxrsound" />
+    <Content Include="Audio\Music\Groove88.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

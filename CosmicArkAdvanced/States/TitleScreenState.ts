@@ -97,8 +97,11 @@
             this.game.load.audio("victory", "Audio/Music/Victory-Song.wav");
             this.game.load.audio("abduction", "Audio/SFX/Laser_Shoot10_loopable.wav");
             this.game.load.audio("SlideWhistleBlues", "Audio/Music/Slide Whistle Blues.wav");
+            this.game.load.audio("LikePaper", "Audio/Music/Like Paper.wav");
             this.game.load.audio("RunTripAndFall", "Audio/Music/Run Trip and Fall.wav");
+            this.game.load.audio("Groove88", "Audio/Music/Groove88.wav");
             this.game.load.audio("explosion", "Audio/SFX/Explosion.wav");
+            this.game.load.audio("transport", "Audio/SFX/Transport_short.wav");
             this.game.load.start();
         }
     }

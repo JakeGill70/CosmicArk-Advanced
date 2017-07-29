@@ -23,9 +23,14 @@ var CosmicArkAdvanced;
         LevelFinishState.prototype.init = function (difficulty, score, timeRemaining, numberToCapture, numberCaught) {
             this.difficulty = difficulty;
             this.score = score;
+            this.uiScore = score;
             this.timeRemaining = timeRemaining;
             this.numberToCapture = numberToCapture;
             this.numberCaught = numberCaught;
+            this.isGameOver = false;
+            if (this.timeRemaining <= 0) {
+                this.isGameOver = true;
+            }
         };
         /**
         * @description Displays the splash image and scales it appropriately. Also registers the "onTap" event
@@ -42,23 +47,28 @@ var CosmicArkAdvanced;
             this.sfx = this.game.add.audio("beep", 0.8 * this.game.music.volume);
             this.sfx.allowMultiple = true;
             // Change music
-            var oldSong = this.game.music.key;
+            this.oldSong = this.game.music.key;
             this.game.music.stop();
             this.game.music = this.game.add.audio("victory", this.game.music.volume);
             this.game.music.loop = false;
             this.game.music.play();
-            this.game.music = this.game.add.audio(oldSong, this.game.music.volume);
             // Calculate the new score values
             this.timeBonus = Math.floor(this.timeRemaining) * 5;
             this.captureBonus = (this.numberToCapture * 500) + (this.numberCaught - this.numberToCapture) * 800;
+            if (this.captureBonus < 0) {
+                this.captureBonus = 0;
+            } // If less than 0, set to 0
+            this.score += this.timeBonus + this.captureBonus; // Assign the REAL score before having to wait on the UI stuff
             // UI
-            // TODO: Is there a way to animate these numbers appearing?
             this.uiText = this.game.add.bitmapText(40, 150, "EdoSZ", // maybe x = 50 would look better
             "Humans Abducted: " + this.numberCaught.toString() + " / " + this.numberToCapture +
                 "\nAbduction Bonus: +" + this.captureBonus.toString() +
                 "\nTime Remaining: " + this.timeRemaining.toFixed(2) + " sec" +
                 "\nTime Bonus: +" + this.timeBonus.toString() +
                 "\n\nScore: " + this.score);
+            if (this.isGameOver) {
+                var youLoseText = this.game.add.bitmapText(this.game.width / 2 + 80, 250, "EdoSZ", "YOU LOSE!!!");
+            }
             // Register the "TitleClicked" even handler
             this.input.onTap.add(this.LevelStartClicked, this);
         };
@@ -66,18 +76,32 @@ var CosmicArkAdvanced;
         * @description Handles the "onTap" event. Just moves over to the gamePlayState state.
         */
         LevelFinishState.prototype.LevelStartClicked = function () {
-            // Increase the difficulty for the next round
-            this.difficulty += 0.25;
-            this.game.state.start("levelStartState", true, false, this.difficulty, this.score); // Go load the next level            }
+            if (this.isFinishedAnimating) {
+                if (this.isGameOver) {
+                    this.game.state.start("mainMenuState");
+                }
+                else {
+                    // Increase the difficulty for the next round
+                    this.difficulty += 0.25;
+                    this.game.state.start("levelStartState", true, false, this.difficulty, this.score); // Go load the next level
+                }
+            }
+            else {
+                this.timr.stop();
+                this.uiScore = this.score;
+                this.captureBonus = 0;
+                this.timeBonus = 0;
+                this.updateText();
+            }
         };
         LevelFinishState.prototype.updateText = function () {
             if (this.captureBonus > 0) {
                 // Add capture bonus
                 this.captureBonus -= 200;
-                this.score += 200;
+                this.uiScore += 200;
                 // Correct if the score moves too much
                 if (this.captureBonus < 0) {
-                    this.score += this.captureBonus;
+                    this.uiScore += this.captureBonus;
                     this.captureBonus = 0; // Reset to 0 for displaying
                 }
                 this.sfx.play();
@@ -91,10 +115,10 @@ var CosmicArkAdvanced;
                 // Add time Bonus
                 if (this.timeBonus > 0) {
                     this.timeBonus -= 15;
-                    this.score += 15;
+                    this.uiScore += 15;
                     // Correct if the score moves too much
                     if (this.timeBonus < 0) {
-                        this.score += this.timeBonus;
+                        this.uiScore += this.timeBonus;
                         this.timeBonus = 0; // Reset to 0 for displaying
                     }
                     this.sfx.play();
@@ -105,12 +129,22 @@ var CosmicArkAdvanced;
                 "\nAbduction Bonus: +" + this.captureBonus.toString() +
                 "\nTime Remaining: " + this.timeRemaining.toFixed(2) + " sec" +
                 "\nTime Bonus: +" + this.timeBonus.toString() +
-                "\n\nScore: " + this.score.toString();
-            this.uiText.updateText();
+                "\n\nScore: " + this.uiScore.toString();
+            this.uiText.updateText(); // NOT Recursion. This re-renders the bitmapped text
+            if (this.timeBonus == 0 && this.captureBonus == 0) {
+                this.isFinishedAnimating = true;
+                // Play some awesome post-game music
+                this.timr.stop(); // Stop the timer from accidently calling this again
+                this.game.music.stop(); // Stop any rouge music that may be playing
+                this.game.music = this.game.add.audio("Groove88", this.game.music.volume, true);
+                this.game.music.play();
+            }
         };
         LevelFinishState.prototype.shutdown = function () {
             this.titleScreenImage.destroy(true);
             this.uiText.destroy(true);
+            this.game.music.stop();
+            this.game.music = this.game.add.audio(this.oldSong, this.game.music.volume);
         };
         return LevelFinishState;
     }(Phaser.State));

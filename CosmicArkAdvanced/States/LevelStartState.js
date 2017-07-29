@@ -66,6 +66,9 @@ var CosmicArkAdvanced;
                         this.game.music = this.game.add.sound("RunTripAndFall", this.game.music.volume, true);
                         break;
                     case "RunTripAndFall":
+                        this.game.music = this.game.add.sound("LikePaper", this.game.music.volume, true);
+                        break;
+                    case "LikePaper":
                     default:
                         this.game.music = this.game.add.sound("ThereminsBeat", this.game.music.volume, true);
                         break;

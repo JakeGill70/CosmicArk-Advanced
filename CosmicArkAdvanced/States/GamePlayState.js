@@ -249,6 +249,9 @@ var CosmicArkAdvanced;
             this.uiText.fixedToCamera = true;
             this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ", "Score: ");
             this.uiText_Score.fixedToCamera = true;
+            // Add tweens to UI for when hit
+            this.tweenSize = this.game.add.tween(this.uiText_Score.scale).to({ x: [1.75, 1], y: [1.75, 1] }, 500, Phaser.Easing.Linear.None, false, 0);
+            this.tweenColor = this.game.add.tween(this.uiText_Score).to({ tint: [0xFF1122, 0xFF1122, 0xFF1122, 0xFFFFFF] }, 500, Phaser.Easing.Linear.None, false, 0);
             // this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
         };
         /**
@@ -325,6 +328,9 @@ var CosmicArkAdvanced;
                         this_1.game.sound.play("explosion", this_1.game.music.volume * 0.50);
                         // Reduce Time
                         this_1.addTime(-5000);
+                        // Change UI
+                        this_1.tweenSize.start();
+                        this_1.tweenColor.start();
                     }
                 };
                 var this_1 = this;
@@ -344,7 +350,6 @@ var CosmicArkAdvanced;
             // Collide the player's ship with the aliens
             var atLeastOne = false; // Flag meaning "At least one alien is availble to be abducted"
             this.alienBatch.forEachAlive(function (alien) {
-                // TODO: Bugfix: Fix it so that the ship cannot abduct an alien if the ship is too low
                 if (this.game.physics.arcade.overlap(this.player, alien)) {
                     atLeastOne = true;
                     this.player.Abduct(alien);
@@ -366,14 +371,34 @@ var CosmicArkAdvanced;
                     this.game.sound.play("explosion", this.game.music.volume * 0.50);
                     // Reduce Time
                     this.addTime(-10000);
+                    // Change UI
+                    this.tweenSize.start();
+                    this.tweenColor.start();
                     // Destroy mine
                     this.mines[n].destroy(true);
                 }
             }
             // Collide the player's ship with the mothership
             if (this.game.physics.arcade.overlap(this.player, this.mothership)) {
-                this.player.Capture();
+                if (this.player.aliensOnBoard > 0) {
+                    this.player.aliensCaptured += this.player.aliensOnBoard;
+                    // Only play the SFX if this isn't the end of the level
+                    if (this.player.aliensCaptured < this.numberToCapture) {
+                        this.sfxRepeater("transport", this.player.aliensOnBoard, this.game.music.volume * 0.70);
+                    }
+                    this.player.aliensOnBoard = 0;
+                }
             }
+        };
+        GamePlayState.prototype.sfxRepeater = function (key, numberOfPlays, volume) {
+            if (volume === void 0) { volume = 0.7; }
+            var sfx = this.game.sound.play(key, volume, false);
+            // Create Timer
+            var sfxRepeatTimer = this.game.time.create(true);
+            sfxRepeatTimer.repeat(sfx.durationMS, numberOfPlays - 1, function () {
+                sfx.play();
+            }, this);
+            sfxRepeatTimer.start();
         };
         /**
          * @Description Helper function which cycles through the sprite batch of men along the bottom the screen and applies logic into how they should move.
@@ -460,7 +485,7 @@ var CosmicArkAdvanced;
          */
         GamePlayState.prototype.render = function () {
             // Debug features...
-            // this.game.debug.body(this.player);
+            //this.game.debug.body(this.player);
             // this.game.debug.body(this.man1, "rgba(255,0,0,0.4");
             // this.gun1.bullets.debug();
             // this.game.debug.body(this.mine1);
@@ -480,7 +505,7 @@ var CosmicArkAdvanced;
             this.uiText.destroy();
             this.uiText_Score.destroy();
             this.levelTimer.destroy();
-            // TODO: Run a check to stop all sounds
+            this.game.sound.stopAll();
         };
         return GamePlayState;
     }(Phaser.State));
