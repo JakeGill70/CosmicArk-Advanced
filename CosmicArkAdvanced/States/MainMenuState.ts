@@ -11,6 +11,7 @@
         titleScreenImage: Phaser.Sprite
         btn_Help: Phaser.BitmapText;
         btn_Play: Phaser.BitmapText;
+        btn_Mute: Phaser.BitmapText;
 
         /**
         * Default constructor, only calls the Phaser.State instructor for now.
@@ -32,24 +33,34 @@
             // Make Buttons
             this.btn_Play = this.add.bitmapText(250, 160, "EdoSZ", "PLAY NOW");
             this.btn_Help = this.add.bitmapText(250, 200, "EdoSZ", "HOW TO PLAY");
+            this.btn_Mute = this.add.bitmapText(250, 240, "EdoSZ", "MUTE");
 
-
+            // Play some theme music!
+            if (!this.game.music.isPlaying) {
+                this.game.music = this.game.add.sound("ThereminsBeat", this.game.music.volume, true);
+                this.game.music.play();
+            }
 
             // Register Event Handlers
-            this.input.onTap.add(this.PlanetClicked, this, 0, this.input.position);
+            this.input.onTap.add(this.ButtonClicked, this, 0, this.input.position);
         }
 
         /**
          * @description Handles "onTap" event. Will grow and shink planets when tapped. Also handles movement into the next gameplay state.
          * @param {Phaser.point} pos The x,y coordinates of where the user touched/clicked
          */
-        PlanetClicked(pos: Phaser.Point) {
+        ButtonClicked(pos: Phaser.Point) {
             if (this.btn_Play.getBounds().contains(pos.x, pos.y)) { 
                 this.game.state.start("mapSelectState");  // Jump to MapSelectState
             }
             else if (this.btn_Help.getBounds().contains(pos.x, pos.y)) { 
                 // Get Game Data from the selected planet
                 this.game.state.start("helpScreenState"); // Jump to the HelpScreenState
+            }
+            else if (this.btn_Mute.getBounds().contains(pos.x, pos.y)) {
+                // Get Game Data from the selected planet
+                this.game.music.volume = (this.game.music.volume > 0) ? 0 : 0.9; // Set the volume to 0% or 90% depending on last value
+                this.btn_Mute.tint = (this.game.music.volume > 0) ? 0xFFFFFF : 0xFF0505; // Set the volume to red or white depending on last value
             }
         }
     }

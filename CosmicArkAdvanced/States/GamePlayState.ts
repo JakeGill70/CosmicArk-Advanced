@@ -20,27 +20,34 @@
     export class GamePlayState extends Phaser.State {
         game: Phaser.Game;                  // Game Refence
         player: CosmicArkAdvanced.Player;   // Player object
-        man1: CosmicArkAdvanced.Man;        // Test Alien
         aliens: CosmicArkAdvanced.IPhysicsReady[];          // List of aliens in this scene that are capable of recieving physics calls
 
         men: Phaser.Group;
 
-        myBatch: Phaser.SpriteBatch;
+        alienBatch: Phaser.SpriteBatch;     // Collection of aliens in the game 
 
-        guns: CosmicArkAdvanced.Gun[];      // Collection of guns  in the game <edf>
-        mines: CosmicArkAdvanced.Mine[];    // Collection of mines in the game <edf>
-        hooks: CosmicArkAdvanced.Hook[];    // Collection of hooks in the game <edf>
+        guns: CosmicArkAdvanced.Gun[];      // Collection of guns  in the game
+        mines: CosmicArkAdvanced.Mine[];    // Collection of mines in the game
+        hooks: CosmicArkAdvanced.Hook[];    // Collection of hooks in the game
 
         mothership: Phaser.Sprite;          // Mothership object
 
         dict: any[];                        // 2 key dictionary of IPhysicsReady object's names which define a boolean value for if the two objects were colliding as of the previous frame.
 
-        gun1: CosmicArkAdvanced.Gun;        // Test gun
-        mine1: CosmicArkAdvanced.Mine;      // Test mine
-        hook1: CosmicArkAdvanced.Hook;      // Test hook
-
         uiText: Phaser.BitmapText;          // UI Text for updating score information
         uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
+
+        tweenSize: Phaser.Tween;
+        tweenColor: Phaser.Tween;
+
+        difficulty: number;                 // Value 1-3 which assists in level generation
+        numberToCapture: number;            // Number of aliens needed 
+        alienTotal: number;                 // Total number of aliens walking along the ground
+
+        timeToCapture: number;              // Number of seconds the player has to finish the level
+        levelTimer: Phaser.Timer;           // Timer object that counts down the number of seconds the player has left to complete the level
+
+        score: number;                 // Holds the current score to carry it over to the LevelFinishState
 
         /**
          * @Description Mostly empty. Does initialize the aliens list and the dictionary.
@@ -48,6 +55,21 @@
          */
         constructor() {
             super();
+        }
+
+        // Todo: document this
+        init(difficulty: number, timeToCapture: number, numberToCapture: number, score: number) {
+            // Assign aurguments to class level properties
+            this.difficulty = difficulty;
+            this.numberToCapture = numberToCapture;
+            this.timeToCapture = timeToCapture;
+            this.score = score;
+
+            // Make the level timer
+            this.levelTimer = this.game.time.create(false);
+            this.levelTimer.loop(timeToCapture * 1000, this.OutOfTime, this);
+
+            // Initialize arrays
             this.aliens = [];
             this.guns = [];
             this.mines = [];
@@ -55,7 +77,111 @@
             this.dict = [];
         }
 
-        addMan(x: number = (-1), y: number = (this.game.world.height - 70)) {
+        // Todo: Document this
+        addMine(x?: number, y?: number) {
+            if (x == null || x == undefined) {
+                x = this.game.world.width * Math.random();
+            }
+            if (y == null || y == undefined) {
+                y = Math.floor(this.game.world.height - ((Math.random() * 150) + 125)); // 125 - 274
+            }
+            let m = new Mine(this.game, x, y, "mine1");
+            this.mines.push(m);
+        }
+
+        // Todo: document this
+        addGun();
+        addGun(spd?: number);
+        addGun(spd?: number, x?: number, y: number = (this.game.world.height - 50)) {
+            if (x == null) {  
+                x = -1;       
+                let minDist = 327 * (Math.E ^ (-0.592 * this.difficulty)); // Roughly equal to halfing the orginal 200, but weighting it to be a more giving in the higher levels
+
+                while (x == -1) {
+                    x = (Math.random() * 1472) + 64; // Creates a Range between 64 and (1600-64)
+                    for (let g of this.guns) {
+                        if (Phaser.Math.difference(x, g.x) < minDist) {
+                            x = -1;
+                            break;
+                        }
+                    }
+
+                    minDist -= 0.05; // Lower the bounds in case more guns get added than the level can support
+                }
+            }
+            if (spd == null) {
+
+                spd = 20 * this.difficulty + 60;
+            }
+
+            let gun = new Gun(this.game, x, y, "gun", spd, this.player);
+
+            //gun.bullets.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
+
+            gun.bullets.fireRate = (58 * this.difficulty * this.difficulty) - (1093 * this.difficulty) + 5946;
+            gun.bullets.fireRateVariance = (Math.random() * 25 + 25) * (this.difficulty % 3);
+
+            // 2000ms was the original testing speed
+            /*
+            if (this.difficulty == 1) {
+                gun.bullets.fireRate = 5000;
+            }
+            else if (this.difficulty == 2) {
+                gun.bullets.fireRate = 4000;
+            }
+            else if (this.difficulty == 3) {
+                gun.bullets.fireRate = 3000;
+            }
+            else {
+                // formula for any unknown difficulty
+                console.log("Error: Unknown difficulty was used when declaring a gun");
+                gun.bullets.fireRate = 2000 * (this.difficulty / 1.5);
+            }
+            */
+                
+            this.guns.push(gun);
+        }
+
+        // Todo: document this
+        addHook();
+        addHook(spd?: number);
+        addHook(spd?: number, x?: number, y: number = (this.game.world.height - 50)) {
+            if (x == null || x == undefined) {
+                x = -1;
+                let minDist = 327 * (Math.E ^ (-0.592 * this.difficulty));
+
+                while (x == -1) {
+                    x = (Math.random() * 1472) + 64; // Creates a Range between 64 and (1600-64)
+                    for (let h of this.hooks) {
+                        if (Phaser.Math.difference(x, h.x) < minDist) {
+                            x = -1;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (spd == null || spd == undefined) {
+                spd = 20 * this.difficulty + 60;
+            }
+            
+            let hook = new Hook(this.game, x, y, "gun", "hook1", this.player);
+            // 2000ms was the original testing speed
+            hook.wep.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
+
+            this.hooks.push(hook);
+        }
+
+        /**
+         * @Description Creates a AI man
+         * @param x Start X position, default is random (keyed as -1, if you want -1, use something like -1.000000001)
+         * @param y Start Y position, default is 70px from the bottom of the world
+         */
+        addMan(isRespawn: boolean = false, x: number = (-1), y: number = (this.game.world.height - 70)) {
+
+            if (!isRespawn) {
+                this.alienTotal++;
+            }
+
             // Establish a random position
             if (x == -1) {
                 x = (Math.random() * 1472) + 64;            // Creates a Range between 64 and (1600-64)
@@ -64,7 +190,7 @@
                 }
             }
             // Create the alien
-            let m = this.myBatch.create(x, y, "man") as Phaser.Sprite;
+            let m = this.alienBatch.create(x, y, "man") as Phaser.Sprite;
             m.data = new CosmicArkAdvanced.AlienProperties();               // Holds additional info about the alien
             m.anchor.setTo(0.5, 1.0);
             (m.data as AlienProperties).initialY = y;                       // Save a copy of the initial y position in case it needs to be respawned
@@ -84,9 +210,12 @@
             m.body.setSize(Math.abs(m.width), m.height * 2, 0, m.height * -1); // Extend the collision box upwards so it can hit the ship
             // (m.body as Phaser.Physics.Arcade.Body).setSize(w, h, x, y);
             m.body.velocity.set(spd, 0);                                  // Set the initial velocity to be it's speed with the random direction
+        }
 
-            // TODO: Delete this debugging feature
-            console.log(m.data.initialY);
+        // TODO: Document this
+        OutOfTime() {
+            let capt = this.player.aliensCaptured;
+            this.game.state.start("levelFinishState", true, false, this.difficulty, this.score, this.GetTimeRemaining(), this.numberToCapture, capt); // Jump to the Level Finish State
         }
 
         /**
@@ -94,37 +223,83 @@
          */
         create() {
 
+            console.log("GamePlayState has started");
+            console.log("Level Difficulty is: " + this.difficulty);
+
             // Use this for debugging to measure FPS
             this.game.time.advancedTiming = true;
-
             // Set Level size
             this.game.world.setBounds(0, 0, 1600, 550);
             // Set Physics settings
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
-            
+
+            // Start the level timer
+            this.levelTimer.start();
+
             // Make the objects
             this.makeBackgrounds();
             this.makeMotherShip();
-            this.player = new Player(this.game, 0, 0, "player");
-            this.gun1 = new Gun(this.game, 150, this.game.world.height - 50, "gun", "gun1", this.player);
-            this.guns.push(this.gun1);
-            this.mine1 = new Mine(this.game, 200, 200, "mine1");
-            this.mines.push(this.mine1);
-            this.hook1 = new Hook(this.game, 400, this.game.world.height - 50, "gun", "hook1", this.player);
-            this.hooks.push(this.hook1);
+            let pStartX = this.mothership.position.x + this.mothership.width / 2;
+            this.player = new Player(this.game, pStartX , 144, "player");
+
+            // Always start with at least ( 3 + Difficulty ) guns
+            this.addGun();
+            this.addGun();
+            this.addGun();
+            for (let i = Math.ceil(this.difficulty); i > 0; i--) {
+                this.addGun();
+                for (let n = Math.floor(this.difficulty); n > 0; n--) {
+                    if (Math.random() <= 0.5) {
+                        this.addGun();
+                    }
+                }
+            }
+
+            // Always start with at least 2+difficulty mines
+            this.addMine();
+            this.addMine();
+            for (let i = Math.floor(this.difficulty); i > 0; i--) {
+                this.addMine();
+                // 60% chance of 1 additional mine
+                // 30% chance of 2 additional mines
+                // 10% chance of 3 additional mines
+                let r = Math.random();
+                if (r < 0.60) {
+                    this.addMine();
+                }
+                else if (r < 0.90) {
+                    this.addMine();
+                    this.addMine();
+                }
+                else {
+                    this.addMine();
+                    this.addMine();
+                    this.addMine();
+                }
+            }
+
+            // Must at least be up to a normal difficulty curve to start seeing Hooks
+            if (this.difficulty > 2.0) {
+                // Add at least 1 hook for every difficulty level
+                // 40% chance of an additional hook every time a single hook is added
+                for (let i = Math.floor(this.difficulty); i > 0; i--) {
+                    this.addHook();
+                    if (Math.random() < 0.40) {
+                        this.addHook();
+                    }
+                }
+            }
+            
 
             // Aliens should always be created after the player so that they don't accidently render behind the tractor beam
-            this.myBatch = this.game.add.spriteBatch(this.game.world); // Create the man sprite batch so they will all be rendered at once
-            this.addMan(65); 
-            this.addMan(); 
-            this.addMan(); 
-            this.addMan();
-            this.addMan();
-            this.addMan();
-            this.addMan();
-            this.addMan();
-            this.addMan();
-            this.addMan();
+            this.alienBatch = this.game.add.spriteBatch(this.game.world); // Create the man sprite batch so they will all be rendered at once
+
+            for (let i = this.numberToCapture; i > 0; i--) {
+                this.addMan();
+                if (Math.random() < (0.6 - ((this.difficulty - 1) * 0.1))) {
+                    this.addMan();
+                }
+            }
 
             // Set Camera settings
             this.game.camera.follow(this.player);
@@ -135,10 +310,13 @@
                 "\nCAPTURED: " + this.player.aliensCaptured.toString());
             this.uiText.fixedToCamera = true;
 
-            this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ",
-                "Score: ");
+            this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ", "Score: ");
 
             this.uiText_Score.fixedToCamera = true;
+
+            // Add tweens to UI for when hit
+            this.tweenSize = this.game.add.tween(this.uiText_Score.scale).to({ x: [1.75, 1], y: [1.75, 1] }, 500, Phaser.Easing.Linear.None, false, 0);
+            this.tweenColor = this.game.add.tween(this.uiText_Score).to({ tint: [0xFF1122, 0xFF1122, 0xFF1122, 0xFFFFFF] }, 500, Phaser.Easing.Linear.None, false, 0);
 
 
             // this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
@@ -165,25 +343,43 @@
         }
 
         /**
-         * @Description Currently only used for checking collisions between objects
+         * @Description Check for collisions between objects, update the UI and coordinate AI movements
          */
         update() {
             this.collideObjects();      // Check for collisions
             this.moveMen();             // Move the men along the bottom of the screen
-
-
-            for (let n = 0; n < this.myBatch.hash.length; n++) {
-                (this.myBatch.hash[n] as CosmicArkAdvanced.Man).update();
-            }
             
-
-
+            for (let n = 0; n < this.alienBatch.hash.length; n++) {
+                (this.alienBatch.hash[n] as CosmicArkAdvanced.Man).update();
+            }
 
             this.uiText.text = "In Transit: " + this.player.aliensOnBoard.toString() +
-                // "\tSCORE: " +
-                "\nCaptured: " + this.player.aliensCaptured.toString();
+                "\nCaptured: " + this.player.aliensCaptured.toString() + " / " + this.numberToCapture.toString();
 
-            this.uiText_Score.text = "Score: ";
+            this.uiText_Score.text = this.GetTimeRemaining().toFixed(2);
+
+            if (this.player.aliensCaptured >= this.numberToCapture) {
+                let capt = this.player.aliensCaptured;
+                console.log("Time Remaining: " + this.GetTimeRemaining());
+                this.game.state.start("levelFinishState", true, false, this.difficulty, this.score, this.GetTimeRemaining(), this.numberToCapture, capt); // Jump to the Level Finished State
+            }
+            
+        }
+
+        //TODO: Document this
+        GetTimeRemaining() {
+            return (this.levelTimer.duration / 1000);
+        }
+
+        /**
+         * Adds more time "levelTimer" object. Can be given a negative number to subtract time.
+         * @param n The number of MILLISECONDS to change the timer by
+         */
+        addTime(n: number) {
+            let d = this.levelTimer.duration + n
+            this.levelTimer.stop(true);
+            this.levelTimer.loop(d, this.OutOfTime, this);
+            this.levelTimer.start();
         }
 
         /**
@@ -194,9 +390,29 @@
             for (let n = 0; n < this.guns.length; n++) {
                 for (let i = 0; i < this.guns[n].bullets.bullets.length; i++) {
                     if (!this.player.isHooked && this.game.physics.arcade.overlap(this.player, this.guns[n].bullets.bullets.getAt(i))) {
-                        let b = this.guns[n].bullets.bullets.getAt(i) as Phaser.Bullet;
-                        b.kill();
-                        console.log("OUCH!!!!!");
+
+                        // Destroy all bullets within the kill radius (Ess. provide a localized i-frame to the player for fairness)
+                        let kill_radius = 150;
+                        this.guns.forEach(function (g, gi, ga) {
+                            for (let bi = 0; bi < g.bullets.bullets.length; bi++){
+                                let bull = (g.bullets.bullets.getAt(bi) as Phaser.Bullet)
+                                if (bull.alive) {
+                                    if (Phaser.Math.distance(bull.x, bull.y, this.player.x, this.player.y) < kill_radius) {
+                                        bull.kill();
+                                    }
+                                }
+                            }
+                        }, this);
+
+                        // Play SFX
+                        this.game.sound.play("explosion", this.game.music.volume * 0.50);
+
+                        // Reduce Time
+                        this.addTime(-5000);
+
+                        // Change UI
+                        this.tweenSize.start();
+                        this.tweenColor.start();
                     }
                 }
             }
@@ -215,8 +431,7 @@
 
             // Collide the player's ship with the aliens
             let atLeastOne = false;                     // Flag meaning "At least one alien is availble to be abducted"
-            this.myBatch.forEachAlive(function (alien: Phaser.Sprite) {
-                // TODO: Bugfix: Fix it so that the ship cannot abduct an alien if the ship is too low
+            this.alienBatch.forEachAlive(function (alien: Phaser.Sprite) {
                 if (this.game.physics.arcade.overlap(this.player, alien)) {
                     atLeastOne = true;
                     this.player.Abduct(alien);
@@ -229,11 +444,25 @@
             // Collide the player's ship with the mines
             for (let n = 0; n < this.mines.length; n++) {
                 if (this.game.physics.arcade.overlap(this.player, this.mines[n])) {
+
+                    // Make Explosion
                     let spt = this.game.add.sprite(0, 0, "bang");
                     spt.scale.set(1.35, 1.35);
                     spt.position.setTo(this.mines[n].x - spt.width / 2, this.mines[n].y - spt.height / 2);
                     spt.animations.add("bang_anim", null, 20, false);
                     spt.animations.play("bang_anim", null, false, true);
+
+                    // Play SFX
+                    this.game.sound.play("explosion", this.game.music.volume * 0.50);
+
+                    // Reduce Time
+                    this.addTime(-10000);
+
+                    // Change UI
+                    this.tweenSize.start();
+                    this.tweenColor.start();
+
+                    // Destroy mine
                     this.mines[n].destroy(true);
                 }
             }
@@ -241,15 +470,41 @@
 
             // Collide the player's ship with the mothership
             if (this.game.physics.arcade.overlap(this.player, this.mothership)) {
-                this.player.Capture();
+
+                if (this.player.aliensOnBoard > 0) {
+                    this.player.aliensCaptured += this.player.aliensOnBoard;
+
+                    // Only play the SFX if this isn't the end of the level
+                    if (this.player.aliensCaptured < this.numberToCapture) {
+                        this.sfxRepeater("transport", this.player.aliensOnBoard, this.game.music.volume * 0.70);
+                    }
+
+                    this.player.aliensOnBoard = 0;
+                }
+
             }
+        }
+
+        sfxRepeater(key: string, numberOfPlays: number, volume = 0.7) {
+
+            let sfx = this.game.sound.play(key, volume, false);
+
+            // Create Timer
+            let sfxRepeatTimer = this.game.time.create(true);
+
+            sfxRepeatTimer.repeat(sfx.durationMS, numberOfPlays-1, function () {
+                sfx.play();
+            }, this);
+
+            sfxRepeatTimer.start();
+
         }
 
         /**
          * @Description Helper function which cycles through the sprite batch of men along the bottom the screen and applies logic into how they should move.
          */
         moveMen() {
-            this.myBatch.forEach(function (alien: Phaser.Sprite) {
+            this.alienBatch.forEach(function (alien: Phaser.Sprite) {
                 if (alien.x > this.game.world.width - Math.abs(alien.width)) {
                     alien.body.velocity.setTo(-alien.data.speed, 0);
                     alien.scale.set(-1, 1);
@@ -340,7 +595,7 @@
          */
         render() {
             // Debug features...
-            // this.game.debug.body(this.player);
+            //this.game.debug.body(this.player);
             // this.game.debug.body(this.man1, "rgba(255,0,0,0.4");
             // this.gun1.bullets.debug();
             // this.game.debug.body(this.mine1);
@@ -348,6 +603,20 @@
             // this.game.debug.body(this.mothership);
             this.game.debug.text(this.game.time.fps.toString(), 8, 80);
             //this.game.debug.body(this.myBatch.getFirstExists(true));
+        }
+
+        shutdown() {
+            this.player.destroy(true);
+            this.aliens = null;
+            this.alienBatch.destroy(true);
+            this.guns = null;
+            this.mines = null;
+            this.hooks = null;
+            this.mothership.destroy();
+            this.uiText.destroy();
+            this.uiText_Score.destroy();
+            this.levelTimer.destroy();
+            this.game.sound.stopAll();
         }
     }
 }

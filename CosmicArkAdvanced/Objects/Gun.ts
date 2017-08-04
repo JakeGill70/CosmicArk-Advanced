@@ -24,7 +24,7 @@
          * @param _name A unique identifer to the object
          * @param _target Optional. What the gun should aim at
          */
-        constructor(_game: Phaser.Game, _x: number, _y: number, _graphicKey: string, _name: string, _target?: Phaser.Sprite) {
+        constructor(_game: Phaser.Game, _x: number, _y: number, _graphicKey: string, bulletSpeed:number, _target?: Phaser.Sprite) {
             super(_game, _x, _y, _graphicKey);      // Pass all the nitty gritty parts to the Phaser.Sprite constructor and let it handle that.
             this.game = _game;                      // get game contex
 
@@ -36,7 +36,7 @@
             
             // If the target exists, initialize the object pool, target, and range
             if (_target != null) {
-                this.init_target(_target, 375);  // A range of 375 pixels feels right for right now
+                this.init_target(_target, 375, bulletSpeed);  // A range of 375 pixels feels right for right now
             }
         }
 
@@ -46,11 +46,12 @@
         */
         init_target(): void;
         init_target(_target: Phaser.Sprite, _range: number): void;
-        init_target(_target?:Phaser.Sprite, _range?:number) {
+        init_target(_target: Phaser.Sprite, _range: number, _speed: number): void;
+        init_target(_target?:Phaser.Sprite, _range?:number, _speed?: number) {
             this.bullets = this.game.add.weapon(10, "bullet");               // Create an object pool for 10 bullets
             this.bullets.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;         // Automatically "delete" the bullets after so many milliseconds
             this.bullets.bulletLifespan = 15000;                               // Set the bullet lifespan to 15000ms (15sec)
-            this.bullets.bulletSpeed = 100;                                         // Speed of the bullet in pixels / second
+            this.bullets.bulletSpeed = (_speed != null) ? _speed : 100;            // Speed of the bullet in pixels / second
             this.bullets.fireRate = 2000;                                            // Rate-of-fire in ms
             this.bullets.trackSprite(this, 0, 0, true);                             // Tell the bullets to base their fire position directly of this sprite 
                                                                                     // Also apply this sprite's rotation to their own.

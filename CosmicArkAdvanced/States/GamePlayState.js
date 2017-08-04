@@ -28,15 +28,114 @@ var CosmicArkAdvanced;
          */
         function GamePlayState() {
             _super.call(this);
+        }
+        // Todo: document this
+        GamePlayState.prototype.init = function (difficulty, timeToCapture, numberToCapture, score) {
+            // Assign aurguments to class level properties
+            this.difficulty = difficulty;
+            this.numberToCapture = numberToCapture;
+            this.timeToCapture = timeToCapture;
+            this.score = score;
+            // Make the level timer
+            this.levelTimer = this.game.time.create(false);
+            this.levelTimer.loop(timeToCapture * 1000, this.OutOfTime, this);
+            // Initialize arrays
             this.aliens = [];
             this.guns = [];
             this.mines = [];
             this.hooks = [];
             this.dict = [];
-        }
-        GamePlayState.prototype.addMan = function (x, y) {
+        };
+        // Todo: Document this
+        GamePlayState.prototype.addMine = function (x, y) {
+            if (x == null || x == undefined) {
+                x = this.game.world.width * Math.random();
+            }
+            if (y == null || y == undefined) {
+                y = Math.floor(this.game.world.height - ((Math.random() * 150) + 125)); // 125 - 274
+            }
+            var m = new CosmicArkAdvanced.Mine(this.game, x, y, "mine1");
+            this.mines.push(m);
+        };
+        GamePlayState.prototype.addGun = function (spd, x, y) {
+            if (y === void 0) { y = (this.game.world.height - 50); }
+            if (x == null) {
+                x = -1;
+                var minDist = 327 * (Math.E ^ (-0.592 * this.difficulty)); // Roughly equal to halfing the orginal 200, but weighting it to be a more giving in the higher levels
+                while (x == -1) {
+                    x = (Math.random() * 1472) + 64; // Creates a Range between 64 and (1600-64)
+                    for (var _i = 0, _a = this.guns; _i < _a.length; _i++) {
+                        var g = _a[_i];
+                        if (Phaser.Math.difference(x, g.x) < minDist) {
+                            x = -1;
+                            break;
+                        }
+                    }
+                    minDist -= 0.05; // Lower the bounds in case more guns get added than the level can support
+                }
+            }
+            if (spd == null) {
+                spd = 20 * this.difficulty + 60;
+            }
+            var gun = new CosmicArkAdvanced.Gun(this.game, x, y, "gun", spd, this.player);
+            //gun.bullets.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
+            gun.bullets.fireRate = (58 * this.difficulty * this.difficulty) - (1093 * this.difficulty) + 5946;
+            gun.bullets.fireRateVariance = (Math.random() * 25 + 25) * (this.difficulty % 3);
+            // 2000ms was the original testing speed
+            /*
+            if (this.difficulty == 1) {
+                gun.bullets.fireRate = 5000;
+            }
+            else if (this.difficulty == 2) {
+                gun.bullets.fireRate = 4000;
+            }
+            else if (this.difficulty == 3) {
+                gun.bullets.fireRate = 3000;
+            }
+            else {
+                // formula for any unknown difficulty
+                console.log("Error: Unknown difficulty was used when declaring a gun");
+                gun.bullets.fireRate = 2000 * (this.difficulty / 1.5);
+            }
+            */
+            this.guns.push(gun);
+        };
+        GamePlayState.prototype.addHook = function (spd, x, y) {
+            if (y === void 0) { y = (this.game.world.height - 50); }
+            if (x == null || x == undefined) {
+                x = -1;
+                var minDist = 327 * (Math.E ^ (-0.592 * this.difficulty));
+                while (x == -1) {
+                    x = (Math.random() * 1472) + 64; // Creates a Range between 64 and (1600-64)
+                    for (var _i = 0, _a = this.hooks; _i < _a.length; _i++) {
+                        var h = _a[_i];
+                        if (Phaser.Math.difference(x, h.x) < minDist) {
+                            x = -1;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (spd == null || spd == undefined) {
+                spd = 20 * this.difficulty + 60;
+            }
+            var hook = new CosmicArkAdvanced.Hook(this.game, x, y, "gun", "hook1", this.player);
+            // 2000ms was the original testing speed
+            hook.wep.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
+            this.hooks.push(hook);
+        };
+        /**
+         * @Description Creates a AI man
+         * @param x Start X position, default is random (keyed as -1, if you want -1, use something like -1.000000001)
+         * @param y Start Y position, default is 70px from the bottom of the world
+         */
+        GamePlayState.prototype.addMan = function (isRespawn, x, y) {
+            if (isRespawn === void 0) { isRespawn = false; }
             if (x === void 0) { x = (-1); }
             if (y === void 0) { y = (this.game.world.height - 70); }
+            if (!isRespawn) {
+                this.alienTotal++;
+            }
             // Establish a random position
             if (x == -1) {
                 x = (Math.random() * 1472) + 64; // Creates a Range between 64 and (1600-64)
@@ -45,7 +144,7 @@ var CosmicArkAdvanced;
                 }
             }
             // Create the alien
-            var m = this.myBatch.create(x, y, "man");
+            var m = this.alienBatch.create(x, y, "man");
             m.data = new CosmicArkAdvanced.AlienProperties(); // Holds additional info about the alien
             m.anchor.setTo(0.5, 1.0);
             m.data.initialY = y; // Save a copy of the initial y position in case it needs to be respawned
@@ -64,41 +163,84 @@ var CosmicArkAdvanced;
             m.body.setSize(Math.abs(m.width), m.height * 2, 0, m.height * -1); // Extend the collision box upwards so it can hit the ship
             // (m.body as Phaser.Physics.Arcade.Body).setSize(w, h, x, y);
             m.body.velocity.set(spd, 0); // Set the initial velocity to be it's speed with the random direction
-            // TODO: Delete this debugging feature
-            console.log(m.data.initialY);
+        };
+        // TODO: Document this
+        GamePlayState.prototype.OutOfTime = function () {
+            var capt = this.player.aliensCaptured;
+            this.game.state.start("levelFinishState", true, false, this.difficulty, this.score, this.GetTimeRemaining(), this.numberToCapture, capt); // Jump to the Level Finish State
         };
         /**
          * @Description Creates the game world by both creating and initializing all the objects in the game state.
          */
         GamePlayState.prototype.create = function () {
+            console.log("GamePlayState has started");
+            console.log("Level Difficulty is: " + this.difficulty);
             // Use this for debugging to measure FPS
             this.game.time.advancedTiming = true;
             // Set Level size
             this.game.world.setBounds(0, 0, 1600, 550);
             // Set Physics settings
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
+            // Start the level timer
+            this.levelTimer.start();
             // Make the objects
             this.makeBackgrounds();
             this.makeMotherShip();
-            this.player = new CosmicArkAdvanced.Player(this.game, 0, 0, "player");
-            this.gun1 = new CosmicArkAdvanced.Gun(this.game, 150, this.game.world.height - 50, "gun", "gun1", this.player);
-            this.guns.push(this.gun1);
-            this.mine1 = new CosmicArkAdvanced.Mine(this.game, 200, 200, "mine1");
-            this.mines.push(this.mine1);
-            this.hook1 = new CosmicArkAdvanced.Hook(this.game, 400, this.game.world.height - 50, "gun", "hook1", this.player);
-            this.hooks.push(this.hook1);
+            var pStartX = this.mothership.position.x + this.mothership.width / 2;
+            this.player = new CosmicArkAdvanced.Player(this.game, pStartX, 144, "player");
+            // Always start with at least ( 3 + Difficulty ) guns
+            this.addGun();
+            this.addGun();
+            this.addGun();
+            for (var i = Math.ceil(this.difficulty); i > 0; i--) {
+                this.addGun();
+                for (var n = Math.floor(this.difficulty); n > 0; n--) {
+                    if (Math.random() <= 0.5) {
+                        this.addGun();
+                    }
+                }
+            }
+            // Always start with at least 2+difficulty mines
+            this.addMine();
+            this.addMine();
+            for (var i = Math.floor(this.difficulty); i > 0; i--) {
+                this.addMine();
+                // 60% chance of 1 additional mine
+                // 30% chance of 2 additional mines
+                // 10% chance of 3 additional mines
+                var r = Math.random();
+                if (r < 0.60) {
+                    this.addMine();
+                }
+                else if (r < 0.90) {
+                    this.addMine();
+                    this.addMine();
+                }
+                else {
+                    this.addMine();
+                    this.addMine();
+                    this.addMine();
+                }
+            }
+            // Must at least be up to a normal difficulty curve to start seeing Hooks
+            if (this.difficulty > 2.0) {
+                // Add at least 1 hook for every difficulty level
+                // 40% chance of an additional hook every time a single hook is added
+                for (var i = Math.floor(this.difficulty); i > 0; i--) {
+                    this.addHook();
+                    if (Math.random() < 0.40) {
+                        this.addHook();
+                    }
+                }
+            }
             // Aliens should always be created after the player so that they don't accidently render behind the tractor beam
-            this.myBatch = this.game.add.spriteBatch(this.game.world); // Create the man sprite batch so they will all be rendered at once
-            this.addMan(65);
-            this.addMan();
-            this.addMan();
-            this.addMan();
-            this.addMan();
-            this.addMan();
-            this.addMan();
-            this.addMan();
-            this.addMan();
-            this.addMan();
+            this.alienBatch = this.game.add.spriteBatch(this.game.world); // Create the man sprite batch so they will all be rendered at once
+            for (var i = this.numberToCapture; i > 0; i--) {
+                this.addMan();
+                if (Math.random() < (0.6 - ((this.difficulty - 1) * 0.1))) {
+                    this.addMan();
+                }
+            }
             // Set Camera settings
             this.game.camera.follow(this.player);
             // UI
@@ -107,6 +249,9 @@ var CosmicArkAdvanced;
             this.uiText.fixedToCamera = true;
             this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ", "Score: ");
             this.uiText_Score.fixedToCamera = true;
+            // Add tweens to UI for when hit
+            this.tweenSize = this.game.add.tween(this.uiText_Score.scale).to({ x: [1.75, 1], y: [1.75, 1] }, 500, Phaser.Easing.Linear.None, false, 0);
+            this.tweenColor = this.game.add.tween(this.uiText_Score).to({ tint: [0xFF1122, 0xFF1122, 0xFF1122, 0xFFFFFF] }, 500, Phaser.Easing.Linear.None, false, 0);
             // this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
         };
         /**
@@ -128,18 +273,36 @@ var CosmicArkAdvanced;
             this.game.add.image(0, 0, "city1");
         };
         /**
-         * @Description Currently only used for checking collisions between objects
+         * @Description Check for collisions between objects, update the UI and coordinate AI movements
          */
         GamePlayState.prototype.update = function () {
             this.collideObjects(); // Check for collisions
             this.moveMen(); // Move the men along the bottom of the screen
-            for (var n = 0; n < this.myBatch.hash.length; n++) {
-                this.myBatch.hash[n].update();
+            for (var n = 0; n < this.alienBatch.hash.length; n++) {
+                this.alienBatch.hash[n].update();
             }
             this.uiText.text = "In Transit: " + this.player.aliensOnBoard.toString() +
-                // "\tSCORE: " +
-                "\nCaptured: " + this.player.aliensCaptured.toString();
-            this.uiText_Score.text = "Score: ";
+                "\nCaptured: " + this.player.aliensCaptured.toString() + " / " + this.numberToCapture.toString();
+            this.uiText_Score.text = this.GetTimeRemaining().toFixed(2);
+            if (this.player.aliensCaptured >= this.numberToCapture) {
+                var capt = this.player.aliensCaptured;
+                console.log("Time Remaining: " + this.GetTimeRemaining());
+                this.game.state.start("levelFinishState", true, false, this.difficulty, this.score, this.GetTimeRemaining(), this.numberToCapture, capt); // Jump to the Level Finished State
+            }
+        };
+        //TODO: Document this
+        GamePlayState.prototype.GetTimeRemaining = function () {
+            return (this.levelTimer.duration / 1000);
+        };
+        /**
+         * Adds more time "levelTimer" object. Can be given a negative number to subtract time.
+         * @param n The number of MILLISECONDS to change the timer by
+         */
+        GamePlayState.prototype.addTime = function (n) {
+            var d = this.levelTimer.duration + n;
+            this.levelTimer.stop(true);
+            this.levelTimer.loop(d, this.OutOfTime, this);
+            this.levelTimer.start();
         };
         /**
          * @Description Called ever frame through the update method. Place collision checks here.
@@ -147,12 +310,32 @@ var CosmicArkAdvanced;
         GamePlayState.prototype.collideObjects = function () {
             // Collide the player's ship with the gun's bullets
             for (var n = 0; n < this.guns.length; n++) {
-                for (var i = 0; i < this.guns[n].bullets.bullets.length; i++) {
-                    if (!this.player.isHooked && this.game.physics.arcade.overlap(this.player, this.guns[n].bullets.bullets.getAt(i))) {
-                        var b = this.guns[n].bullets.bullets.getAt(i);
-                        b.kill();
-                        console.log("OUCH!!!!!");
+                var _loop_1 = function(i) {
+                    if (!this_1.player.isHooked && this_1.game.physics.arcade.overlap(this_1.player, this_1.guns[n].bullets.bullets.getAt(i))) {
+                        // Destroy all bullets within the kill radius (Ess. provide a localized i-frame to the player for fairness)
+                        var kill_radius_1 = 150;
+                        this_1.guns.forEach(function (g, gi, ga) {
+                            for (var bi = 0; bi < g.bullets.bullets.length; bi++) {
+                                var bull = g.bullets.bullets.getAt(bi);
+                                if (bull.alive) {
+                                    if (Phaser.Math.distance(bull.x, bull.y, this.player.x, this.player.y) < kill_radius_1) {
+                                        bull.kill();
+                                    }
+                                }
+                            }
+                        }, this_1);
+                        // Play SFX
+                        this_1.game.sound.play("explosion", this_1.game.music.volume * 0.50);
+                        // Reduce Time
+                        this_1.addTime(-5000);
+                        // Change UI
+                        this_1.tweenSize.start();
+                        this_1.tweenColor.start();
                     }
+                };
+                var this_1 = this;
+                for (var i = 0; i < this.guns[n].bullets.bullets.length; i++) {
+                    _loop_1(i);
                 }
             }
             // Collide the player's ship with the hooks
@@ -166,8 +349,7 @@ var CosmicArkAdvanced;
             }
             // Collide the player's ship with the aliens
             var atLeastOne = false; // Flag meaning "At least one alien is availble to be abducted"
-            this.myBatch.forEachAlive(function (alien) {
-                // TODO: Bugfix: Fix it so that the ship cannot abduct an alien if the ship is too low
+            this.alienBatch.forEachAlive(function (alien) {
                 if (this.game.physics.arcade.overlap(this.player, alien)) {
                     atLeastOne = true;
                     this.player.Abduct(alien);
@@ -179,24 +361,50 @@ var CosmicArkAdvanced;
             // Collide the player's ship with the mines
             for (var n = 0; n < this.mines.length; n++) {
                 if (this.game.physics.arcade.overlap(this.player, this.mines[n])) {
+                    // Make Explosion
                     var spt = this.game.add.sprite(0, 0, "bang");
                     spt.scale.set(1.35, 1.35);
                     spt.position.setTo(this.mines[n].x - spt.width / 2, this.mines[n].y - spt.height / 2);
                     spt.animations.add("bang_anim", null, 20, false);
                     spt.animations.play("bang_anim", null, false, true);
+                    // Play SFX
+                    this.game.sound.play("explosion", this.game.music.volume * 0.50);
+                    // Reduce Time
+                    this.addTime(-10000);
+                    // Change UI
+                    this.tweenSize.start();
+                    this.tweenColor.start();
+                    // Destroy mine
                     this.mines[n].destroy(true);
                 }
             }
             // Collide the player's ship with the mothership
             if (this.game.physics.arcade.overlap(this.player, this.mothership)) {
-                this.player.Capture();
+                if (this.player.aliensOnBoard > 0) {
+                    this.player.aliensCaptured += this.player.aliensOnBoard;
+                    // Only play the SFX if this isn't the end of the level
+                    if (this.player.aliensCaptured < this.numberToCapture) {
+                        this.sfxRepeater("transport", this.player.aliensOnBoard, this.game.music.volume * 0.70);
+                    }
+                    this.player.aliensOnBoard = 0;
+                }
             }
+        };
+        GamePlayState.prototype.sfxRepeater = function (key, numberOfPlays, volume) {
+            if (volume === void 0) { volume = 0.7; }
+            var sfx = this.game.sound.play(key, volume, false);
+            // Create Timer
+            var sfxRepeatTimer = this.game.time.create(true);
+            sfxRepeatTimer.repeat(sfx.durationMS, numberOfPlays - 1, function () {
+                sfx.play();
+            }, this);
+            sfxRepeatTimer.start();
         };
         /**
          * @Description Helper function which cycles through the sprite batch of men along the bottom the screen and applies logic into how they should move.
          */
         GamePlayState.prototype.moveMen = function () {
-            this.myBatch.forEach(function (alien) {
+            this.alienBatch.forEach(function (alien) {
                 if (alien.x > this.game.world.width - Math.abs(alien.width)) {
                     alien.body.velocity.setTo(-alien.data.speed, 0);
                     alien.scale.set(-1, 1);
@@ -277,7 +485,7 @@ var CosmicArkAdvanced;
          */
         GamePlayState.prototype.render = function () {
             // Debug features...
-            // this.game.debug.body(this.player);
+            //this.game.debug.body(this.player);
             // this.game.debug.body(this.man1, "rgba(255,0,0,0.4");
             // this.gun1.bullets.debug();
             // this.game.debug.body(this.mine1);
@@ -285,6 +493,19 @@ var CosmicArkAdvanced;
             // this.game.debug.body(this.mothership);
             this.game.debug.text(this.game.time.fps.toString(), 8, 80);
             //this.game.debug.body(this.myBatch.getFirstExists(true));
+        };
+        GamePlayState.prototype.shutdown = function () {
+            this.player.destroy(true);
+            this.aliens = null;
+            this.alienBatch.destroy(true);
+            this.guns = null;
+            this.mines = null;
+            this.hooks = null;
+            this.mothership.destroy();
+            this.uiText.destroy();
+            this.uiText_Score.destroy();
+            this.levelTimer.destroy();
+            this.game.sound.stopAll();
         };
         return GamePlayState;
     }(Phaser.State));

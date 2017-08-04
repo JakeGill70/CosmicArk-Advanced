@@ -34,6 +34,7 @@ var CosmicArkAdvanced;
          */
         function Player(_game, _x, _y, _name) {
             _super.call(this, _game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
+            this.maxHeight = 400; // Max height is the highest the y value can be. 
             this.game = _game; // get game context
             this.name = _name; // Set the objects unique name
             this.aliensOnBoard = 0; // Reset score counters
@@ -46,37 +47,40 @@ var CosmicArkAdvanced;
             this.moveDistThreshold = 5; // Set threshold for moving the ship based on tapping the screen
             this.tag = CosmicArkAdvanced.PhysicsTag.PLAYER; // Physics tag to determine how other sections of code should interact with it.
             this.isAbudcting = false; // is the player abduction someone right now?
-            this.abductionSpeed = 45; // Set the speed which aliens are abducted at. (px / sec)
+            this.abductionSpeed = 70; // Set the speed which aliens are abducted at. (px / sec)
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
             this.animations.add("flash", [0, 1], 5, true); // Add the animation which makes the ship glow
             this.game.physics.enable(this, Phaser.Physics.ARCADE); // Enable physics for the ship
             this.body.collideWorldBounds = true; // Automatically lock the players sprite into the world so they cannot move off screen.
             this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
+            this.abductionSound = this.game.add.sound("abduction", 0.06 * this.game.music.volume, true);
         }
         /**
          * @description Called every frame. Handles moving the player and sets the "isMoving" flag.
          * Also, if abducting, will LERP the abductee's x-coordinate to match the player's.
          */
         Player.prototype.update = function () {
-            if (!this.game.paused) {
+            this.body.velocity = new Phaser.Point(0, 0);
+            this.isMoving = false; // Turn this flag off. Movement will turn it back on if needed.
+            // If hooked, move with the hook instead of taking input
+            if (!this.isHooked) {
+                this.arrowKeyMovement();
+                this.touchMovement();
+            }
+            else {
+                this.isMoving = true;
+                this.body.velocity = this.hookedVelocity;
+            }
+            if (this.body.y > 400) {
                 this.body.velocity = new Phaser.Point(0, 0);
-                this.isMoving = false; // Turn this flag off. Movement will turn it back on if needed.
-                // If hooked, move with the hook instead of taking input
-                if (!this.isHooked) {
-                    this.arrowKeyMovement();
-                    this.touchMovement();
-                }
-                else {
-                    this.isMoving = true;
-                    this.body.velocity = this.hookedVelocity;
-                }
-                if (this.isMoving) {
-                    this.stopAbducting(false);
-                }
-                if (this.isAbudcting) {
-                    if (this.alienAbductee.x !== this.x) {
-                        this.alienAbductee.x = Phaser.Math.bezierInterpolation([this.alienAbductee.x, this.x], 0.085); // 0.085 felt like a good speed. No significant meaning.
-                    }
+                this.body.y = 400;
+            }
+            if (this.isMoving) {
+                this.stopAbducting(false);
+            }
+            if (this.isAbudcting) {
+                if (this.alienAbductee.x !== this.x) {
+                    this.alienAbductee.x = Phaser.Math.bezierInterpolation([this.alienAbductee.x, this.x], 0.085); // 0.085 felt like a good speed. No significant meaning.
                 }
             }
         };
@@ -101,13 +105,13 @@ var CosmicArkAdvanced;
                 if (Phaser.Point.distance(this.position, pos) > this.moveDistThreshold) {
                     // Move along the X-axis
                     if (Phaser.Math.difference(this.position.x, pos.x) > this.moveDistThreshold) {
-                        this.x += moveAmtX;
+                        this.body.x += moveAmtX;
                         // Stop abducting when moving
                         this.isMoving = true;
                     }
                     // Move along the Y-Axis
                     if (Phaser.Math.difference(this.position.y, pos.y) > this.moveDistThreshold) {
-                        this.y += moveAmtY;
+                        this.body.y += moveAmtY;
                         // Stop abducting when moving
                         this.isMoving = true;
                     }
@@ -123,23 +127,23 @@ var CosmicArkAdvanced;
             var isDiagonal = ((this.cursor.right.isDown || this.cursor.left.isDown) && (this.cursor.up.isDown || this.cursor.down.isDown));
             // Horizontal movement
             if (this.cursor.right.isDown == true) {
-                this.x += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
+                this.body.x += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
                 // Stop abducting when moving
                 this.isMoving = true;
             }
             else if (this.cursor.left.isDown == true) {
-                this.x -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
+                this.body.x -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
                 // Stop abducting when moving
                 this.isMoving = true;
             }
             // Vertical movement
             if (this.cursor.up.isDown == true) {
-                this.y -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
+                this.body.y -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
                 // Stop abducting when moving
                 this.isMoving = true;
             }
             else if (this.cursor.down.isDown == true) {
-                this.y += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
+                this.body.y += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
                 // Stop abducting when moving
                 this.isMoving = true;
             }
@@ -204,8 +208,8 @@ var CosmicArkAdvanced;
                 this.alienAbductee.position = new Phaser.Point(this.alienAbductee.x, Math.abs(this.alienAbductee.data.initialY)); // Reset it's y-coordinate
                 this.alienAbductee.mask = null; // Clear it's render mask
                 this.alienAbductee = null; // Clear it from it's abducting duties ;)
-                console.log(ab.position);
             }
+            this.abductionSound.stop(); // Stop the annoying noise
             this.isAbudcting = false;
             this.beam.clear(); // Destroy any graphic's artifacts of the beam
             this.beamMask.clear(); // Destroy any graphic's artifacts of the beam's mask. This shouldn't make a difference since the mask isn't technically rendered, but do it anyway just in case of weirdness.
@@ -226,6 +230,9 @@ var CosmicArkAdvanced;
             // Only abduct 1 alien at a time
             if (this.alienAbductee != null && this.alienAbductee != a) {
                 return;
+            }
+            if (!this.abductionSound.isPlaying) {
+                this.abductionSound.play();
             }
             if (this.isMoving) {
                 this.animations.frame = 1; // Turn on the blue glow

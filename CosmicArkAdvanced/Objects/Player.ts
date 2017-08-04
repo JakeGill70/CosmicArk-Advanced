@@ -36,6 +36,12 @@
         aliensOnBoard: number;              // Number of aliens captured, but not yet returned to the mothership
         aliensCaptured: number;             // Number of aliens captured, AND returned to the mothership
 
+        maxHeight: number = 400;      // Max height is the highest the y value can be. 
+                                    // This translates to the lowests point the player can go on the screen. 
+                                    // So it can also be thought of as the min height for the player, and still be correct.
+
+        abductionSound: Phaser.Sound;
+
         /**
          * @description Constructor for the player's ship
          * @constructor
@@ -67,7 +73,7 @@
 
             this.isAbudcting = false;   // is the player abduction someone right now?
 
-            this.abductionSpeed = 45;   // Set the speed which aliens are abducted at. (px / sec)
+            this.abductionSpeed = 70;   // Set the speed which aliens are abducted at. (px / sec)
 
             this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
 
@@ -78,6 +84,8 @@
             this.body.collideWorldBounds = true;     // Automatically lock the players sprite into the world so they cannot move off screen.
 
             this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
+
+            this.abductionSound = this.game.add.sound("abduction", 0.06 * this.game.music.volume, true);
         }
 
         /**
@@ -85,30 +93,32 @@
          * Also, if abducting, will LERP the abductee's x-coordinate to match the player's.
          */
         update() {
-            if (!this.game.paused) {
+            this.body.velocity = new Phaser.Point(0, 0);
+            this.isMoving = false;  // Turn this flag off. Movement will turn it back on if needed.
+
+            // If hooked, move with the hook instead of taking input
+            if (!this.isHooked) {
+                this.arrowKeyMovement();
+                this.touchMovement();
+            }
+            else {
+                this.isMoving = true;
+                this.body.velocity = this.hookedVelocity;
+            }
+
+            if (this.body.y > 400) {
                 this.body.velocity = new Phaser.Point(0, 0);
-                this.isMoving = false;  // Turn this flag off. Movement will turn it back on if needed.
+                this.body.y = 400;
+            }
 
-                // If hooked, move with the hook instead of taking input
-                if (!this.isHooked) {
-                    this.arrowKeyMovement();
-                    this.touchMovement();
-                }
-                else {
-                    this.isMoving = true;
-                    this.body.velocity = this.hookedVelocity;
-                }
-                
-
-                if (this.isMoving) {    // If the flag was set after moving, stop abducting
-                    this.stopAbducting(false);
-                }
+            if (this.isMoving) {    // If the flag was set after moving, stop abducting
+                this.stopAbducting(false);
+            }
 
 
-                if (this.isAbudcting) {
-                    if (this.alienAbductee.x !== this.x) {
-                        this.alienAbductee.x = Phaser.Math.bezierInterpolation([this.alienAbductee.x, this.x], 0.085);  // 0.085 felt like a good speed. No significant meaning.
-                    }
+            if (this.isAbudcting) {
+                if (this.alienAbductee.x !== this.x) {
+                    this.alienAbductee.x = Phaser.Math.bezierInterpolation([this.alienAbductee.x, this.x], 0.085);  // 0.085 felt like a good speed. No significant meaning.
                 }
             }
         }
@@ -136,7 +146,7 @@
                 if (Phaser.Point.distance(this.position, pos) > this.moveDistThreshold) {    // And the touch if far enough away
                     // Move along the X-axis
                     if (Phaser.Math.difference(this.position.x, pos.x) > this.moveDistThreshold) {
-                        this.x += moveAmtX;
+                        this.body.x += moveAmtX;
 
                         // Stop abducting when moving
                         this.isMoving = true;
@@ -144,7 +154,7 @@
 
                     // Move along the Y-Axis
                     if (Phaser.Math.difference(this.position.y, pos.y) > this.moveDistThreshold) {
-                        this.y += moveAmtY;
+                        this.body.y += moveAmtY;
 
                         // Stop abducting when moving
                         this.isMoving = true;
@@ -163,13 +173,13 @@
 
             // Horizontal movement
             if (this.cursor.right.isDown == true) {
-                this.x += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed(); 
+                this.body.x += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed(); 
 
                 // Stop abducting when moving
                 this.isMoving = true;
             }
             else if (this.cursor.left.isDown == true) {
-                this.x -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();  
+                this.body.x -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();  
 
                 // Stop abducting when moving
                 this.isMoving = true;
@@ -177,13 +187,13 @@
 
             // Vertical movement
             if (this.cursor.up.isDown == true) {
-                this.y -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed(); 
+                this.body.y -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed(); 
 
                 // Stop abducting when moving
                 this.isMoving = true;
             }
             else if (this.cursor.down.isDown == true) {
-                this.y += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed(); 
+                this.body.y += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed(); 
 
                 // Stop abducting when moving
                 this.isMoving = true;
@@ -256,9 +266,9 @@
                 this.alienAbductee.position = new Phaser.Point(this.alienAbductee.x, Math.abs(this.alienAbductee.data.initialY));  // Reset it's y-coordinate
                 this.alienAbductee.mask = null;                             // Clear it's render mask
                 this.alienAbductee = null;                              // Clear it from it's abducting duties ;)
-                console.log(ab.position);
             }
 
+            this.abductionSound.stop(); // Stop the annoying noise
             this.isAbudcting = false;
             this.beam.clear();  // Destroy any graphic's artifacts of the beam
             this.beamMask.clear();  // Destroy any graphic's artifacts of the beam's mask. This shouldn't make a difference since the mask isn't technically rendered, but do it anyway just in case of weirdness.
@@ -283,6 +293,9 @@
                 return;
             }
 
+            if (!this.abductionSound.isPlaying) {
+                this.abductionSound.play();
+            }
 
             if (this.isMoving) {
                 this.animations.frame = 1;     // Turn on the blue glow
