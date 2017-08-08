@@ -249,10 +249,25 @@ var CosmicArkAdvanced;
             this.uiText.fixedToCamera = true;
             this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ", "Score: ");
             this.uiText_Score.fixedToCamera = true;
+            this.uiBtn_Pause = this.game.add.button(this.game.width - 32, 0, "pause", this.pauseGame, this);
+            this.uiBtn_Pause.fixedToCamera = true;
             // Add tweens to UI for when hit
             this.tweenSize = this.game.add.tween(this.uiText_Score.scale).to({ x: [1.75, 1], y: [1.75, 1] }, 500, Phaser.Easing.Linear.None, false, 0);
             this.tweenColor = this.game.add.tween(this.uiText_Score).to({ tint: [0xFF1122, 0xFF1122, 0xFF1122, 0xFFFFFF] }, 500, Phaser.Easing.Linear.None, false, 0);
             // this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
+        };
+        GamePlayState.prototype.pauseGame = function () {
+            this.game.paused = true;
+            this.game.input.onDown.add(this.unpauseGame, this, 0, this.input.position);
+            this.uiText_Pause = this.game.add.bitmapText(0, 0, "EdoSZ", "PAUSE", 48);
+            this.uiText_Pause.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Pause.textWidth / 2;
+            this.uiText_Pause.position.y = (this.game.height / 2) + this.camera.position.y - this.uiText_Pause.textHeight / 2;
+        };
+        GamePlayState.prototype.unpauseGame = function (pos) {
+            if (this.uiBtn_Pause.getBounds().contains(pos.x, pos.y)) {
+                this.game.paused = false;
+                this.uiText_Pause.destroy();
+            }
         };
         /**
          * @Descirption Creates the mothership sprite and adjust it's properties accordingly.

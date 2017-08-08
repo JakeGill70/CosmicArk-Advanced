@@ -92,6 +92,8 @@
             this.game.load.image("planet1", "Graphics/Statics/planet_1.png");
             this.game.load.image("planet2", "Graphics/Statics/planet_2.png");
             this.game.load.image("planet3", "Graphics/Statics/planet_3.png");
+            // UI
+            this.game.load.image("pause", "Graphics/UI/Pause-1.png");
             // Audio
             this.game.load.audio("beep", "Audio/SFX/Beep.wav");
             this.game.load.audio("victory", "Audio/Music/Victory-Song.wav");
