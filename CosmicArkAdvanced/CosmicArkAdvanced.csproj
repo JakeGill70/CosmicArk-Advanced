@@ -51,6 +51,8 @@
     <Content Include="Graphics\Sprites\dinghy2.png" />
     <Content Include="Graphics\Sprites\dinghy4.png" />
     <Content Include="Graphics\Sprites\dinghy3.png" />
+    <Content Include="Graphics\Sprites\gunBase-01.png" />
+    <Content Include="Graphics\Sprites\gunTop-01.png" />
     <Content Include="Graphics\Sprites\UFO_Glow.png" />
     <Content Include="Graphics\Sprites\walk5_sheet.png" />
     <Content Include="Graphics\Statics\bullet1.png" />

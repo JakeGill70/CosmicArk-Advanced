@@ -53,6 +53,12 @@ var CosmicArkAdvanced;
             this.game.physics.enable(this, Phaser.Physics.ARCADE); // Enable physics for the ship
             this.body.collideWorldBounds = true; // Automatically lock the players sprite into the world so they cannot move off screen.
             this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
+            this.wasd = {
+                up: this.game.input.keyboard.addKey(Phaser.Keyboard.W),
+                down: this.game.input.keyboard.addKey(Phaser.Keyboard.S),
+                left: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
+                right: this.game.input.keyboard.addKey(Phaser.Keyboard.D),
+            };
             this.abductionSound = this.game.add.sound("abduction", 0.06 * this.game.music.volume, true);
         }
         /**
@@ -126,23 +132,23 @@ var CosmicArkAdvanced;
             // This keeps the ship from moving too fast when diagonal. For more, look up "vector addition".
             var isDiagonal = ((this.cursor.right.isDown || this.cursor.left.isDown) && (this.cursor.up.isDown || this.cursor.down.isDown));
             // Horizontal movement
-            if (this.cursor.right.isDown == true) {
+            if (this.cursor.right.isDown == true || this.wasd.right.isDown) {
                 this.body.x += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
                 // Stop abducting when moving
                 this.isMoving = true;
             }
-            else if (this.cursor.left.isDown == true) {
+            else if (this.cursor.left.isDown == true || this.wasd.left.isDown) {
                 this.body.x -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
                 // Stop abducting when moving
                 this.isMoving = true;
             }
             // Vertical movement
-            if (this.cursor.up.isDown == true) {
+            if (this.cursor.up.isDown == true || this.wasd.up.isDown) {
                 this.body.y -= isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
                 // Stop abducting when moving
                 this.isMoving = true;
             }
-            else if (this.cursor.down.isDown == true) {
+            else if (this.cursor.down.isDown == true || this.wasd.down.isDown) {
                 this.body.y += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
                 // Stop abducting when moving
                 this.isMoving = true;

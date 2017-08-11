@@ -77,7 +77,7 @@ var CosmicArkAdvanced;
             if (spd == null) {
                 spd = 20 * this.difficulty + 60;
             }
-            var gun = new CosmicArkAdvanced.Gun(this.game, x, y, "gun", spd, this.player);
+            var gun = new CosmicArkAdvanced.Gun(this.game, x, y, "gunTop", spd, this.player);
             //gun.bullets.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
             gun.bullets.fireRate = (58 * this.difficulty * this.difficulty) - (1093 * this.difficulty) + 5946;
             gun.bullets.fireRateVariance = (Math.random() * 25 + 25) * (this.difficulty % 3);
@@ -343,6 +343,12 @@ var CosmicArkAdvanced;
                         this_1.game.sound.play("explosion", this_1.game.music.volume * 0.50);
                         // Reduce Time
                         this_1.addTime(-5000);
+                        // Reduce Transit Count
+                        if (this_1.player.aliensOnBoard > 0) {
+                            this_1.player.aliensOnBoard--;
+                            // Replace that person
+                            this_1.addMan(true);
+                        }
                         // Change UI
                         this_1.tweenSize.start();
                         this_1.tweenColor.start();
@@ -386,6 +392,14 @@ var CosmicArkAdvanced;
                     this.game.sound.play("explosion", this.game.music.volume * 0.50);
                     // Reduce Time
                     this.addTime(-10000);
+                    // Reduce Transit Count
+                    for (var k = 0; k < 3; k++) {
+                        if (this.player.aliensOnBoard > 0) {
+                            this.player.aliensOnBoard--;
+                            // Replace that person
+                            this.addMan(true);
+                        }
+                    }
                     // Change UI
                     this.tweenSize.start();
                     this.tweenColor.start();
@@ -399,7 +413,7 @@ var CosmicArkAdvanced;
                     this.player.aliensCaptured += this.player.aliensOnBoard;
                     // Only play the SFX if this isn't the end of the level
                     if (this.player.aliensCaptured < this.numberToCapture) {
-                        this.sfxRepeater("transport", this.player.aliensOnBoard, this.game.music.volume * 0.70);
+                        this.sfxRepeater("transport", this.player.aliensOnBoard, this.game.music.volume * 0.40);
                     }
                     this.player.aliensOnBoard = 0;
                 }

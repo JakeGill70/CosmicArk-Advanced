@@ -62,6 +62,7 @@ var CosmicArkAdvanced;
         TitleScreenState.prototype.loadComplete = function () {
             this.finishedLoading = true;
             this.text.setText("Click to Continue");
+            this.game.readInstructionsAtLeastOnce = false;
         };
         TitleScreenState.prototype.loadStuff = function () {
             // Backgrounds
@@ -73,6 +74,8 @@ var CosmicArkAdvanced;
             // Sprites
             this.game.load.spritesheet("man", "Graphics/Sprites/walk5_sheet.png", 64, 64, 8);
             this.game.load.image("gun", "Graphics/Sprites/gun1.png");
+            this.game.load.image("gunBase", "Graphics/Sprites/gunBase-01.png");
+            this.game.load.image("gunTop", "Graphics/Sprites/gunTop-01.png");
             this.game.load.image("rope", "Graphics/Sprites/rope3.png");
             this.game.load.spritesheet("ship", "Graphics/Sprites/UFO_Glow.png", 48, 24, 2);
             this.game.load.spritesheet("bang", "Graphics/Sprites/bang.png", 64, 64, 14);

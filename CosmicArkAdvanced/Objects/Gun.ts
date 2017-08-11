@@ -13,6 +13,7 @@
         target: Phaser.Sprite;           // What the Gun should aim at
         bullets: Phaser.Weapon;          // Object Pool of Possible Bullets
         effectiveRange: number           // Minimum distance between the target and the gun before the gun will shoot
+        base: Phaser.Sprite;
 
         /**
          * @description Generic gun which will shoot at a given target if within range
@@ -25,14 +26,20 @@
          * @param _target Optional. What the gun should aim at
          */
         constructor(_game: Phaser.Game, _x: number, _y: number, _graphicKey: string, bulletSpeed:number, _target?: Phaser.Sprite) {
-            super(_game, _x, _y, _graphicKey);      // Pass all the nitty gritty parts to the Phaser.Sprite constructor and let it handle that.
+            super(_game, _x, _y, "gunTop");      // Pass all the nitty gritty parts to the Phaser.Sprite constructor and let it handle that.
             this.game = _game;                      // get game contex
 
             this.game.add.existing(this);           // Add this object to the gamestate
 
+            // Create and add the base
+            this.base = new Phaser.Sprite(this.game, this.x, this.y, "gunBase");
+            this.base.anchor.setTo(0.50, 0.22);
+            this.base.position.set(this.x, this.y);
+            this.game.add.existing(this.base);
+
             this.effectiveRange = 10000;            // Make a default value for the range. 10,000 gives plenty of headroom
 
-            this.anchor.setTo(0.0, 1);              // Move the anchor point to the bottom-left
+            this.anchor.setTo(0.31, 0.44);              // Move the anchor point to the bottom-left
             
             // If the target exists, initialize the object pool, target, and range
             if (_target != null) {
@@ -71,6 +78,17 @@
                     let deltaY = this.target.position.y - this.position.y;
                     let angle = Math.atan2(deltaY, deltaX);
                     this.rotation = angle;
+                    // Flip the sprite if the angle is too steep
+                    if (Math.abs(Phaser.Math.radToDeg(angle)) > 90) {
+                        console.log(Phaser.Math.radToDeg(angle));
+                        this.scale.set(1, -1);
+                        this.base.scale.set(-1, 1);
+                    }
+                    else {
+                        console.log(this.renderOrderID.toString() + ", " + Phaser.Math.radToDeg(angle).toString());
+                        this.scale.set(1, 1);
+                        this.base.scale.set(1, 1);
+                    }
                     //console.log(Phaser.Point.distance(this.target.worldPosition, this.worldPosition));
                     this.bullets.fire();        // Fire will not "fire" if the fireRate has not passed.
                 }
