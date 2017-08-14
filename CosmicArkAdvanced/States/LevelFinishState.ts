@@ -65,6 +65,7 @@
             this.timr = this.game.time.create(false);
             this.timr.loop(100, this.updateText, this);
             this.timr.start(2000);
+            this.isFinishedAnimating = false;
 
             // Set background images
             this.titleScreenImage = this.add.sprite(0, 0, "main"); // Pull the image out of memory
@@ -118,8 +119,7 @@
                     this.game.state.start("levelStartState", true, false, this.difficulty, this.score); // Go load the next level
                 }
             }
-            else {
-                this.timr.stop();
+            else  {
                 this.uiScore = this.score;
                 this.captureBonus = 0;
                 this.timeBonus = 0;

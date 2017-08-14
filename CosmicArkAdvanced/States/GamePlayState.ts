@@ -36,9 +36,12 @@
 
         uiText: Phaser.BitmapText;          // UI Text for updating score information
         uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
+        uiBtn_Pause: Phaser.Button;
+        uiText_Pause: Phaser.BitmapText;
 
         tweenSize: Phaser.Tween;
         tweenColor: Phaser.Tween;
+        
 
         difficulty: number;                 // Value 1-3 which assists in level generation
         numberToCapture: number;            // Number of aliens needed 
@@ -114,30 +117,12 @@
                 spd = 20 * this.difficulty + 60;
             }
 
-            let gun = new Gun(this.game, x, y, "gun", spd, this.player);
+            let gun = new Gun(this.game, x, y, "gunTop", spd, this.player);
 
             //gun.bullets.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
 
             gun.bullets.fireRate = (58 * this.difficulty * this.difficulty) - (1093 * this.difficulty) + 5946;
-            gun.bullets.fireRateVariance = (Math.random() * 25 + 25) * (this.difficulty % 3);
-
-            // 2000ms was the original testing speed
-            /*
-            if (this.difficulty == 1) {
-                gun.bullets.fireRate = 5000;
-            }
-            else if (this.difficulty == 2) {
-                gun.bullets.fireRate = 4000;
-            }
-            else if (this.difficulty == 3) {
-                gun.bullets.fireRate = 3000;
-            }
-            else {
-                // formula for any unknown difficulty
-                console.log("Error: Unknown difficulty was used when declaring a gun");
-                gun.bullets.fireRate = 2000 * (this.difficulty / 1.5);
-            }
-            */
+            gun.bullets.fireRateVariance = (Math.random() * 25 + 25) * ((this.difficulty % 3)+1);
                 
             this.guns.push(gun);
         }
@@ -166,7 +151,9 @@
             
             let hook = new Hook(this.game, x, y, "gun", "hook1", this.player);
             // 2000ms was the original testing speed
-            hook.wep.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
+            //hook.wep.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
+            hook.wep.fireRate = (58 * this.difficulty * this.difficulty) - (1093 * this.difficulty) + 5946;
+            hook.wep.fireRateVariance = (Math.random() * 30 + 35) * ((this.difficulty % 3) + 1);
 
             this.hooks.push(hook);
         }
@@ -311,15 +298,35 @@
             this.uiText.fixedToCamera = true;
 
             this.uiText_Score = this.game.add.bitmapText(650, 0, "EdoSZ", "Score: ");
-
             this.uiText_Score.fixedToCamera = true;
+
+            this.uiBtn_Pause = this.game.add.button(this.game.width - 32, 0, "pause", this.pauseGame, this);
+            
+            this.uiBtn_Pause.fixedToCamera = true;
 
             // Add tweens to UI for when hit
             this.tweenSize = this.game.add.tween(this.uiText_Score.scale).to({ x: [1.75, 1], y: [1.75, 1] }, 500, Phaser.Easing.Linear.None, false, 0);
             this.tweenColor = this.game.add.tween(this.uiText_Score).to({ tint: [0xFF1122, 0xFF1122, 0xFF1122, 0xFFFFFF] }, 500, Phaser.Easing.Linear.None, false, 0);
 
-
+            
             // this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
+        }
+
+        pauseGame() {
+            this.game.paused = true;
+            this.game.input.onDown.add(this.unpauseGame, this, 0, this.input.position);
+
+            this.uiText_Pause = this.game.add.bitmapText(0, 0, "EdoSZ", "PAUSE", 48);
+            this.uiText_Pause.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Pause.textWidth/2;
+            this.uiText_Pause.position.y = (this.game.height / 2) + this.camera.position.y - this.uiText_Pause.textHeight / 2;
+
+        }
+
+        unpauseGame(pos : Phaser.Point) {
+            if (this.uiBtn_Pause.getBounds().contains(pos.x, pos.y)) {
+                this.game.paused = false;
+                this.uiText_Pause.destroy();
+            }
         }
 
         /**
@@ -389,7 +396,7 @@
             // Collide the player's ship with the gun's bullets
             for (let n = 0; n < this.guns.length; n++) {
                 for (let i = 0; i < this.guns[n].bullets.bullets.length; i++) {
-                    if (!this.player.isHooked && this.game.physics.arcade.overlap(this.player, this.guns[n].bullets.bullets.getAt(i))) {
+                    if (this.game.physics.arcade.overlap(this.player, this.guns[n].bullets.bullets.getAt(i))) {
 
                         // Destroy all bullets within the kill radius (Ess. provide a localized i-frame to the player for fairness)
                         let kill_radius = 150;
@@ -409,6 +416,13 @@
 
                         // Reduce Time
                         this.addTime(-5000);
+
+                        // Reduce Transit Count
+                        if (this.player.aliensOnBoard > 0) {
+                            this.player.aliensOnBoard--;
+                            // Replace that person
+                            this.addMan(true);
+                        }
 
                         // Change UI
                         this.tweenSize.start();
@@ -458,6 +472,17 @@
                     // Reduce Time
                     this.addTime(-10000);
 
+                    // Reduce Transit Count
+                    for (var k = 0; k < 3; k++) {
+                        if (this.player.aliensOnBoard > 0) {
+                            this.player.aliensOnBoard--;
+                            // Replace that person
+                            this.addMan(true);
+                        }
+                    }
+                    
+                    
+
                     // Change UI
                     this.tweenSize.start();
                     this.tweenColor.start();
@@ -476,7 +501,7 @@
 
                     // Only play the SFX if this isn't the end of the level
                     if (this.player.aliensCaptured < this.numberToCapture) {
-                        this.sfxRepeater("transport", this.player.aliensOnBoard, this.game.music.volume * 0.70);
+                        this.sfxRepeater("transport", this.player.aliensOnBoard, this.game.music.volume * 0.40);
                     }
 
                     this.player.aliensOnBoard = 0;

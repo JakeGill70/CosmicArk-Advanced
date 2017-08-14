@@ -19,6 +19,10 @@ var CosmicArkAdvanced;
         function HelpScreenState() {
             _super.call(this);
         }
+        HelpScreenState.prototype.init = function (_cameFromPlayState) {
+            if (_cameFromPlayState === void 0) { _cameFromPlayState = false; }
+            this.cameFromPlayState = _cameFromPlayState;
+        };
         /**
          * @description Displays the splash image and scales it appropriately. Also registers the "onTap" event
          */
@@ -27,6 +31,7 @@ var CosmicArkAdvanced;
             //    this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
             //    this.game.scale.startFullScreen(false);
             //}
+            this.game.readInstructionsAtLeastOnce = true;
             this.titleScreenImage = this.add.sprite(0, 0, "help"); // Pull the image out of memory
             this.titleScreenImage.scale.setTo(this.game.width / this.titleScreenImage.width, this.game.height / this.titleScreenImage.height); // Scale it to fit the size of the screen
             // Register the "TitleClicked" even handler
@@ -36,8 +41,12 @@ var CosmicArkAdvanced;
          * @Description Handles the "onTap" event. Just moves over to the mapSelectState state.
          */
         HelpScreenState.prototype.TitleClicked = function () {
-            //this.game.scale.startFullScreen(false);
-            this.game.state.start("mainMenuState"); // Jump to the MainMenuState
+            if (this.cameFromPlayState) {
+                this.game.state.start("mapSelectState"); // Jump to MapSelectState
+            }
+            else {
+                this.game.state.start("mainMenuState"); // Jump to the MainMenuState
+            }
         };
         return HelpScreenState;
     }(Phaser.State));

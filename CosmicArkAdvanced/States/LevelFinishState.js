@@ -40,6 +40,7 @@ var CosmicArkAdvanced;
             this.timr = this.game.time.create(false);
             this.timr.loop(100, this.updateText, this);
             this.timr.start(2000);
+            this.isFinishedAnimating = false;
             // Set background images
             this.titleScreenImage = this.add.sprite(0, 0, "main"); // Pull the image out of memory
             this.titleScreenImage.scale.setTo(this.game.width / this.titleScreenImage.width, this.game.height / this.titleScreenImage.height); // Scale it to fit the size of the screen
@@ -87,7 +88,6 @@ var CosmicArkAdvanced;
                 }
             }
             else {
-                this.timr.stop();
                 this.uiScore = this.score;
                 this.captureBonus = 0;
                 this.timeBonus = 0;

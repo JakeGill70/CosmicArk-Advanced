@@ -45,7 +45,12 @@ var CosmicArkAdvanced;
          */
         MainMenuState.prototype.ButtonClicked = function (pos) {
             if (this.btn_Play.getBounds().contains(pos.x, pos.y)) {
-                this.game.state.start("mapSelectState"); // Jump to MapSelectState
+                if (this.game.readInstructionsAtLeastOnce) {
+                    this.game.state.start("mapSelectState"); // Jump to MapSelectState
+                }
+                else {
+                    this.game.state.start("helpScreenState", true, false, true); // Jump to the HelpScreenState
+                }
             }
             else if (this.btn_Help.getBounds().contains(pos.x, pos.y)) {
                 // Get Game Data from the selected planet
