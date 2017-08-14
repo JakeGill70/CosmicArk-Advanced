@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     /**
@@ -18,7 +23,7 @@ var CosmicArkAdvanced;
          * @constructor Default.
          */
         function TitleScreenState() {
-            _super.call(this);
+            return _super.call(this) || this;
         }
         /**
          * @description Displays the splash image and scales it appropriately. Also registers the "onTap" event
@@ -48,6 +53,9 @@ var CosmicArkAdvanced;
         TitleScreenState.prototype.TitleClicked = function () {
             if (this.finishedLoading) {
                 this.game.state.start("mainMenuState");
+                if (!this.game.device.desktop) {
+                    this.game.scale.startFullScreen(true);
+                }
             }
             else {
                 if (!this.game.load.isLoading) {
@@ -62,6 +70,7 @@ var CosmicArkAdvanced;
         TitleScreenState.prototype.loadComplete = function () {
             this.finishedLoading = true;
             this.text.setText("Click to Continue");
+            this.game.readInstructionsAtLeastOnce = false;
         };
         TitleScreenState.prototype.loadStuff = function () {
             // Backgrounds
@@ -73,17 +82,22 @@ var CosmicArkAdvanced;
             // Sprites
             this.game.load.spritesheet("man", "Graphics/Sprites/walk5_sheet.png", 64, 64, 8);
             this.game.load.image("gun", "Graphics/Sprites/gun1.png");
+            this.game.load.image("gunBase", "Graphics/Sprites/gunBase-01.png");
+            this.game.load.image("gunTop", "Graphics/Sprites/gunTop-01.png");
             this.game.load.image("rope", "Graphics/Sprites/rope3.png");
             this.game.load.spritesheet("ship", "Graphics/Sprites/UFO_Glow.png", 48, 24, 2);
             this.game.load.spritesheet("bang", "Graphics/Sprites/bang.png", 64, 64, 14);
+            this.game.load.spritesheet("wave", "Graphics/Sprites/wave.png", 32, 32, 3);
             // Static Sprites
             this.game.load.image("mothership", "Graphics/Statics/mothership3.png");
-            this.game.load.image("hook", "Graphics/Statics/hook2.png");
+            this.game.load.image("hook", "Graphics/Statics/hook.png");
             this.game.load.image("mine", "Graphics/Statics/Mine3.png");
             this.game.load.image("bullet", "Graphics/Statics/bullet1.png");
             this.game.load.image("planet1", "Graphics/Statics/planet_1.png");
             this.game.load.image("planet2", "Graphics/Statics/planet_2.png");
             this.game.load.image("planet3", "Graphics/Statics/planet_3.png");
+            // UI
+            this.game.load.image("pause", "Graphics/UI/Pause-1.png");
             // Audio
             this.game.load.audio("beep", "Audio/SFX/Beep.wav");
             this.game.load.audio("victory", "Audio/Music/Victory-Song.wav");

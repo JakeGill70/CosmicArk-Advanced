@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     /**
@@ -13,12 +18,13 @@ var CosmicArkAdvanced;
     var Mine = (function (_super) {
         __extends(Mine, _super);
         function Mine(_game, _x, _y, _name) {
-            _super.call(this, _game, _x, _y, "mine"); // Create the sprite at the x,y coordinate in game
-            this.tag = CosmicArkAdvanced.PhysicsTag.MINE; // Label what type of object this is
-            this.game.add.existing(this); //  Add this object to the gamestate
-            this.anchor.set(0.5, 0.5); // Center the position over the center of the mind sprite
-            this.game.physics.enable(this, Phaser.Physics.ARCADE); // Enable physics for this object so collisions are possible
-            this.body.setCircle(this.width / 2, 0, 0); // Change the collider to a circle
+            var _this = _super.call(this, _game, _x, _y, "mine") || this;
+            _this.tag = CosmicArkAdvanced.PhysicsTag.MINE; // Label what type of object this is
+            _this.game.add.existing(_this); //  Add this object to the gamestate
+            _this.anchor.set(0.5, 0.5); // Center the position over the center of the mind sprite
+            _this.game.physics.enable(_this, Phaser.Physics.ARCADE); // Enable physics for this object so collisions are possible
+            _this.body.setCircle(_this.width / 2, 0, 0); // Change the collider to a circle
+            return _this;
         }
         /**
          * @Descirption Handles what should happen the imediate frame after a collision first occurs.

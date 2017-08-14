@@ -68,17 +68,21 @@ var CosmicArkAdvanced;
             this.game.state.add("levelFinishState", CosmicArkAdvanced.LevelFinishState, false);
             this.game.state.add("titleScreenState", CosmicArkAdvanced.TitleScreenState, true);
             console.log(MyGame.AUTO_SCALING);
+            console.log(this.game.scale.scaleMode);
             if (MyGame.AUTO_SCALING == true) {
-                this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-            }
-            // If on a mobile device, Set the scale mode to be an exact fit
-            if (!this.game.device.desktop) {
-                this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+                if (!this.game.device.desktop) {
+                    this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+                    this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+                    //have the game centered horizontally
+                    this.game.scale.pageAlignHorizontally = true;
+                    this.game.scale.pageAlignVertically = true;
+                    this.game.scale.startFullScreen(true);
+                }
             }
         };
-        MyGame.AUTO_SCALING = false; // Debug var
         return MyGame;
     }());
+    MyGame.AUTO_SCALING = true; // Debug var
     CosmicArkAdvanced.MyGame = MyGame;
     /**
      * @description global function used to find the difference between to x,y corrdinates

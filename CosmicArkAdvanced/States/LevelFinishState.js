@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     /**
@@ -18,7 +23,7 @@ var CosmicArkAdvanced;
          * @constructor Default.
          */
         function LevelFinishState() {
-            _super.call(this);
+            return _super.call(this) || this;
         }
         LevelFinishState.prototype.init = function (difficulty, score, timeRemaining, numberToCapture, numberCaught) {
             this.difficulty = difficulty;
@@ -40,6 +45,7 @@ var CosmicArkAdvanced;
             this.timr = this.game.time.create(false);
             this.timr.loop(100, this.updateText, this);
             this.timr.start(2000);
+            this.isFinishedAnimating = false;
             // Set background images
             this.titleScreenImage = this.add.sprite(0, 0, "main"); // Pull the image out of memory
             this.titleScreenImage.scale.setTo(this.game.width / this.titleScreenImage.width, this.game.height / this.titleScreenImage.height); // Scale it to fit the size of the screen
@@ -87,7 +93,6 @@ var CosmicArkAdvanced;
                 }
             }
             else {
-                this.timr.stop();
                 this.uiScore = this.score;
                 this.captureBonus = 0;
                 this.timeBonus = 0;

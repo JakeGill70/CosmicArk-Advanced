@@ -9,12 +9,17 @@
         game: Phaser.Game;
         music: Phaser.Sound;
         titleScreenImage: Phaser.Sprite;
+        cameFromPlayState: boolean;
 
         /**
          * @constructor Default.
          */
         constructor() {
             super();
+        }
+
+        init(_cameFromPlayState:boolean = false) {
+            this.cameFromPlayState = _cameFromPlayState;
         }
 
         /**
@@ -25,6 +30,8 @@
             //    this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
             //    this.game.scale.startFullScreen(false);
             //}
+
+            this.game.readInstructionsAtLeastOnce = true;
 
             this.titleScreenImage = this.add.sprite(0, 0, "help"); // Pull the image out of memory
             this.titleScreenImage.scale.setTo(this.game.width / this.titleScreenImage.width, this.game.height / this.titleScreenImage.height);  // Scale it to fit the size of the screen
@@ -37,8 +44,13 @@
          * @Description Handles the "onTap" event. Just moves over to the mapSelectState state.
          */
         TitleClicked() {
-            //this.game.scale.startFullScreen(false);
-            this.game.state.start("mainMenuState"); // Jump to the MainMenuState
+            
+            if (this.cameFromPlayState) {
+                this.game.state.start("mapSelectState");  // Jump to MapSelectState
+            }
+            else {
+                this.game.state.start("mainMenuState"); // Jump to the MainMenuState
+            }
         }
     }
 }

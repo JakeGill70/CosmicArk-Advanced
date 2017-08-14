@@ -10,7 +10,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -19,6 +19,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
@@ -51,8 +52,11 @@
     <Content Include="Graphics\Sprites\dinghy2.png" />
     <Content Include="Graphics\Sprites\dinghy4.png" />
     <Content Include="Graphics\Sprites\dinghy3.png" />
+    <Content Include="Graphics\Sprites\gunBase-01.png" />
+    <Content Include="Graphics\Sprites\gunTop-01.png" />
     <Content Include="Graphics\Sprites\UFO_Glow.png" />
     <Content Include="Graphics\Sprites\walk5_sheet.png" />
+    <Content Include="Graphics\Sprites\wave.png" />
     <Content Include="Graphics\Statics\bullet1.png" />
     <Content Include="Graphics\Sprites\gun1.png" />
     <Content Include="Graphics\Statics\hook2.png" />
@@ -70,6 +74,7 @@
     <Content Include="Graphics\Statics\planet_2.png" />
     <Content Include="Graphics\Statics\planet_3.png" />
     <Content Include="Graphics\Backgrounds\NightSky.png" />
+    <Content Include="Graphics\UI\Pause-1.png" />
     <Content Include="index.html" />
     <Content Include="Graphics\Sprites\Man.png" />
     <Content Include="Phaser\p2.js" />
@@ -121,7 +126,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Graphics\UI\" />
     <Folder Include="Scenes\" />
   </ItemGroup>
   <PropertyGroup>

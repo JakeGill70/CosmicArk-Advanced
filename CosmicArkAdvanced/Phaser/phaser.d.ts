@@ -1466,6 +1466,7 @@ declare module Phaser {
         width: number;
         world: Phaser.World;
         music: Phaser.Sound;
+        readInstructionsAtLeastOnce: boolean;
 
         boot(): void;
         destroy(): void;

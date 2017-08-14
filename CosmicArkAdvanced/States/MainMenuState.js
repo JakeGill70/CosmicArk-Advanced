@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     /**
@@ -18,7 +23,7 @@ var CosmicArkAdvanced;
         * @constructor
         */
         function MainMenuState() {
-            _super.call(this);
+            return _super.call(this) || this;
         }
         /** @desription Populates the game state with sprites and registers the
         * event handlers needed for touch/mouse input
@@ -45,7 +50,12 @@ var CosmicArkAdvanced;
          */
         MainMenuState.prototype.ButtonClicked = function (pos) {
             if (this.btn_Play.getBounds().contains(pos.x, pos.y)) {
-                this.game.state.start("mapSelectState"); // Jump to MapSelectState
+                if (this.game.readInstructionsAtLeastOnce) {
+                    this.game.state.start("mapSelectState"); // Jump to MapSelectState
+                }
+                else {
+                    this.game.state.start("helpScreenState", true, false, true); // Jump to the HelpScreenState
+                }
             }
             else if (this.btn_Help.getBounds().contains(pos.x, pos.y)) {
                 // Get Game Data from the selected planet
