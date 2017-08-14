@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     // TODO: A lot of this needs to split off into a default abstract class called "ALIEN"
@@ -27,22 +32,23 @@ var CosmicArkAdvanced;
          * @param _name The unique identifer to this object
          */
         function Man(_game, _x, _y) {
-            _super.call(this, _game, _x, _y, "man"); // Create the sprite at the x,y coordinate in game
-            this.game = _game; // get game context
+            var _this = _super.call(this, _game, _x, _y, "man") || this;
+            _this.game = _game; // get game context
             // this.name = _name; // Set the objects unique name
-            this.game.add.existing(this); // Add this object to the gamestate
-            this.moveSpeed = 5; // Set current walking speed
-            this.tag = CosmicArkAdvanced.PhysicsTag.ALIEN; // Physics tag to determine how other sections of code should interact with it.
-            this.canMove = true; // Let the alien know that it is ok to move around for right now
-            this.isBeingAbducted = false; // Let the alien know that nothing is capturing him.... yet....
-            this.startY = _y;
-            this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
-            this.game.physics.enable(this, Phaser.Physics.ARCADE); // enable physics for this alien
+            _this.game.add.existing(_this); // Add this object to the gamestate
+            _this.moveSpeed = 5; // Set current walking speed
+            _this.tag = CosmicArkAdvanced.PhysicsTag.ALIEN; // Physics tag to determine how other sections of code should interact with it.
+            _this.canMove = true; // Let the alien know that it is ok to move around for right now
+            _this.isBeingAbducted = false; // Let the alien know that nothing is capturing him.... yet....
+            _this.startY = _y;
+            _this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
+            _this.game.physics.enable(_this, Phaser.Physics.ARCADE); // enable physics for this alien
             var offset = 75; // Offset is how much extra height should be added the alien's collider so the ship will collide at altitude
-            this.body.setSize(this.width, this.height + offset, 0, -offset); // Extend the collision box upwards so it can hit the ship
+            _this.body.setSize(_this.width, _this.height + offset, 0, -offset); // Extend the collision box upwards so it can hit the ship
             // Set Walk Animation
-            this.animations.add("walk_anim", null, 12, true);
-            this.animations.play("walk_anim", 12, true, false);
+            _this.animations.add("walk_anim", null, 12, true);
+            _this.animations.play("walk_anim", 12, true, false);
+            return _this;
         }
         /**
          * @description Called every frame.

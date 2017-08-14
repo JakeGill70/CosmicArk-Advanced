@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     /**
@@ -33,33 +38,34 @@ var CosmicArkAdvanced;
          * @param _beam Context of the Phaser.Graphics object which handles rendering the "tractor beam"
          */
         function Player(_game, _x, _y, _name) {
-            _super.call(this, _game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
-            this.maxHeight = 400; // Max height is the highest the y value can be. 
-            this.game = _game; // get game context
-            this.name = _name; // Set the objects unique name
-            this.aliensOnBoard = 0; // Reset score counters
-            this.aliensCaptured = 0;
-            this.beam = this.game.add.graphics(0, 0); // Create and add the beam to the gamestate
-            this.beamMask = this.game.add.graphics(0, 0); // Create and add the beam's bit mask to the gamestate
-            this.beamMask.renderable = false;
-            this.game.add.existing(this); // Add this object to the gamestate. We have to add it last so that it will render on top of the beam
-            this.moveSpeed = 15; // Set current walking speed
-            this.moveDistThreshold = 5; // Set threshold for moving the ship based on tapping the screen
-            this.tag = CosmicArkAdvanced.PhysicsTag.PLAYER; // Physics tag to determine how other sections of code should interact with it.
-            this.isAbudcting = false; // is the player abduction someone right now?
-            this.abductionSpeed = 70; // Set the speed which aliens are abducted at. (px / sec)
-            this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
-            this.animations.add("flash", [0, 1], 5, true); // Add the animation which makes the ship glow
-            this.game.physics.enable(this, Phaser.Physics.ARCADE); // Enable physics for the ship
-            this.body.collideWorldBounds = true; // Automatically lock the players sprite into the world so they cannot move off screen.
-            this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
-            this.wasd = {
-                up: this.game.input.keyboard.addKey(Phaser.Keyboard.W),
-                down: this.game.input.keyboard.addKey(Phaser.Keyboard.S),
-                left: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
-                right: this.game.input.keyboard.addKey(Phaser.Keyboard.D),
+            var _this = _super.call(this, _game, _x, _y, "ship") || this;
+            _this.maxHeight = 400; // Max height is the highest the y value can be. 
+            _this.game = _game; // get game context
+            _this.name = _name; // Set the objects unique name
+            _this.aliensOnBoard = 0; // Reset score counters
+            _this.aliensCaptured = 0;
+            _this.beam = _this.game.add.graphics(0, 0); // Create and add the beam to the gamestate
+            _this.beamMask = _this.game.add.graphics(0, 0); // Create and add the beam's bit mask to the gamestate
+            _this.beamMask.renderable = false;
+            _this.game.add.existing(_this); // Add this object to the gamestate. We have to add it last so that it will render on top of the beam
+            _this.moveSpeed = 15; // Set current walking speed
+            _this.moveDistThreshold = 5; // Set threshold for moving the ship based on tapping the screen
+            _this.tag = CosmicArkAdvanced.PhysicsTag.PLAYER; // Physics tag to determine how other sections of code should interact with it.
+            _this.isAbudcting = false; // is the player abduction someone right now?
+            _this.abductionSpeed = 70; // Set the speed which aliens are abducted at. (px / sec)
+            _this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
+            _this.animations.add("flash", [0, 1], 5, true); // Add the animation which makes the ship glow
+            _this.game.physics.enable(_this, Phaser.Physics.ARCADE); // Enable physics for the ship
+            _this.body.collideWorldBounds = true; // Automatically lock the players sprite into the world so they cannot move off screen.
+            _this.cursor = _this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
+            _this.wasd = {
+                up: _this.game.input.keyboard.addKey(Phaser.Keyboard.W),
+                down: _this.game.input.keyboard.addKey(Phaser.Keyboard.S),
+                left: _this.game.input.keyboard.addKey(Phaser.Keyboard.A),
+                right: _this.game.input.keyboard.addKey(Phaser.Keyboard.D),
             };
-            this.abductionSound = this.game.add.sound("abduction", 0.06 * this.game.music.volume, true);
+            _this.abductionSound = _this.game.add.sound("abduction", 0.06 * _this.game.music.volume, true);
+            return _this;
         }
         /**
          * @description Called every frame. Handles moving the player and sets the "isMoving" flag.

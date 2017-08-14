@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+    <!--
+        Customize the content security policy in the meta tag below as needed. Add 'unsafe-inline' to default-src to enable inline JavaScript.
+        For details, see http://go.microsoft.com/fwlink/?LinkID=617521
+    -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+        
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <title>CosmicArkCordovaEdition</title>
+    </head>
+    <body>
+
+
+        <!-- 
+        <div class="app">
+            <h1>Apache Cordova</h1>
+            <div id="deviceready" class="blink">
+                <p class="event listening">Connecting to Device</p>
+                <p class="event received">Device is Ready</p>
+                <p>Hello World</p>
+            </div>
+        </div>
+        -->
+        Hello World
+        <div id="content"></div>
+
+        <!-------------------------------->
+        <!-- LINK JAVASCRIPT FILES HERE -->
+        <!-------------------------------->
+        
+        <script src="Enums/PhysicsTag.js"></script>
+        <script src="States/GamePlayState.js"></script>
+        <script src="States/TitleScreenState.js"></script>
+        <script src="States/MapSelectState.js"></script>
+        <script src="States/HelpScreenState.js"></script>
+        <script src="States/LevelStartState.js"></script>
+        <script src="States/LevelFinishState.js"></script>
+        <script src="States/MainMenuState.js"></script>
+        <script src="Phaser/phaser.js"></script>
+        <script src="Objects/Player.js"></script>
+        <script src="Objects/Man.js"></script>
+        <script src="Objects/Gun.js"></script>
+        <script src="Objects/Mine.js"></script>
+        <script src="Objects/Hook.js"></script>
+        <script src="Objects/AlienProperties.js"></script>
+        <script src="app.js"></script>
+        <!-------------------------------->
+
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="scripts/platformOverrides.js"></script>
+        <script type="text/javascript" src="scripts/appBundle.js"></script>
+    </body>
+</html>

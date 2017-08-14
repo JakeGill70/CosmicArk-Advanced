@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     /**
@@ -26,20 +31,21 @@ var CosmicArkAdvanced;
          * @param _target Optional. What the gun should aim at
          */
         function Gun(_game, _x, _y, _graphicKey, bulletSpeed, _target) {
-            _super.call(this, _game, _x, _y, "gunTop"); // Pass all the nitty gritty parts to the Phaser.Sprite constructor and let it handle that.
-            this.game = _game; // get game contex
-            this.game.add.existing(this); // Add this object to the gamestate
+            var _this = _super.call(this, _game, _x, _y, "gunTop") || this;
+            _this.game = _game; // get game contex
+            _this.game.add.existing(_this); // Add this object to the gamestate
             // Create and add the base
-            this.base = new Phaser.Sprite(this.game, this.x, this.y, "gunBase");
-            this.base.anchor.setTo(0.50, 0.22);
-            this.base.position.set(this.x, this.y);
-            this.game.add.existing(this.base);
-            this.effectiveRange = 10000; // Make a default value for the range. 10,000 gives plenty of headroom
-            this.anchor.setTo(0.31, 0.44); // Move the anchor point to the bottom-left
+            _this.base = new Phaser.Sprite(_this.game, _this.x, _this.y, "gunBase");
+            _this.base.anchor.setTo(0.50, 0.22);
+            _this.base.position.set(_this.x, _this.y);
+            _this.game.add.existing(_this.base);
+            _this.effectiveRange = 10000; // Make a default value for the range. 10,000 gives plenty of headroom
+            _this.anchor.setTo(0.31, 0.44); // Move the anchor point to the bottom-left
             // If the target exists, initialize the object pool, target, and range
             if (_target != null) {
-                this.init_target(_target, 375, bulletSpeed); // A range of 375 pixels feels right for right now
+                _this.init_target(_target, 375, bulletSpeed); // A range of 375 pixels feels right for right now
             }
+            return _this;
         }
         Gun.prototype.init_target = function (_target, _range, _speed) {
             this.bullets = this.game.add.weapon(10, "bullet"); // Create an object pool for 10 bullets
@@ -66,12 +72,10 @@ var CosmicArkAdvanced;
                     this.rotation = angle;
                     // Flip the sprite if the angle is too steep
                     if (Math.abs(Phaser.Math.radToDeg(angle)) > 90) {
-                        console.log(Phaser.Math.radToDeg(angle));
                         this.scale.set(1, -1);
                         this.base.scale.set(-1, 1);
                     }
                     else {
-                        console.log(this.renderOrderID.toString() + ", " + Phaser.Math.radToDeg(angle).toString());
                         this.scale.set(1, 1);
                         this.base.scale.set(1, 1);
                     }

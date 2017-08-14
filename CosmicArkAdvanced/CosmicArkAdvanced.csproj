@@ -10,7 +10,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>2.4</TypeScriptToolsVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -55,6 +55,7 @@
     <Content Include="Graphics\Sprites\gunTop-01.png" />
     <Content Include="Graphics\Sprites\UFO_Glow.png" />
     <Content Include="Graphics\Sprites\walk5_sheet.png" />
+    <Content Include="Graphics\Sprites\wave.png" />
     <Content Include="Graphics\Statics\bullet1.png" />
     <Content Include="Graphics\Sprites\gun1.png" />
     <Content Include="Graphics\Statics\hook2.png" />

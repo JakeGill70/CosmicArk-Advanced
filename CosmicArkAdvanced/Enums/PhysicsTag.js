@@ -4,11 +4,11 @@ var CosmicArkAdvanced;
     * @type {enum}
     * @returns {number}
     * @see {CosmicArkAdvanced.IPhysicsReady} */
+    var PhysicsTag;
     (function (PhysicsTag) {
         PhysicsTag[PhysicsTag["PLAYER"] = 0] = "PLAYER";
         PhysicsTag[PhysicsTag["ALIEN"] = 1] = "ALIEN";
         PhysicsTag[PhysicsTag["MINE"] = 2] = "MINE";
-    })(CosmicArkAdvanced.PhysicsTag || (CosmicArkAdvanced.PhysicsTag = {}));
-    var PhysicsTag = CosmicArkAdvanced.PhysicsTag;
+    })(PhysicsTag = CosmicArkAdvanced.PhysicsTag || (CosmicArkAdvanced.PhysicsTag = {}));
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=PhysicsTag.js.map
