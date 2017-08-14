@@ -122,25 +122,7 @@
             //gun.bullets.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
 
             gun.bullets.fireRate = (58 * this.difficulty * this.difficulty) - (1093 * this.difficulty) + 5946;
-            gun.bullets.fireRateVariance = (Math.random() * 25 + 25) * (this.difficulty % 3);
-
-            // 2000ms was the original testing speed
-            /*
-            if (this.difficulty == 1) {
-                gun.bullets.fireRate = 5000;
-            }
-            else if (this.difficulty == 2) {
-                gun.bullets.fireRate = 4000;
-            }
-            else if (this.difficulty == 3) {
-                gun.bullets.fireRate = 3000;
-            }
-            else {
-                // formula for any unknown difficulty
-                console.log("Error: Unknown difficulty was used when declaring a gun");
-                gun.bullets.fireRate = 2000 * (this.difficulty / 1.5);
-            }
-            */
+            gun.bullets.fireRateVariance = (Math.random() * 25 + 25) * ((this.difficulty % 3)+1);
                 
             this.guns.push(gun);
         }
@@ -169,7 +151,9 @@
             
             let hook = new Hook(this.game, x, y, "gun", "hook1", this.player);
             // 2000ms was the original testing speed
-            hook.wep.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
+            //hook.wep.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
+            hook.wep.fireRate = (58 * this.difficulty * this.difficulty) - (1093 * this.difficulty) + 5946;
+            hook.wep.fireRateVariance = (Math.random() * 30 + 35) * ((this.difficulty % 3) + 1);
 
             this.hooks.push(hook);
         }
@@ -412,7 +396,7 @@
             // Collide the player's ship with the gun's bullets
             for (let n = 0; n < this.guns.length; n++) {
                 for (let i = 0; i < this.guns[n].bullets.bullets.length; i++) {
-                    if (!this.player.isHooked && this.game.physics.arcade.overlap(this.player, this.guns[n].bullets.bullets.getAt(i))) {
+                    if (this.game.physics.arcade.overlap(this.player, this.guns[n].bullets.bullets.getAt(i))) {
 
                         // Destroy all bullets within the kill radius (Ess. provide a localized i-frame to the player for fairness)
                         let kill_radius = 150;

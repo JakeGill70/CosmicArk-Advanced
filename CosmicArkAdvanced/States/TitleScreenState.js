@@ -48,6 +48,9 @@ var CosmicArkAdvanced;
         TitleScreenState.prototype.TitleClicked = function () {
             if (this.finishedLoading) {
                 this.game.state.start("mainMenuState");
+                if (!this.game.device.desktop) {
+                    this.game.scale.startFullScreen(true);
+                }
             }
             else {
                 if (!this.game.load.isLoading) {
@@ -79,9 +82,10 @@ var CosmicArkAdvanced;
             this.game.load.image("rope", "Graphics/Sprites/rope3.png");
             this.game.load.spritesheet("ship", "Graphics/Sprites/UFO_Glow.png", 48, 24, 2);
             this.game.load.spritesheet("bang", "Graphics/Sprites/bang.png", 64, 64, 14);
+            this.game.load.spritesheet("wave", "Graphics/Sprites/wave.png", 32, 32, 3);
             // Static Sprites
             this.game.load.image("mothership", "Graphics/Statics/mothership3.png");
-            this.game.load.image("hook", "Graphics/Statics/hook2.png");
+            this.game.load.image("hook", "Graphics/Statics/hook.png");
             this.game.load.image("mine", "Graphics/Statics/Mine3.png");
             this.game.load.image("bullet", "Graphics/Statics/bullet1.png");
             this.game.load.image("planet1", "Graphics/Statics/planet_1.png");

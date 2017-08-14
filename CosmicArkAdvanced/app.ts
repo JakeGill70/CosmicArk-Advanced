@@ -7,7 +7,7 @@
     export class MyGame {
         game: Phaser.Game;
 
-        private static AUTO_SCALING = false;    // Debug var
+        private static AUTO_SCALING = true;    // Debug var
 
         /**
          * @description Creates the game context to use with the rest of the game
@@ -79,15 +79,23 @@
             this.game.state.add("levelStartState", CosmicArkAdvanced.LevelStartState, false);
             this.game.state.add("levelFinishState", CosmicArkAdvanced.LevelFinishState, false);
             this.game.state.add("titleScreenState", CosmicArkAdvanced.TitleScreenState, true);
-            console.log(MyGame.AUTO_SCALING);
-            if (MyGame.AUTO_SCALING == true) {
-                this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-            }
 
-            // If on a mobile device, Set the scale mode to be an exact fit
-            if (!this.game.device.desktop) {
-                this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
-               // this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+
+            console.log(MyGame.AUTO_SCALING);
+            console.log(this.game.scale.scaleMode);
+            if (MyGame.AUTO_SCALING == true) {
+                
+                if (!this.game.device.desktop) {
+                    this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+                    this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+
+                    //have the game centered horizontally
+                    this.game.scale.pageAlignHorizontally = true;
+                    this.game.scale.pageAlignVertically = true;
+
+                    this.game.scale.startFullScreen(true);
+                }
+
             }
         }
 

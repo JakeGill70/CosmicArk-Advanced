@@ -66,12 +66,10 @@ var CosmicArkAdvanced;
                     this.rotation = angle;
                     // Flip the sprite if the angle is too steep
                     if (Math.abs(Phaser.Math.radToDeg(angle)) > 90) {
-                        console.log(Phaser.Math.radToDeg(angle));
                         this.scale.set(1, -1);
                         this.base.scale.set(-1, 1);
                     }
                     else {
-                        console.log(this.renderOrderID.toString() + ", " + Phaser.Math.radToDeg(angle).toString());
                         this.scale.set(1, 1);
                         this.base.scale.set(1, 1);
                     }
