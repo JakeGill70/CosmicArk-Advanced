@@ -113,6 +113,8 @@
             this.game.load.audio("Groove88", "Audio/Music/Groove88.wav");
             this.game.load.audio("explosion", "Audio/SFX/Explosion.wav");
             this.game.load.audio("transport", "Audio/SFX/Transport_short.wav");
+            this.game.songs = ["ThereminsBeat", "SlideWhistleBlues", "LikePaper", "RunTripAndFall", "Groove88"];
+            this.game.songIndex = 0;    // The fist song will always be "Theremin's Beat"
             this.game.load.start();
         }
     }
