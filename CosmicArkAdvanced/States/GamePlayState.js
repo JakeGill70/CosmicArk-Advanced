@@ -161,7 +161,7 @@ var CosmicArkAdvanced;
             m.body.velocity.set(spd, 0); // Set the initial velocity to be it's speed with the random direction
         };
         /**
-         * @description TODO
+         * @description If you are out of time the game will end.
          */
         GamePlayState.prototype.OutOfTime = function () {
             var capt = this.player.aliensCaptured;
@@ -255,7 +255,7 @@ var CosmicArkAdvanced;
             // this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
         };
         /**
-         * @description TODO
+         * @description when paused, there will be options that come up that you can select
          */
         GamePlayState.prototype.pauseGame = function () {
             this.game.paused = true;
@@ -265,7 +265,9 @@ var CosmicArkAdvanced;
             this.uiText_Restart.position.y = (this.game.height / 2) + this.camera.position.y - this.uiText_Restart.textHeight / 2;
         };
         /**
-         * @description TODO
+         * @description when you press the pause button again it will un-pause the game.
+         *              handles logic for when you click options in the pause menu.
+         * @param position of your finger/cursor
          */
         GamePlayState.prototype.unpauseGame = function (pos) {
             if (this.uiBtn_Pause.getBounds().contains(pos.x, pos.y)) {
@@ -273,9 +275,8 @@ var CosmicArkAdvanced;
                 this.uiText_Restart.destroy();
             }
             else if (this.uiText_Restart.getBounds().contains(pos.x, pos.y)) {
-                console.log("Restart has been activated, nigga");
-                this.game.paused = false; // testing, EDF
-                //this.game.state.start("gamePlayState", true, false, this.difficulty, this.timeToCapture, this.numberToCapture, this.score); // Jump to the GamePlayState
+                //console.log("Restart has been activated"); // testing
+                this.game.paused = false;
                 this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
             }
         };
@@ -316,7 +317,7 @@ var CosmicArkAdvanced;
             }
         };
         /**
-         * @description TODO
+         * @description returns how much time is remaining
         */
         GamePlayState.prototype.GetTimeRemaining = function () {
             return (this.levelTimer.duration / 1000);
@@ -432,7 +433,8 @@ var CosmicArkAdvanced;
             }
         };
         /**
-         * @description TODO
+         * @description lets you stack sound effects so that one will play right after the other,
+         *              but they won't all play at the same time.
          */
         GamePlayState.prototype.sfxRepeater = function (key, numberOfPlays, volume) {
             if (volume === void 0) { volume = 0.7; }
