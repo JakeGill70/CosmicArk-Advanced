@@ -19,6 +19,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
@@ -41,6 +42,7 @@
     <Content Include="Audio\SFX\Transport.wav" />
     <Content Include="Audio\SFX\Transport_short.wav" />
     <Content Include="Fonts\EdoSZ.png" />
+    <Content Include="Graphics\Backgrounds\BlueGrid.png" />
     <Content Include="Graphics\Backgrounds\City1.png" />
     <Content Include="Graphics\Backgrounds\MainMenuScreen2.png" />
     <Content Include="Graphics\Backgrounds\TitleCard3-4.png" />

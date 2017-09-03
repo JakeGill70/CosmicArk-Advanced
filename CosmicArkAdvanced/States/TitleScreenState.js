@@ -74,6 +74,7 @@ var CosmicArkAdvanced;
         };
         TitleScreenState.prototype.loadStuff = function () {
             // Backgrounds
+            this.game.load.image("blueGrid", "Graphics/Backgrounds/BlueGrid.png");
             this.game.load.image("help", "Graphics/Backgrounds/HelpScreen1.png");
             this.game.load.image("main", "Graphics/Backgrounds/MainMenuScreen2.png");
             this.game.load.image("nightSky", "Graphics/Backgrounds/NightSky.png");
@@ -111,6 +112,7 @@ var CosmicArkAdvanced;
             this.game.songs = ["ThereminsBeat", "SlideWhistleBlues", "LikePaper", "RunTripAndFall", "Groove88"];
             this.game.songIndex = 0; // The fist song will always be "Theremin's Beat"
             this.game.load.start();
+            this.game.music.volume = 0; // so we don't go insane.
         };
         return TitleScreenState;
     }(Phaser.State));

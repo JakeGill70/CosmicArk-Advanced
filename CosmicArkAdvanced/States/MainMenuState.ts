@@ -31,9 +31,20 @@
             this.titleScreenImage.scale.setTo(this.game.width / this.titleScreenImage.width, this.game.height / this.titleScreenImage.height);  // Scale it to fit the size of the screen
 
             // Make Buttons
-            this.btn_Play = this.add.bitmapText(250, 160, "EdoSZ", "PLAY NOW");
-            this.btn_Help = this.add.bitmapText(250, 200, "EdoSZ", "HOW TO PLAY");
-            this.btn_Mute = this.add.bitmapText(250, 240, "EdoSZ", "MUTE");
+            this.btn_Play = this.add.bitmapText(0, 195, "EdoSZ", "PLAY NOW");
+            this.btn_Help = this.add.bitmapText(0, 255, "EdoSZ", "HOW TO PLAY");
+            this.btn_Mute = this.add.bitmapText(0, 315, "EdoSZ", "MUTE");
+
+            //Change Anchors
+            this.btn_Play.anchor.set(0.5, 0);
+            this.btn_Help.anchor.set(0.5, 0);
+            this.btn_Mute.anchor.set(0.5, 0);
+
+            // Reset Position
+            this.btn_Play.position.x = this.game.width / 2;
+            this.btn_Help.position.x = this.game.width / 2;
+            this.btn_Mute.position.x = this.game.width / 2;
+
 
             // Play some theme music!
             if (!this.game.music.isPlaying) {
