@@ -99,10 +99,34 @@
 
             if (this.isGameOver) {
                 let youLoseText = this.game.add.bitmapText(this.game.width / 2 + 80, 250, "EdoSZ", "YOU LOSE!!!");
+                this.UpdateHighscore(this.score);
             }
 
             // Register the "TitleClicked" even handler
             this.input.onTap.add(this.LevelStartClicked, this);
+        }
+
+        UpdateHighscore(score: number) {
+            // Get the highscores
+            let currHighScoresRaw: string = localStorage.getItem("highScore");
+            let currHighScoresString: string[] = currHighScoresRaw.split(":");
+
+            // Add new highscore if high enough
+            for (var i = 0; i < currHighScoresString.length; i++) {
+                if (score > parseInt(currHighScoresString[i])) {
+                    currHighScoresString.splice(i, 0, score.toString());
+                }
+            }
+
+            // Save the high score list
+            currHighScoresRaw = "";
+            for (var i = 0; i < 10; i++) {
+                currHighScoresRaw += currHighScoresString[i] + ":";
+            }
+            currHighScoresRaw = currHighScoresRaw.substring(0, currHighScoresRaw.length - 1);
+
+            localStorage.setItem("highScore", currHighScoresRaw);
+
         }
 
         /**
