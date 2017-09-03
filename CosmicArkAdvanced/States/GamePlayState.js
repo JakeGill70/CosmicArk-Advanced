@@ -24,6 +24,7 @@ var CosmicArkAdvanced;
      * @Property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
      * @Property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
      * @Property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
+     * @Property uiBtn_Pause {Phaser.Button}                -
      */
     var GamePlayState = (function (_super) {
         __extends(GamePlayState, _super);
@@ -51,7 +52,9 @@ var CosmicArkAdvanced;
             this.hooks = [];
             this.dict = [];
         };
-        // Todo: Document this
+        /**
+         * @description adds mines to the current level
+         */
         GamePlayState.prototype.addMine = function (x, y) {
             if (x == null || x == undefined) {
                 x = this.game.world.width * Math.random();
@@ -249,9 +252,6 @@ var CosmicArkAdvanced;
         GamePlayState.prototype.pauseGame = function () {
             this.game.paused = true;
             this.game.input.onDown.add(this.unpauseGame, this, 0, this.input.position);
-            //this.uiText_Pause = this.game.add.bitmapText(0, 0, "EdoSZ", "PAUSE", 48);
-            //this.uiText_Pause.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Pause.textWidth/2;
-            //this.uiText_Pause.position.y = (this.game.height / 2) + this.camera.position.y - this.uiText_Pause.textHeight / 2;
             this.uiText_Restart = this.game.add.bitmapText(0, 0, "EdoSZ", "RESTART", 48);
             this.uiText_Restart.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Restart.textWidth / 2;
             this.uiText_Restart.position.y = (this.game.height / 2) + this.camera.position.y - this.uiText_Restart.textHeight / 2;
