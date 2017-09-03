@@ -19,15 +19,16 @@ var CosmicArkAdvanced;
     var MainMenuState = (function (_super) {
         __extends(MainMenuState, _super);
         /**
-        * Default constructor, only calls the Phaser.State instructor for now.
+        * @description Default constructor, only calls the Phaser.State instructor for now.
         * @constructor
         */
         function MainMenuState() {
             return _super.call(this) || this;
         }
-        /** @desription Populates the game state with sprites and registers the
-        * event handlers needed for touch/mouse input
-        */
+        /**
+         * @description Populates the game state with sprites and registers the
+         *              event handlers needed for touch/mouse input
+         */
         MainMenuState.prototype.create = function () {
             // Make background image
             this.titleScreenImage = this.add.sprite(0, 0, "main"); // Pull the image out of memory

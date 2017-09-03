@@ -40,7 +40,9 @@
         }
 
 
-
+        /**
+         * @description TODO
+         */
         init(difficulty: number, score: number, timeRemaining: number, numberToCapture: number, numberCaught: number) {
             this.difficulty = difficulty;
             this.score = score;
@@ -128,7 +130,9 @@
         }
 
         
-
+        /**
+         * @description update the score and time as the game progresses
+         */
         updateText() {
             if (this.captureBonus > 0) {
                 // Add capture bonus
@@ -184,6 +188,9 @@
             }
         }
 
+        /**
+         * @description un-initialize components
+         */
         shutdown() {
             this.titleScreenImage.destroy(true);
             this.uiText.destroy(true);

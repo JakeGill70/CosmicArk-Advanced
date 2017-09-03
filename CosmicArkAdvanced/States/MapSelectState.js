@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     /**
-     * @desription This can be used as either a level select or a difficulty select screen. Depends on what direction we want to go.
+     * @description This can be used as either a level select or a difficulty select screen. Depends on what direction we want to go.
      * @property {Phaser.Game} game                   - The game context
      * @property {Phaser.Sound} music                 - The SFX player
      * @property {Phaser.Sprite} planet1              - A possible planet the user can click on
@@ -22,15 +22,16 @@ var CosmicArkAdvanced;
     var MapSelectState = (function (_super) {
         __extends(MapSelectState, _super);
         /**
-        * Default constructor, only calls the Phaser.State instructor for now.
-        * @constructor
-        */
+         * @description Default constructor, only calls the Phaser.State instructor for now.
+         * @constructor
+         */
         function MapSelectState() {
             return _super.call(this) || this;
         }
-        /** @desription Populates the game state with sprites and registers the
-        * event handlers needed for touch/mouse input
-        */
+        /**
+         * @description Populates the game state with sprites and registers the
+         *              event handlers needed for touch/mouse input
+         */
         MapSelectState.prototype.create = function () {
             this.selectedPlanet = null; // Make sure nothing was selected
             this.game.add.image(0, 0, "blueGrid");
@@ -79,6 +80,10 @@ var CosmicArkAdvanced;
                 this.difficulty = 0;
             }
         };
+        /**
+         * @description when you select a planet, it will grow in size and shrink the one that was previously selected.
+         * @param a planet
+         */
         MapSelectState.prototype.selectPlanet = function (p) {
             // Shrink the scale of the old planet
             if (this.selectedPlanet != null) {

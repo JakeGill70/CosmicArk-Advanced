@@ -22,6 +22,9 @@
             super();
         }
 
+        /**
+         * @description TODO
+         */
         init(difficulty: number, score: number) {
             this.difficulty = difficulty;
             this.score = score;
@@ -71,6 +74,9 @@
             this.game.state.start("gamePlayState", true, false, this.difficulty, this.timeToCapture, this.numberToCapture, this.score); // Jump to the GamePlayState
        }
 
+        /**
+         * @description un-initialize components
+         */
         shutdown() {
             this.titleScreenImage.destroy(true);
             this.uiText.destroy(true);

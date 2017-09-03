@@ -1,6 +1,6 @@
 ﻿module CosmicArkAdvanced {
    /** 
-    * @desription This can be used as either a level select or a difficulty select screen. Depends on what direction we want to go.
+    * @description This can be used as either a level select or a difficulty select screen. Depends on what direction we want to go.
     * @property {Phaser.Game} game                   - The game context
     * @property {Phaser.Sound} music                 - The SFX player
     * @property {Phaser.Sprite} planet1              - A possible planet the user can click on
@@ -18,16 +18,17 @@
         difficulty: number;
 
         /**
-        * Default constructor, only calls the Phaser.State instructor for now.
-        * @constructor
-        */
+         * @description Default constructor, only calls the Phaser.State instructor for now.
+         * @constructor
+         */
         constructor() {
             super();
         }
 
-        /** @desription Populates the game state with sprites and registers the
-        * event handlers needed for touch/mouse input
-        */
+        /**
+         * @description Populates the game state with sprites and registers the
+         *              event handlers needed for touch/mouse input
+         */
         create() {
             this.selectedPlanet = null;     // Make sure nothing was selected
 
@@ -84,6 +85,10 @@
             }
         }
 
+        /**
+         * @description when you select a planet, it will grow in size and shrink the one that was previously selected.
+         * @param a planet
+         */
         selectPlanet(p?: Phaser.Sprite) {
             // Shrink the scale of the old planet
             if (this.selectedPlanet != null) { 
