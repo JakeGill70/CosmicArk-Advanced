@@ -93,7 +93,7 @@
         }
 
         /**
-         * @Description function which is called when the hook collides with the player's ship.
+         * @description function which is called when the hook collides with the player's ship.
          * Sets the hasTarget flag, inverts the hook's velocity, and call the wephip function on the player's ship
          * @see {CosmicArkAdvanced.Player.wephip()}
          */

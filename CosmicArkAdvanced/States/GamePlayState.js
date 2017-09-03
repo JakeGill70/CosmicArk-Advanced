@@ -13,29 +13,31 @@ var CosmicArkAdvanced;
     // Yo yo yo this be ethan dawg!
     // TODO: Is supercollider still needed? Can IPhysics ready be gutted? How much of this code is dead now?
     /**
-     * @Description The meat and potatoes of the game. This is where the actual "game" part lives.
-     * @Property game {Phaser.Game}                         - The game context
-     * @Property player {Phaser.Sprite}                     - The player object
-     * @Property man1 {CosmicArkAdvanced.Man}               - Test Alien
-     * @Property aliens {CosmicArkAdvance.IPhysicsReady[]}  - List of aliens in this scene that are capable of recieving physics calls
-     * @Property dict {any[]}                               - A 2-keyed dictionary which maps 2 strings to a boolean value. Maps out physics collision states.
-     * @Property gun1 {CosmicArkAdvanced.Gun}               - Test Gun
-     * @Property mine1 {CosmicArkAdvanced.Mine}             - Test Mine
-     * @Property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
-     * @Property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
-     * @Property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
-     * @Property uiBtn_Pause {Phaser.Button}                -
+     * @description The meat and potatoes of the game. This is where the actual "game" part lives.
+     * @property game {Phaser.Game}                         - The game context
+     * @property player {Phaser.Sprite}                     - The player object
+     * @property man1 {CosmicArkAdvanced.Man}               - Test Alien
+     * @property aliens {CosmicArkAdvance.IPhysicsReady[]}  - List of aliens in this scene that are capable of recieving physics calls
+     * @property dict {any[]}                               - A 2-keyed dictionary which maps 2 strings to a boolean value. Maps out physics collision states.
+     * @property gun1 {CosmicArkAdvanced.Gun}               - Test Gun
+     * @property mine1 {CosmicArkAdvanced.Mine}             - Test Mine
+     * @property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
+     * @property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
+     * @property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
+     * @property uiBtn_Pause {Phaser.Button}                -
      */
     var GamePlayState = (function (_super) {
         __extends(GamePlayState, _super);
         /**
-         * @Description Mostly empty. Does initialize the aliens list and the dictionary.
-         * @Constructor
+         * @description Mostly empty. Does initialize the aliens list and the dictionary.
+         * @constructor
          */
         function GamePlayState() {
             return _super.call(this) || this;
         }
-        // Todo: document this
+        /**
+         * @description TODO
+         */
         GamePlayState.prototype.init = function (difficulty, timeToCapture, numberToCapture, score) {
             // Assign aurguments to class level properties
             this.difficulty = difficulty;
@@ -53,7 +55,8 @@ var CosmicArkAdvanced;
             this.dict = [];
         };
         /**
-         * @description adds mines to the current level
+         * @description adding mines to the level
+         * @param x and y coordinates
          */
         GamePlayState.prototype.addMine = function (x, y) {
             if (x == null || x == undefined) {
@@ -118,7 +121,7 @@ var CosmicArkAdvanced;
             this.hooks.push(hook);
         };
         /**
-         * @Description Creates a AI man
+         * @description Creates a AI man
          * @param x Start X position, default is random (keyed as -1, if you want -1, use something like -1.000000001)
          * @param y Start Y position, default is 70px from the bottom of the world
          */
@@ -157,13 +160,15 @@ var CosmicArkAdvanced;
             // (m.body as Phaser.Physics.Arcade.Body).setSize(w, h, x, y);
             m.body.velocity.set(spd, 0); // Set the initial velocity to be it's speed with the random direction
         };
-        // TODO: Document this
+        /**
+         * @description TODO
+         */
         GamePlayState.prototype.OutOfTime = function () {
             var capt = this.player.aliensCaptured;
             this.game.state.start("levelFinishState", true, false, this.difficulty, this.score, this.GetTimeRemaining(), this.numberToCapture, capt); // Jump to the Level Finish State
         };
         /**
-         * @Description Creates the game world by both creating and initializing all the objects in the game state.
+         * @description Creates the game world by both creating and initializing all the objects in the game state.
          */
         GamePlayState.prototype.create = function () {
             console.log("GamePlayState has started");
@@ -249,6 +254,9 @@ var CosmicArkAdvanced;
             this.tweenColor = this.game.add.tween(this.uiText_Score).to({ tint: [0xFF1122, 0xFF1122, 0xFF1122, 0xFFFFFF] }, 500, Phaser.Easing.Linear.None, false, 0);
             // this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
         };
+        /**
+         * @description TODO
+         */
         GamePlayState.prototype.pauseGame = function () {
             this.game.paused = true;
             this.game.input.onDown.add(this.unpauseGame, this, 0, this.input.position);
@@ -256,6 +264,9 @@ var CosmicArkAdvanced;
             this.uiText_Restart.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Restart.textWidth / 2;
             this.uiText_Restart.position.y = (this.game.height / 2) + this.camera.position.y - this.uiText_Restart.textHeight / 2;
         };
+        /**
+         * @description TODO
+         */
         GamePlayState.prototype.unpauseGame = function (pos) {
             if (this.uiBtn_Pause.getBounds().contains(pos.x, pos.y)) {
                 this.game.paused = false;
@@ -269,7 +280,7 @@ var CosmicArkAdvanced;
             }
         };
         /**
-         * @Descirption Creates the mothership sprite and adjust it's properties accordingly.
+         * @description Creates the mothership sprite and adjust it's properties accordingly.
          */
         GamePlayState.prototype.makeMotherShip = function () {
             this.mothership = this.game.add.sprite(0, 0, "mothership");
@@ -280,14 +291,14 @@ var CosmicArkAdvanced;
             this.mothership.body.setCircle(this.mothership.width * 0.75, this.mothership.width * -0.25, this.mothership.width * -1.18);
         };
         /**
-         * @Description Adds the background images to the gamestate and scales them appropriately
+         * @description Adds the background images to the gamestate and scales them appropriately
          */
         GamePlayState.prototype.makeBackgrounds = function () {
             // let bd = new Phaser.Image(this.game, 0, this.game.world.height, "city1");
             this.game.add.image(0, 0, "city1");
         };
         /**
-         * @Description Check for collisions between objects, update the UI and coordinate AI movements
+         * @description Check for collisions between objects, update the UI and coordinate AI movements
          */
         GamePlayState.prototype.update = function () {
             this.collideObjects(); // Check for collisions
@@ -304,12 +315,14 @@ var CosmicArkAdvanced;
                 this.game.state.start("levelFinishState", true, false, this.difficulty, this.score, this.GetTimeRemaining(), this.numberToCapture, capt); // Jump to the Level Finished State
             }
         };
-        //TODO: Document this
+        /**
+         * @description TODO
+        */
         GamePlayState.prototype.GetTimeRemaining = function () {
             return (this.levelTimer.duration / 1000);
         };
         /**
-         * Adds more time "levelTimer" object. Can be given a negative number to subtract time.
+         * @description Adds more time "levelTimer" object. Can be given a negative number to subtract time.
          * @param n The number of MILLISECONDS to change the timer by
          */
         GamePlayState.prototype.addTime = function (n) {
@@ -319,7 +332,7 @@ var CosmicArkAdvanced;
             this.levelTimer.start();
         };
         /**
-         * @Description Called ever frame through the update method. Place collision checks here.
+         * @description Called ever frame through the update method. Place collision checks here.
          */
         GamePlayState.prototype.collideObjects = function () {
             // Collide the player's ship with the gun's bullets
@@ -418,6 +431,9 @@ var CosmicArkAdvanced;
                 }
             }
         };
+        /**
+         * @description TODO
+         */
         GamePlayState.prototype.sfxRepeater = function (key, numberOfPlays, volume) {
             if (volume === void 0) { volume = 0.7; }
             var sfx = this.game.sound.play(key, volume, false);
@@ -429,7 +445,7 @@ var CosmicArkAdvanced;
             sfxRepeatTimer.start();
         };
         /**
-         * @Description Helper function which cycles through the sprite batch of men along the bottom the screen and applies logic into how they should move.
+         * @description Helper function which cycles through the sprite batch of men along the bottom the screen and applies logic into how they should move.
          */
         GamePlayState.prototype.moveMen = function () {
             this.alienBatch.forEach(function (alien) {
@@ -444,9 +460,9 @@ var CosmicArkAdvanced;
             }, this);
         };
         /**
-         * @Description This is the super in-depth version of collision checking I (Jake) created. Checks for collisions between two objects and triggers the appropriate events on the object.
-         * @Param obj1  The first object to check collision against
-         * @Param obj2  The second object to check collision against
+         * @description This is the super in-depth version of collision checking I (Jake) created. Checks for collisions between two objects and triggers the appropriate events on the object.
+         * @param obj1  The first object to check collision against
+         * @param obj2  The second object to check collision against
          */
         GamePlayState.prototype.superCollider = function (obj1, obj2) {
             if (this.game.physics.arcade.collide(obj1, obj2, this.OnCollisionCaller, this.OnCollisionProposalCaller)) {
@@ -479,41 +495,41 @@ var CosmicArkAdvanced;
         };
         /**
          * @Descirption Calls the OnCollisionProposal events on both objects, and return their answer. Both objects must accept the proposal before continueing.
-         * @Param obj1
-         * @Param obj2
+         * @param obj1
+         * @param obj2
          */
         GamePlayState.prototype.OnCollisionProposalCaller = function (obj1, obj2) {
             return (obj1.OnCollisionProposal(obj2) && obj2.OnCollisionProposal(obj1));
         };
         /**
          * @Descirption Calls the OnCollisionEnter events on both objects
-         * @Param obj1
-         * @Param obj2
+         * @param obj1
+         * @param obj2
          */
         GamePlayState.prototype.OnCollisionEnterCaller = function (obj1, obj2) {
             obj1.OnCollisionEnter(obj2);
             obj2.OnCollisionEnter(obj1);
         };
         /**
-         * @Description Calls the OnCollision events on both objects
-         * @Param obj1
-         * @Param obj2
+         * @description Calls the OnCollision events on both objects
+         * @param obj1
+         * @param obj2
          */
         GamePlayState.prototype.OnCollisionCaller = function (obj1, obj2) {
             obj1.OnCollision(obj2);
             obj2.OnCollision(obj1);
         };
         /**
-         * @Description Calls the OnCollisionExit events on both objects
-         * @Param obj1
-         * @Param obj2
+         * @description Calls the OnCollisionExit events on both objects
+         * @param obj1
+         * @param obj2
          */
         GamePlayState.prototype.OnCollisionExitCaller = function (obj1, obj2) {
             obj1.OnCollisionExit(obj2);
             obj2.OnCollisionExit(obj1);
         };
         /**
-         * @Description Post rendering effects.
+         * @description Post rendering effects.
          */
         GamePlayState.prototype.render = function () {
             // Debug features...
@@ -526,6 +542,9 @@ var CosmicArkAdvanced;
             this.game.debug.text(this.game.time.fps.toString(), 8, 80);
             //this.game.debug.body(this.myBatch.getFirstExists(true));
         };
+        /**
+         * @description un-initializes game objects
+         */
         GamePlayState.prototype.shutdown = function () {
             this.player.destroy(true);
             this.aliens = null;

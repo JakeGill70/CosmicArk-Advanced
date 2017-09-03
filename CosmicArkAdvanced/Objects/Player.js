@@ -29,7 +29,7 @@ var CosmicArkAdvanced;
     var Player = (function (_super) {
         __extends(Player, _super);
         /**
-         * @description Constructor for the player's ship
+         * @description constructor for the player's ship
          * @constructor
          * @param _game Context of the main game window
          * @param _x Starting world X coordinate
@@ -227,7 +227,7 @@ var CosmicArkAdvanced;
             this.beamMask.clear(); // Destroy any graphic's artifacts of the beam's mask. This shouldn't make a difference since the mask isn't technically rendered, but do it anyway just in case of weirdness.
         };
         /**
-         * @Description Should be called when colliding with the mothership.
+         * @description Should be called when colliding with the mothership.
          * This method resets the "In Transit" score to 0, and increases the "Captured" score appropriately
          */
         Player.prototype.Capture = function () {

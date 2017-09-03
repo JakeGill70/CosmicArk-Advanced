@@ -160,7 +160,7 @@ declare module PIXI {
         context: CanvasRenderingContext2D;
         maskManager: CanvasMaskManager;
         scaleMode: scaleModes;
-        smoothProperty: string;
+        smoothproperty: string;
         roundPixels: boolean;
 
     }

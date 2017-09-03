@@ -5,25 +5,25 @@
     // TODO: Is supercollider still needed? Can IPhysics ready be gutted? How much of this code is dead now?
 
     /**
-     * @Description The meat and potatoes of the game. This is where the actual "game" part lives.
-     * @Property game {Phaser.Game}                         - The game context
-     * @Property player {Phaser.Sprite}                     - The player object 
-     * @Property man1 {CosmicArkAdvanced.Man}               - Test Alien
-     * @Property aliens {CosmicArkAdvance.IPhysicsReady[]}  - List of aliens in this scene that are capable of recieving physics calls
-     * @Property dict {any[]}                               - A 2-keyed dictionary which maps 2 strings to a boolean value. Maps out physics collision states.
-     * @Property gun1 {CosmicArkAdvanced.Gun}               - Test Gun
-     * @Property mine1 {CosmicArkAdvanced.Mine}             - Test Mine
-     * @Property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
-     * @Property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
-     * @Property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
-     * @Property uiBtn_Pause {Phaser.Button}                - 
+     * @description The meat and potatoes of the game. This is where the actual "game" part lives.
+     * @property game {Phaser.Game}                         - The game context
+     * @property player {Phaser.Sprite}                     - The player object 
+     * @property man1 {CosmicArkAdvanced.Man}               - Test Alien
+     * @property aliens {CosmicArkAdvance.IPhysicsReady[]}  - List of aliens in this scene that are capable of recieving physics calls
+     * @property dict {any[]}                               - A 2-keyed dictionary which maps 2 strings to a boolean value. Maps out physics collision states.
+     * @property gun1 {CosmicArkAdvanced.Gun}               - Test Gun
+     * @property mine1 {CosmicArkAdvanced.Mine}             - Test Mine
+     * @property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
+     * @property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
+     * @property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
+     * @property uiBtn_Pause {Phaser.Button}                - 
      */
     export class GamePlayState extends Phaser.State {
         game: Phaser.Game;                          // Game Refence
         player: CosmicArkAdvanced.Player;           // Player object
         aliens: CosmicArkAdvanced.IPhysicsReady[];  // List of aliens in this scene that are capable of recieving physics calls
 
-        men: Phaser.Group;
+        men: Phaser.Group;                  // Collection of men
 
         alienBatch: Phaser.SpriteBatch;     // Collection of aliens in the game 
 
@@ -54,14 +54,16 @@
         score: number;                      // Holds the current score to carry it over to the LevelFinishState
 
         /**
-         * @Description Mostly empty. Does initialize the aliens list and the dictionary.
-         * @Constructor
+         * @description Mostly empty. Does initialize the aliens list and the dictionary.
+         * @constructor
          */
         constructor() {
             super();
         }
 
-        // Todo: document this
+        /**
+         * @description TODO
+         */
         init(difficulty: number, timeToCapture: number, numberToCapture: number, score: number) {
             // Assign aurguments to class level properties
             this.difficulty = difficulty;
@@ -82,7 +84,8 @@
         }
 
         /**
-         * @description adds mines to the current level
+         * @description adding mines to the level
+         * @param x and y coordinates
          */
         addMine(x?: number, y?: number) {
             if (x == null || x == undefined) {
@@ -96,7 +99,8 @@
         }
 
         /**
-         * @description adds guns to the current level
+         * @description adds the enemy weapons to the game dependant on certain conditions.
+         * @param depends
          */
         addGun();
         addGun(spd?: number);
@@ -132,7 +136,10 @@
             this.guns.push(gun);
         }
 
-        // Todo: document this
+        /**
+         * @description adds the enemy hooks to the game dependant on certain conditions.
+         * @param depends
+         */
         addHook();
         addHook(spd?: number);
         addHook(spd?: number, x?: number, y: number = (this.game.world.height - 50)) {
@@ -164,7 +171,7 @@
         }
 
         /**
-         * @Description Creates a AI man
+         * @description Creates a AI man
          * @param x Start X position, default is random (keyed as -1, if you want -1, use something like -1.000000001)
          * @param y Start Y position, default is 70px from the bottom of the world
          */
@@ -176,7 +183,7 @@
 
             // Establish a random position
             if (x == -1) {
-                x = (Math.random() * 1472) + 64;            // Creates a Range between 64 and (1600-64)
+                x = (Math.random() * 1472) + 64;                            // Creates a Range between 64 and (1600-64)
                 while (Phaser.Math.difference(x, this.player.x) < 150) {
                     x = (Math.random() * 1472) + 64;
                 }
@@ -188,30 +195,32 @@
             (m.data as AlienProperties).initialY = y;                       // Save a copy of the initial y position in case it needs to be respawned
             
             // Calculate the speed and direction this alien will start with
-            let spd = Math.floor(Math.random() * 35) + 40; // Creates a random integer between 40 and 80
+            let spd = Math.floor(Math.random() * 35) + 40;                 // Creates a random integer between 40 and 80
             m.data.speed = spd;
 
             m.animations.add("walk", null, 12 * (spd/60), true);
             m.animations.play("walk");
             
-            spd = (Math.random() - 0.5 >= 0) ? -spd : spd;  // Assign it to a random direction
-            if (spd < 0) { m.scale.setTo(-1, 1) };          // If the speed if now negative, flip the sprite visuals to match
+            spd = (Math.random() - 0.5 >= 0) ? -spd : spd;                 // Assign it to a random direction
+            if (spd < 0) { m.scale.setTo(-1, 1) };                         // If the speed if now negative, flip the sprite visuals to match
 
             // Enable Physics and set physics attributes
-            this.game.physics.enable(m, Phaser.Physics.ARCADE);         // Activate physics
+            this.game.physics.enable(m, Phaser.Physics.ARCADE);            // Activate physics
             m.body.setSize(Math.abs(m.width), m.height * 2, 0, m.height * -1); // Extend the collision box upwards so it can hit the ship
             // (m.body as Phaser.Physics.Arcade.Body).setSize(w, h, x, y);
-            m.body.velocity.set(spd, 0);                                  // Set the initial velocity to be it's speed with the random direction
+            m.body.velocity.set(spd, 0);                                   // Set the initial velocity to be it's speed with the random direction
         }
 
-        // TODO: Document this
+        /**
+         * @description TODO
+         */
         OutOfTime() {
             let capt = this.player.aliensCaptured;
             this.game.state.start("levelFinishState", true, false, this.difficulty, this.score, this.GetTimeRemaining(), this.numberToCapture, capt); // Jump to the Level Finish State
         }
 
         /**
-         * @Description Creates the game world by both creating and initializing all the objects in the game state.
+         * @description Creates the game world by both creating and initializing all the objects in the game state.
          */
         create() {
 
@@ -317,6 +326,9 @@
             // this.game.add.text(8, 18, "Captured: " + this.aliensCaptured.toString(), { font: '16pt Arial', fill: 'red' });
         }
 
+        /**
+         * @description TODO
+         */
         pauseGame() {
             this.game.paused = true;
             this.game.input.onDown.add(this.unpauseGame, this, 0, this.input.position);
@@ -327,6 +339,9 @@
 
         }
 
+        /**
+         * @description TODO
+         */
         unpauseGame(pos : Phaser.Point) {
             if (this.uiBtn_Pause.getBounds().contains(pos.x, pos.y)) {
                 this.game.paused = false;
@@ -341,7 +356,7 @@
         }
 
         /**
-         * @Descirption Creates the mothership sprite and adjust it's properties accordingly.
+         * @description Creates the mothership sprite and adjust it's properties accordingly.
          */
         makeMotherShip() {
             this.mothership = this.game.add.sprite(0, 0, "mothership");
@@ -353,7 +368,7 @@
         }
 
         /**
-         * @Description Adds the background images to the gamestate and scales them appropriately
+         * @description Adds the background images to the gamestate and scales them appropriately
          */
         makeBackgrounds() {
             // let bd = new Phaser.Image(this.game, 0, this.game.world.height, "city1");
@@ -361,7 +376,7 @@
         }
 
         /**
-         * @Description Check for collisions between objects, update the UI and coordinate AI movements
+         * @description Check for collisions between objects, update the UI and coordinate AI movements
          */
         update() {
             this.collideObjects();      // Check for collisions
@@ -384,13 +399,15 @@
             
         }
 
-        //TODO: Document this
+        /**
+         * @description TODO
+        */
         GetTimeRemaining() {
             return (this.levelTimer.duration / 1000);
         }
 
         /**
-         * Adds more time "levelTimer" object. Can be given a negative number to subtract time.
+         * @description Adds more time "levelTimer" object. Can be given a negative number to subtract time.
          * @param n The number of MILLISECONDS to change the timer by
          */
         addTime(n: number) {
@@ -401,7 +418,7 @@
         }
 
         /**
-         * @Description Called ever frame through the update method. Place collision checks here.
+         * @description Called ever frame through the update method. Place collision checks here.
          */
         collideObjects() {
             // Collide the player's ship with the gun's bullets
@@ -521,6 +538,9 @@
             }
         }
 
+        /**
+         * @description TODO
+         */
         sfxRepeater(key: string, numberOfPlays: number, volume = 0.7) {
 
             let sfx = this.game.sound.play(key, volume, false);
@@ -537,7 +557,7 @@
         }
 
         /**
-         * @Description Helper function which cycles through the sprite batch of men along the bottom the screen and applies logic into how they should move.
+         * @description Helper function which cycles through the sprite batch of men along the bottom the screen and applies logic into how they should move.
          */
         moveMen() {
             this.alienBatch.forEach(function (alien: Phaser.Sprite) {
@@ -553,9 +573,9 @@
         }
 
         /**
-         * @Description This is the super in-depth version of collision checking I (Jake) created. Checks for collisions between two objects and triggers the appropriate events on the object.
-         * @Param obj1  The first object to check collision against
-         * @Param obj2  The second object to check collision against
+         * @description This is the super in-depth version of collision checking I (Jake) created. Checks for collisions between two objects and triggers the appropriate events on the object.
+         * @param obj1  The first object to check collision against
+         * @param obj2  The second object to check collision against
          */
         superCollider(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             if (this.game.physics.arcade.collide(obj1, obj2, this.OnCollisionCaller, this.OnCollisionProposalCaller)) {        
@@ -589,8 +609,8 @@
 
         /**
          * @Descirption Calls the OnCollisionProposal events on both objects, and return their answer. Both objects must accept the proposal before continueing.
-         * @Param obj1
-         * @Param obj2
+         * @param obj1
+         * @param obj2
          */
         OnCollisionProposalCaller(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             return (obj1.OnCollisionProposal(obj2) && obj2.OnCollisionProposal(obj1));
@@ -598,8 +618,8 @@
 
         /**
          * @Descirption Calls the OnCollisionEnter events on both objects
-         * @Param obj1
-         * @Param obj2
+         * @param obj1
+         * @param obj2
          */
         OnCollisionEnterCaller(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             obj1.OnCollisionEnter(obj2);
@@ -607,9 +627,9 @@
         }
 
         /**
-         * @Description Calls the OnCollision events on both objects
-         * @Param obj1
-         * @Param obj2
+         * @description Calls the OnCollision events on both objects
+         * @param obj1
+         * @param obj2
          */
         OnCollisionCaller(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             obj1.OnCollision(obj2);
@@ -617,9 +637,9 @@
         }
 
         /**
-         * @Description Calls the OnCollisionExit events on both objects
-         * @Param obj1
-         * @Param obj2
+         * @description Calls the OnCollisionExit events on both objects
+         * @param obj1
+         * @param obj2
          */
         OnCollisionExitCaller(obj1: IPhysicsReady, obj2: IPhysicsReady) {
             obj1.OnCollisionExit(obj2);
@@ -627,7 +647,7 @@
         }
 
         /**
-         * @Description Post rendering effects.
+         * @description Post rendering effects.
          */
         render() {
             // Debug features...
@@ -641,6 +661,9 @@
             //this.game.debug.body(this.myBatch.getFirstExists(true));
         }
 
+        /**
+         * @description un-initializes game objects
+         */
         shutdown() {
             this.player.destroy(true);
             this.aliens = null;
