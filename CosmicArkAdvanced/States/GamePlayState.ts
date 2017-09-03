@@ -16,7 +16,8 @@
      * @property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
      * @property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
      * @property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
-     * @property uiBtn_Pause {Phaser.Button}                - 
+     * @property uiBtn_Pause {Phaser.Button}                - Temp UI element for displaying a pause button icon
+     * @property uiText_Restart {Phaser.BitmapText}         - Temp UI element for displaying a restart option in the pause menu
      */
     export class GamePlayState extends Phaser.State {
         game: Phaser.Game;                          // Game Refence
@@ -39,6 +40,8 @@
         uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
         uiBtn_Pause: Phaser.Button;         // UI Button for pausing the game
         uiText_Restart: Phaser.BitmapText;  // UI Text used as a selection to restart the level
+
+        pauseBackground: Phaser.Image;      // Variable used to easier control the pause menu background image
 
         tweenSize: Phaser.Tween;            // Used to transition in between sizes
         tweenColor: Phaser.Tween;           // Used to transition in between colors
@@ -333,6 +336,12 @@
             this.game.paused = true;
             this.game.input.onDown.add(this.unpauseGame, this, 0, this.input.position);
 
+            this.pauseBackground = this.game.add.image(0, 0, "blueGrid");
+            this.pauseBackground.width = this.pauseBackground.width / 2 - 10;
+            this.pauseBackground.height = this.pauseBackground.height / 2 - 45; // the 45 is so it doesn't obscured the top left text. probably be changed later.
+            this.pauseBackground.position.x = (this.game.width / 2) + this.camera.position.x - this.pauseBackground.width / 2;
+            this.pauseBackground.position.y = (this.game.height / 2) + this.camera.position.y - this.pauseBackground.height / 2;
+            
             this.uiText_Restart = this.game.add.bitmapText(0, 0, "EdoSZ", "RESTART", 48);
             this.uiText_Restart.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Restart.textWidth / 2;
             this.uiText_Restart.position.y = (this.game.height / 2) + this.camera.position.y - this.uiText_Restart.textHeight / 2;
@@ -348,6 +357,7 @@
             if (this.uiBtn_Pause.getBounds().contains(pos.x, pos.y)) {
                 this.game.paused = false;
                 this.uiText_Restart.destroy();
+                this.pauseBackground.destroy();
             }
             else if (this.uiText_Restart.getBounds().contains(pos.x, pos.y)) {
                 //console.log("Restart has been activated"); // testing
