@@ -100,7 +100,7 @@
 
         /**
          * @description adds the enemy weapons to the game dependant on certain conditions.
-         * @param depends
+         * @param speed, x and y coordinates
          */
         addGun();
         addGun(spd?: number);
@@ -138,7 +138,7 @@
 
         /**
          * @description adds the enemy hooks to the game dependant on certain conditions.
-         * @param depends
+         * @param speed, x and y coordinates
          */
         addHook();
         addHook(spd?: number);
@@ -212,7 +212,7 @@
         }
 
         /**
-         * @description TODO
+         * @description If you are out of time the game will end.
          */
         OutOfTime() {
             let capt = this.player.aliensCaptured;
@@ -327,7 +327,7 @@
         }
 
         /**
-         * @description TODO
+         * @description when paused, there will be options that come up that you can select
          */
         pauseGame() {
             this.game.paused = true;
@@ -340,7 +340,9 @@
         }
 
         /**
-         * @description TODO
+         * @description when you press the pause button again it will un-pause the game.
+         *              handles logic for when you click options in the pause menu.
+         * @param position of your finger/cursor
          */
         unpauseGame(pos : Phaser.Point) {
             if (this.uiBtn_Pause.getBounds().contains(pos.x, pos.y)) {
@@ -348,9 +350,8 @@
                 this.uiText_Restart.destroy();
             }
             else if (this.uiText_Restart.getBounds().contains(pos.x, pos.y)) {
-                console.log("Restart has been activated, nigga");
-                this.game.paused = false;  // testing, EDF
-                //this.game.state.start("gamePlayState", true, false, this.difficulty, this.timeToCapture, this.numberToCapture, this.score); // Jump to the GamePlayState
+                //console.log("Restart has been activated"); // testing
+                this.game.paused = false;
                 this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
             }
         }
@@ -400,7 +401,7 @@
         }
 
         /**
-         * @description TODO
+         * @description returns how much time is remaining
         */
         GetTimeRemaining() {
             return (this.levelTimer.duration / 1000);
@@ -539,7 +540,8 @@
         }
 
         /**
-         * @description TODO
+         * @description lets you stack sound effects so that one will play right after the other,
+         *              but they won't all play at the same time.
          */
         sfxRepeater(key: string, numberOfPlays: number, volume = 0.7) {
 
