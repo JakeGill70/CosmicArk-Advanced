@@ -16,11 +16,12 @@
      * @Property hook1 {CosmicArkAdvanced.Hook}             - Test Hook
      * @Property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
      * @Property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
+     * @Property uiBtn_Pause {Phaser.Button}                - 
      */
     export class GamePlayState extends Phaser.State {
-        game: Phaser.Game;                  // Game Refence
-        player: CosmicArkAdvanced.Player;   // Player object
-        aliens: CosmicArkAdvanced.IPhysicsReady[];          // List of aliens in this scene that are capable of recieving physics calls
+        game: Phaser.Game;                          // Game Refence
+        player: CosmicArkAdvanced.Player;           // Player object
+        aliens: CosmicArkAdvanced.IPhysicsReady[];  // List of aliens in this scene that are capable of recieving physics calls
 
         men: Phaser.Group;
 
@@ -36,12 +37,11 @@
 
         uiText: Phaser.BitmapText;          // UI Text for updating score information
         uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
-        uiBtn_Pause: Phaser.Button;
-        uiText_Pause: Phaser.BitmapText;
-        uiText_Restart: Phaser.BitmapText;
+        uiBtn_Pause: Phaser.Button;         // UI Button for pausing the game
+        uiText_Restart: Phaser.BitmapText;  // UI Text used as a selection to restart the level
 
-        tweenSize: Phaser.Tween;
-        tweenColor: Phaser.Tween;
+        tweenSize: Phaser.Tween;            // Used to transition in between sizes
+        tweenColor: Phaser.Tween;           // Used to transition in between colors
         
 
         difficulty: number;                 // Value 1-3 which assists in level generation
@@ -51,7 +51,7 @@
         timeToCapture: number;              // Number of seconds the player has to finish the level
         levelTimer: Phaser.Timer;           // Timer object that counts down the number of seconds the player has left to complete the level
 
-        score: number;                 // Holds the current score to carry it over to the LevelFinishState
+        score: number;                      // Holds the current score to carry it over to the LevelFinishState
 
         /**
          * @Description Mostly empty. Does initialize the aliens list and the dictionary.
@@ -316,10 +316,6 @@
         pauseGame() {
             this.game.paused = true;
             this.game.input.onDown.add(this.unpauseGame, this, 0, this.input.position);
-
-            //this.uiText_Pause = this.game.add.bitmapText(0, 0, "EdoSZ", "PAUSE", 48);
-            //this.uiText_Pause.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Pause.textWidth/2;
-            //this.uiText_Pause.position.y = (this.game.height / 2) + this.camera.position.y - this.uiText_Pause.textHeight / 2;
 
             this.uiText_Restart = this.game.add.bitmapText(0, 0, "EdoSZ", "RESTART", 48);
             this.uiText_Restart.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Restart.textWidth / 2;
