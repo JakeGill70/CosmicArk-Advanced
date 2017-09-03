@@ -31,21 +31,21 @@
         create() {
             this.selectedPlanet = null;     // Make sure nothing was selected
 
+            this.game.add.image(0, 0, "blueGrid");
+
             // Add the difficulty/level select text
             let txt_explain = this.game.add.bitmapText(0, 15, "EdoSZ", "Choose Your Planet");
             txt_explain.position.setTo(this.game.width/2 - txt_explain.textWidth/2, 15);
             txt_explain.tint = 0xFF0000;
 
             // Add the text labeling in difficulty
-            let txt_easy = this.game.add.bitmapText(20,                             120, "EdoSZ", "Easy");
-            let txt_medium = this.game.add.bitmapText(this.game.width / 3 + 10,     120, "EdoSZ", "Normal");
-            let txt_hard = this.game.add.bitmapText(this.game.width * 2 / 3 + 10, 120, "EdoSZ", "Hard");
-            // TODO : Make this screen look pretty
-            let txt_note = this.game.add.bitmapText(15, this.game.height - 45, "EdoSZ", "TODO: Make this screen look pretty");
+            let txt_easy = this.game.add.bitmapText((20)+88,                           180, "EdoSZ", "Easy");
+            let txt_medium = this.game.add.bitmapText((this.game.width / 3 + 10)+80,   180, "EdoSZ", "Normal");
+            let txt_hard = this.game.add.bitmapText((this.game.width * 2 / 3 + 10)+80, 180, "EdoSZ", "Hard");
 
-            this.planet1 = this.game.add.sprite(5,   160, "planet1"); // Pull the image out of memory
-            this.planet2 = this.game.add.sprite(this.game.width/3, 160, "planet2"); // Pull the image out of memory
-            this.planet3 = this.game.add.sprite(this.game.width * 2 / 3, 160, "planet3"); // Pull the image out of memory
+            this.planet1 = this.game.add.sprite((5)+75,   220, "planet1"); // Pull the image out of memory
+            this.planet2 = this.game.add.sprite((this.game.width/3)+75, 220, "planet2"); // Pull the image out of memory
+            this.planet3 = this.game.add.sprite((this.game.width * 2 / 3)+65, 220, "planet3"); // Pull the image out of memory
 
             // Register Event Handlers
             this.input.onTap.add(this.PlanetClicked, this, 0, this.input.position);

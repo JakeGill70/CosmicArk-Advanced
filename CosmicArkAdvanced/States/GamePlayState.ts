@@ -38,6 +38,7 @@
         uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
         uiBtn_Pause: Phaser.Button;
         uiText_Pause: Phaser.BitmapText;
+        uiText_Restart: Phaser.BitmapText;
 
         tweenSize: Phaser.Tween;
         tweenColor: Phaser.Tween;
@@ -316,16 +317,26 @@
             this.game.paused = true;
             this.game.input.onDown.add(this.unpauseGame, this, 0, this.input.position);
 
-            this.uiText_Pause = this.game.add.bitmapText(0, 0, "EdoSZ", "PAUSE", 48);
-            this.uiText_Pause.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Pause.textWidth/2;
-            this.uiText_Pause.position.y = (this.game.height / 2) + this.camera.position.y - this.uiText_Pause.textHeight / 2;
+            //this.uiText_Pause = this.game.add.bitmapText(0, 0, "EdoSZ", "PAUSE", 48);
+            //this.uiText_Pause.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Pause.textWidth/2;
+            //this.uiText_Pause.position.y = (this.game.height / 2) + this.camera.position.y - this.uiText_Pause.textHeight / 2;
+
+            this.uiText_Restart = this.game.add.bitmapText(0, 0, "EdoSZ", "RESTART", 48);
+            this.uiText_Restart.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Restart.textWidth / 2;
+            this.uiText_Restart.position.y = (this.game.height / 2) + this.camera.position.y - this.uiText_Restart.textHeight / 2;
 
         }
 
         unpauseGame(pos : Phaser.Point) {
             if (this.uiBtn_Pause.getBounds().contains(pos.x, pos.y)) {
                 this.game.paused = false;
-                this.uiText_Pause.destroy();
+                this.uiText_Restart.destroy();
+            }
+            else if (this.uiText_Restart.getBounds().contains(pos.x, pos.y)) {
+                console.log("Restart has been activated, nigga");
+                this.game.paused = false;  // testing, EDF
+                //this.game.state.start("gamePlayState", true, false, this.difficulty, this.timeToCapture, this.numberToCapture, this.score); // Jump to the GamePlayState
+                this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
             }
         }
 
