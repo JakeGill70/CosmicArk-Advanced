@@ -1,13 +1,8 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     /**
@@ -33,14 +28,13 @@ var CosmicArkAdvanced;
          * @param _target Optional. What the gun should aim at
          */
         function Hook(_game, _x, _y, _graphicKey, _name, _target) {
-            var _this = _super.call(this, _game, _x, _y, _graphicKey) || this;
-            _this.game = _game; // get game contex
-            _this.game.add.existing(_this); // Add this object to the gamestate
-            _this.effectiveRange = 1; // Make a default value for the range. 10,000 gives plenty of headroom
-            _this.anchor.setTo(0.0, 1); // Move the anchor point to the bottom-left
-            _this.init_target(_target, 200); // A range of 200 pixels feels right for right now
-            _this.wep.onKill.add(_this.releaseHook, _this); // Register the onKill event from the weapon class 
-            return _this;
+            _super.call(this, _game, _x, _y, _graphicKey); // Pass all the nitty gritty parts to the Phaser.Sprite constructor and let it handle that.
+            this.game = _game; // get game contex
+            this.game.add.existing(this); // Add this object to the gamestate
+            this.effectiveRange = 1; // Make a default value for the range. 10,000 gives plenty of headroom
+            this.anchor.setTo(0.0, 1); // Move the anchor point to the bottom-left
+            this.init_target(_target, 200); // A range of 200 pixels feels right for right now
+            this.wep.onKill.add(this.releaseHook, this); // Register the onKill event from the weapon class 
         }
         Hook.prototype.init_target = function (_target, _range) {
             this.target = (_target != null) ? _target : null; // If it exists, Set the target to the given value

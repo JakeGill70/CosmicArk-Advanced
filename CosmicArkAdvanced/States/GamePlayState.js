@@ -1,13 +1,8 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     // Yo yo yo this be ethan dawg!
@@ -32,7 +27,7 @@ var CosmicArkAdvanced;
          * @Constructor
          */
         function GamePlayState() {
-            return _super.call(this) || this;
+            _super.call(this);
         }
         // Todo: document this
         GamePlayState.prototype.init = function (difficulty, timeToCapture, numberToCapture, score) {
@@ -315,7 +310,7 @@ var CosmicArkAdvanced;
         GamePlayState.prototype.collideObjects = function () {
             // Collide the player's ship with the gun's bullets
             for (var n = 0; n < this.guns.length; n++) {
-                var _loop_1 = function (i) {
+                var _loop_1 = function(i) {
                     if (this_1.game.physics.arcade.overlap(this_1.player, this_1.guns[n].bullets.bullets.getAt(i))) {
                         // Destroy all bullets within the kill radius (Ess. provide a localized i-frame to the player for fairness)
                         var kill_radius_1 = 150;
@@ -450,8 +445,6 @@ var CosmicArkAdvanced;
                 }
                 catch (err) {
                     this.dict[obj1.name, obj2.name] = false; // If there was an exception, 
-                    // it is because that dictionary entry doesn't exist yet. 
-                    // So add it here.
                 }
             }
             else {
@@ -463,8 +456,6 @@ var CosmicArkAdvanced;
                 }
                 catch (err) {
                     this.dict[obj1.name, obj2.name] = false; // If there was an exception, 
-                    // it is because that dictionary entry doesn't exist yet. 
-                    // So add it here.
                 }
             }
         };
