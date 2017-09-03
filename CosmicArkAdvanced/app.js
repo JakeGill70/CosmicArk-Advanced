@@ -66,6 +66,7 @@ var CosmicArkAdvanced;
             this.game.state.add("helpScreenState", CosmicArkAdvanced.HelpScreenState, false);
             this.game.state.add("levelStartState", CosmicArkAdvanced.LevelStartState, false);
             this.game.state.add("levelFinishState", CosmicArkAdvanced.LevelFinishState, false);
+            this.game.state.add("highscoreState", CosmicArkAdvanced.HighscoreState, false);
             this.game.state.add("titleScreenState", CosmicArkAdvanced.TitleScreenState, true);
             console.log(MyGame.AUTO_SCALING);
             console.log(this.game.scale.scaleMode);

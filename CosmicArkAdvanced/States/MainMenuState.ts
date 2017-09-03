@@ -12,6 +12,7 @@
         btn_Help: Phaser.BitmapText;
         btn_Play: Phaser.BitmapText;
         btn_Mute: Phaser.BitmapText;
+        btn_Highscore: Phaser.BitmapText;
 
         /**
         * Default constructor, only calls the Phaser.State instructor for now.
@@ -33,16 +34,19 @@
             // Make Buttons
             this.btn_Play = this.add.bitmapText(0, 195, "EdoSZ", "PLAY NOW");
             this.btn_Help = this.add.bitmapText(0, 255, "EdoSZ", "HOW TO PLAY");
-            this.btn_Mute = this.add.bitmapText(0, 315, "EdoSZ", "MUTE");
+            this.btn_Highscore = this.add.bitmapText(0, 315, "EdoSZ", "HIGHSCORE");
+            this.btn_Mute = this.add.bitmapText(0, 375, "EdoSZ", "MUTE");
 
             //Change Anchors
             this.btn_Play.anchor.set(0.5, 0);
             this.btn_Help.anchor.set(0.5, 0);
+            this.btn_Highscore.anchor.set(0.5, 0);
             this.btn_Mute.anchor.set(0.5, 0);
 
             // Reset Position
             this.btn_Play.position.x = this.game.width / 2;
             this.btn_Help.position.x = this.game.width / 2;
+            this.btn_Highscore.position.x = this.game.width / 2;
             this.btn_Mute.position.x = this.game.width / 2;
 
 
@@ -77,6 +81,9 @@
                 // Get Game Data from the selected planet
                 this.game.music.volume = (this.game.music.volume > 0) ? 0 : 0.9; // Set the volume to 0% or 90% depending on last value
                 this.btn_Mute.tint = (this.game.music.volume > 0) ? 0xFFFFFF : 0xFF0505; // Set the volume to red or white depending on last value
+            }
+            else if (this.btn_Highscore.getBounds().contains(pos.x, pos.y)) {
+                this.game.state.start("highscoreState"); // Jump to HighscoreState
             }
         }
     }
