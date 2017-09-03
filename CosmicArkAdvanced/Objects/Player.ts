@@ -45,7 +45,7 @@
         wasd;
 
         /**
-         * @description Constructor for the player's ship
+         * @description constructor for the player's ship
          * @constructor
          * @param _game Context of the main game window
          * @param _x Starting world X coordinate
@@ -284,7 +284,7 @@
         }
 
         /**
-         * @Description Should be called when colliding with the mothership.
+         * @description Should be called when colliding with the mothership.
          * This method resets the "In Transit" score to 0, and increases the "Captured" score appropriately
          */
         Capture() {

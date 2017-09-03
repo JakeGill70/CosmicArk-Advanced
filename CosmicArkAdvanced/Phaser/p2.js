@@ -9342,7 +9342,7 @@ var p2 = module.exports = {
     version :                       _dereq_('../package.json').version,
 };
 
-Object.defineProperty(p2, 'Rectangle', {
+Object.defineproperty(p2, 'Rectangle', {
     get: function() {
         console.warn('The Rectangle class has been renamed to Box.');
         return this.Box;
@@ -10890,7 +10890,7 @@ Shape.LINE =        16;
  */
 Shape.BOX =   32;
 
-Object.defineProperty(Shape, 'RECTANGLE', {
+Object.defineproperty(Shape, 'RECTANGLE', {
     get: function() {
         console.warn('Shape.RECTANGLE is deprecated, use Shape.BOX instead.');
         return Shape.BOX;

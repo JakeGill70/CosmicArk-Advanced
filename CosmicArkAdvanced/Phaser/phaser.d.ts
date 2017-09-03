@@ -281,7 +281,7 @@ declare module Phaser {
         op: string;
         pixels: Uint32Array;
         smoothed: boolean;
-        smoothProperty: string;
+        smoothproperty: string;
         texture: PIXI.Texture;
         textureFrame: Phaser.Frame;
         type: number;
@@ -1781,7 +1781,7 @@ declare module Phaser {
         callAllExists(callback: string, existsValue: boolean, ...parameters: any[]): void;
         callbackFromArray(child: any, callback: Function, length: number): void;
         checkAll(key: string[], value: any, checkAlive?: boolean, checkVisible?: boolean, force?: boolean): boolean;
-        checkProperty(child: any, key: string[], value: any, force?: boolean): boolean;
+        checkproperty(child: any, key: string[], value: any, force?: boolean): boolean;
         countDead(): number;
         countLiving(): number;
         create(x: number, y: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, exists?: boolean, index?: number): any;
@@ -1805,7 +1805,7 @@ declare module Phaser {
         getIndex(child: any): number;
         getRandom(startIndex?: number, length?: number): any;
         getTop(): any;
-        hasProperty(child: any, key: string[]): boolean;
+        hasproperty(child: any, key: string[]): boolean;
         iterate(key: string, value: any, returnType: number, callback?: Function, callbackContext?: any, ...args: any[]): any;
         moveAll(group: Phaser.Group, silent?: boolean): Phaser.Group;
         moveDown(child: any): any;
@@ -1827,7 +1827,7 @@ declare module Phaser {
         set(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
         setAll(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?: boolean): void;
         setAllChildren(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?: boolean): void;
-        setProperty(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
+        setproperty(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
         sort(key?: string, order?: number): void;
         subAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
         swap(child1: any, child2: any): boolean;
@@ -2595,9 +2595,9 @@ declare module Phaser {
         static mapLinear(x: number, a1: number, a2: number, b1: number, b2: number): number;
         static max(...numbers: number[]): number;
         static maxAdd(value: number, amount: number, max: number): number;
-        static maxProperty(...numbers: number[]): number;
+        static maxproperty(...numbers: number[]): number;
         static min(...numbers: number[]): number;
-        static minProperty(...numbers: number[]): number;
+        static minproperty(...numbers: number[]): number;
         static minSub(value: number, amount: number, min: number): number;
         static normalizeAngle(angle: number, radians?: boolean): number;
         static percent(a: number, b: number, base?: number): number;
@@ -3863,7 +3863,7 @@ declare module Phaser {
         }
     }
 
-    interface PluginConstructorOf<T> {
+    interface PluginconstructorOf<T> {
         new (...parameters: any[]): T;
     }
 
@@ -3874,7 +3874,7 @@ declare module Phaser {
         game: Phaser.Game;
         plugins: Phaser.Plugin[];
 
-        add<T extends Phaser.Plugin>(plugin: PluginConstructorOf<T>, ...parameters: any[]): T;
+        add<T extends Phaser.Plugin>(plugin: PluginconstructorOf<T>, ...parameters: any[]): T;
         destroy(): void;
         postRender(): void;
         postUpdate(): void;
@@ -5531,8 +5531,8 @@ declare module Phaser {
 
     class Utils {
 
-        static getProperty(obj: any, prop: string): any;
-        static setProperty(obj: any, prop: string, value: any): any;
+        static getproperty(obj: any, prop: string): any;
+        static setproperty(obj: any, prop: string, value: any): any;
         static chanceRoll(chance: number): boolean;
         static randomChoice(choice1: string | number, choice2: any): any;
         static reverseString(string: string): string;

@@ -1,6 +1,6 @@
 ﻿module CosmicArkAdvanced {
     /**
-     * @Description A floating obstacle that will explode if the player gets too close
+     * @description A floating obstacle that will explode if the player gets too close
      * @property game {Phaser.game}                 - The game context used by everything else in the game.
      * @property tag {CosmicArkAdvanced.PhysicsTag} - What type of physics object is this?
      */

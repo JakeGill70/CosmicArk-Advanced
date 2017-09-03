@@ -1537,7 +1537,7 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function (renderSession) {
  * @property width
  * @type Number
  */
-Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
+Object.defineproperty(PIXI.DisplayObjectContainer.prototype, 'width', {
 
     get: function() {
         return this.getLocalBounds().width * this.scale.x;
@@ -1566,7 +1566,7 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
  * @property height
  * @type Number
  */
-Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
+Object.defineproperty(PIXI.DisplayObjectContainer.prototype, 'height', {
 
     get: function() {
         return this.getLocalBounds().height * this.scale.y;
@@ -1721,7 +1721,7 @@ PIXI.Sprite.prototype.constructor = PIXI.Sprite;
  * @property width
  * @type Number
  */
-Object.defineProperty(PIXI.Sprite.prototype, 'width', {
+Object.defineproperty(PIXI.Sprite.prototype, 'width', {
 
     get: function() {
         return this.scale.x * this.texture.frame.width;
@@ -1740,7 +1740,7 @@ Object.defineProperty(PIXI.Sprite.prototype, 'width', {
  * @property height
  * @type Number
  */
-Object.defineProperty(PIXI.Sprite.prototype, 'height', {
+Object.defineproperty(PIXI.Sprite.prototype, 'height', {
 
     get: function() {
         return  this.scale.y * this.texture.frame.height;
@@ -2048,10 +2048,10 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
         renderSession.context.globalAlpha = this.worldAlpha;
 
         //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
-        if (renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
+        if (renderSession.smoothproperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
         {
             renderSession.scaleMode = this.texture.baseTexture.scaleMode;
-            renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === PIXI.scaleModes.LINEAR);
+            renderSession.context[renderSession.smoothproperty] = (renderSession.scaleMode === PIXI.scaleModes.LINEAR);
         }
 
         //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions
@@ -2629,7 +2629,7 @@ PIXI._CompileShader = function(gl, shaderSrc, shaderType)
     gl.shaderSource(shader, src);
     gl.compileShader(shader);
 
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
+    if (!gl.getShaderparameter(shader, gl.COMPILE_STATUS))
     {
         window.console.log(gl.getShaderInfoLog(shader));
         return null;
@@ -2657,7 +2657,7 @@ PIXI.compileProgram = function(gl, vertexSrc, fragmentSrc)
     gl.attachShader(shaderProgram, fragmentShader);
     gl.linkProgram(shaderProgram);
 
-    if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS))
+    if (!gl.getProgramparameter(shaderProgram, gl.LINK_STATUS))
     {
         window.console.log(gl.getProgramInfoLog(shaderProgram));
         window.console.log("Could not initialise shaders");
@@ -2934,10 +2934,10 @@ PIXI.PixiShader.prototype.initSampler2D = function(uniform)
             gl.texImage2D(gl.TEXTURE_2D, 0, format, gl.RGBA, gl.UNSIGNED_BYTE, uniform.value.baseTexture.source);
         }
 
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
+        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
+        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
+        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
+        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
     }
 
     gl.uniform1i(uniform.uniformLocation, this.textureCount);
@@ -3943,27 +3943,27 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
 
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
 
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+    gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
 
     if (texture.mipmap && PIXI.isPowerOfTwo(texture.width, texture.height))
     {
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR_MIPMAP_LINEAR : gl.NEAREST_MIPMAP_NEAREST);
+        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR_MIPMAP_LINEAR : gl.NEAREST_MIPMAP_NEAREST);
         gl.generateMipmap(gl.TEXTURE_2D);
     }
     else
     {
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
     }
 
     if (!texture._powerOf2)
     {
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     }
     else
     {
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
     }
 
     texture._dirty[gl.id] = false;
@@ -6265,10 +6265,10 @@ PIXI.FilterTexture = function(gl, width, height, scaleMode)
     scaleMode = scaleMode || PIXI.scaleModes.DEFAULT;
 
     gl.bindTexture(gl.TEXTURE_2D,  this.texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+    gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+    gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer );
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer );
@@ -6786,7 +6786,7 @@ PIXI.CanvasRenderer = function (game) {
         context: this.context,
         maskManager: this.maskManager,
         scaleMode: null,
-        smoothProperty: Phaser.Canvas.getSmoothingPrefix(this.context),
+        smoothproperty: Phaser.Canvas.getSmoothingPrefix(this.context),
 
         /**
          * If true Pixi will Math.floor() x/y values when rendering, stopping pixel interpolation.
@@ -6889,9 +6889,9 @@ PIXI.CanvasRenderer.prototype.resize = function (width, height) {
         this.view.style.height = this.height / this.resolution + "px";
     }
 
-    if (this.renderSession.smoothProperty)
+    if (this.renderSession.smoothproperty)
     {
-        this.context[this.renderSession.smoothProperty] = (this.renderSession.scaleMode === PIXI.scaleModes.LINEAR);
+        this.context[this.renderSession.smoothproperty] = (this.renderSession.scaleMode === PIXI.scaleModes.LINEAR);
     }
 
 };
@@ -9072,7 +9072,7 @@ PIXI.TilingSprite.prototype.destroy = function () {
  * @property width
  * @type Number
  */
-Object.defineProperty(PIXI.TilingSprite.prototype, 'width', {
+Object.defineproperty(PIXI.TilingSprite.prototype, 'width', {
 
     get: function() {
         return this._width;
@@ -9090,7 +9090,7 @@ Object.defineProperty(PIXI.TilingSprite.prototype, 'width', {
  * @property height
  * @type Number
  */
-Object.defineProperty(PIXI.TilingSprite.prototype, 'height', {
+Object.defineproperty(PIXI.TilingSprite.prototype, 'height', {
 
     get: function() {
         return  this._height;
