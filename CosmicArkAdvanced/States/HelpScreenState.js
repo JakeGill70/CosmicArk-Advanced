@@ -43,7 +43,7 @@ var CosmicArkAdvanced;
             this.input.onTap.addOnce(this.TitleClicked, this);
         };
         /**
-         * @Description Handles the "onTap" event. Just moves over to the mapSelectState state.
+         * @description Handles the "onTap" event. Just moves over to the mapSelectState state.
          */
         HelpScreenState.prototype.TitleClicked = function () {
             if (this.cameFromPlayState) {

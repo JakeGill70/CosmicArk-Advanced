@@ -106,7 +106,7 @@
         }
         
         /**
-         * @Description Flips the object's scale to simulate mirror the sprite so it will always face the direction it is walking
+         * @description Flips the object's scale to simulate mirror the sprite so it will always face the direction it is walking
          */
         turnToFaceCenter() {
             if (this.world.x > this.game.world.width * 0.5) {

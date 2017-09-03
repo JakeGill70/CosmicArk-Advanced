@@ -937,7 +937,7 @@ declare module p2 {
         clear(): void;
         clone(): World;
         hitTest(worldPoint: number[], bodies: Body[], precision: number): Body[];
-        setGlobalEquationParameters(parameters: {
+        setGlobalEquationparameters(parameters: {
             relaxation?: number;
             stiffness?: number;
         }): void;
