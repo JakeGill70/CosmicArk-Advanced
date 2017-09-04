@@ -1,13 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     /**
@@ -17,18 +7,17 @@ var CosmicArkAdvanced;
 * @property game {Phaser.Sprite}           - The actual splash screen image to display
 * @property uiText {Phaser.BitmapText}     - Temp UI element for displaying score information
 */
-    var LevelFinishState = (function (_super) {
-        __extends(LevelFinishState, _super);
+    class LevelFinishState extends Phaser.State {
         /**
          * @constructor Default.
          */
-        function LevelFinishState() {
-            return _super.call(this) || this;
+        constructor() {
+            super();
         }
         /**
          * @description TODO
          */
-        LevelFinishState.prototype.init = function (difficulty, score, timeRemaining, numberToCapture, numberCaught) {
+        init(difficulty, score, timeRemaining, numberToCapture, numberCaught) {
             this.difficulty = difficulty;
             this.score = score;
             this.uiScore = score;
@@ -39,11 +28,11 @@ var CosmicArkAdvanced;
             if (this.timeRemaining <= 0) {
                 this.isGameOver = true;
             }
-        };
+        }
         /**
         * @description Displays the splash image and scales it appropriately. Also registers the "onTap" event
         */
-        LevelFinishState.prototype.create = function () {
+        create() {
             // Text Animation Timer
             this.timr = this.game.time.create(false);
             this.timr.loop(100, this.updateText, this);
@@ -76,15 +65,15 @@ var CosmicArkAdvanced;
                 "\nTime Bonus: +" + this.timeBonus.toString() +
                 "\n\nScore: " + this.score);
             if (this.isGameOver) {
-                var youLoseText = this.game.add.bitmapText(this.game.width / 2 + 80, 250, "EdoSZ", "YOU LOSE!!!");
+                let youLoseText = this.game.add.bitmapText(this.game.width / 2 + 80, 250, "EdoSZ", "YOU LOSE!!!");
             }
             // Register the "TitleClicked" even handler
             this.input.onTap.add(this.LevelStartClicked, this);
-        };
+        }
         /**
         * @description Handles the "onTap" event. Just moves over to the gamePlayState state.
         */
-        LevelFinishState.prototype.LevelStartClicked = function () {
+        LevelStartClicked() {
             if (this.isFinishedAnimating) {
                 if (this.isGameOver) {
                     this.game.state.start("mainMenuState");
@@ -101,11 +90,11 @@ var CosmicArkAdvanced;
                 this.timeBonus = 0;
                 this.updateText();
             }
-        };
+        }
         /**
          * @description update the score and time as the game progresses
          */
-        LevelFinishState.prototype.updateText = function () {
+        updateText() {
             if (this.captureBonus > 0) {
                 // Add capture bonus
                 this.captureBonus -= 200;
@@ -150,18 +139,17 @@ var CosmicArkAdvanced;
                 this.game.music = this.game.add.audio("Groove88", this.game.music.volume, true);
                 this.game.music.play();
             }
-        };
+        }
         /**
          * @description un-initialize components
          */
-        LevelFinishState.prototype.shutdown = function () {
+        shutdown() {
             this.titleScreenImage.destroy(true);
             this.uiText.destroy(true);
             this.game.music.stop();
             this.game.music = this.game.add.audio(this.oldSong, this.game.music.volume);
-        };
-        return LevelFinishState;
-    }(Phaser.State));
+        }
+    }
     CosmicArkAdvanced.LevelFinishState = LevelFinishState;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=LevelFinishState.js.map

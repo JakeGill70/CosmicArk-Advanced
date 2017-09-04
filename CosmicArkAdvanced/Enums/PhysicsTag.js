@@ -4,7 +4,7 @@ var CosmicArkAdvanced;
     * @type {enum}
     * @returns {number}
     * @see {CosmicArkAdvanced.IPhysicsReady} */
-    var PhysicsTag;
+    let PhysicsTag;
     (function (PhysicsTag) {
         PhysicsTag[PhysicsTag["PLAYER"] = 0] = "PLAYER";
         PhysicsTag[PhysicsTag["ALIEN"] = 1] = "ALIEN";
