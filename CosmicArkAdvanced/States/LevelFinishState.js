@@ -25,6 +25,9 @@ var CosmicArkAdvanced;
         function LevelFinishState() {
             return _super.call(this) || this;
         }
+        /**
+         * @description TODO
+         */
         LevelFinishState.prototype.init = function (difficulty, score, timeRemaining, numberToCapture, numberCaught) {
             this.difficulty = difficulty;
             this.score = score;
@@ -99,6 +102,9 @@ var CosmicArkAdvanced;
                 this.updateText();
             }
         };
+        /**
+         * @description update the score and time as the game progresses
+         */
         LevelFinishState.prototype.updateText = function () {
             if (this.captureBonus > 0) {
                 // Add capture bonus
@@ -145,6 +151,9 @@ var CosmicArkAdvanced;
                 this.game.music.play();
             }
         };
+        /**
+         * @description un-initialize components
+         */
         LevelFinishState.prototype.shutdown = function () {
             this.titleScreenImage.destroy(true);
             this.uiText.destroy(true);

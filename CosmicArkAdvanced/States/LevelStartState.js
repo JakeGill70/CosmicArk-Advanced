@@ -25,6 +25,9 @@ var CosmicArkAdvanced;
         function LevelStartState() {
             return _super.call(this) || this;
         }
+        /**
+         * @description TODO
+         */
         LevelStartState.prototype.init = function (difficulty, score) {
             this.difficulty = difficulty;
             this.score = score;
@@ -64,6 +67,9 @@ var CosmicArkAdvanced;
             console.log("I'm over here!");
             this.game.state.start("gamePlayState", true, false, this.difficulty, this.timeToCapture, this.numberToCapture, this.score); // Jump to the GamePlayState
         };
+        /**
+         * @description un-initialize components
+         */
         LevelStartState.prototype.shutdown = function () {
             this.titleScreenImage.destroy(true);
             this.uiText.destroy(true);

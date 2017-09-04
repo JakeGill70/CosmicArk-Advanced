@@ -15,16 +15,17 @@
         btn_Highscore: Phaser.BitmapText;
 
         /**
-        * Default constructor, only calls the Phaser.State instructor for now.
+        * @description Default constructor, only calls the Phaser.State instructor for now.
         * @constructor
         */
         constructor() {
             super();
         }
 
-        /** @desription Populates the game state with sprites and registers the
-        * event handlers needed for touch/mouse input
-        */
+        /**
+         * @description Populates the game state with sprites and registers the
+         *              event handlers needed for touch/mouse input
+         */
         create() {
 
             // Make background image

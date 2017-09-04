@@ -19,15 +19,16 @@ var CosmicArkAdvanced;
     var HighscoreState = (function (_super) {
         __extends(HighscoreState, _super);
         /**
-        * Default constructor, only calls the Phaser.State instructor for now.
-        * @constructor
-        */
+         * @description Default constructor, only calls the Phaser.State instructor for now.
+         * @constructor
+         */
         function HighscoreState() {
             return _super.call(this) || this;
         }
-        /** @desription Populates the game state with sprites and registers the
-        * event handlers needed for touch/mouse input
-        */
+        /**
+         * @description Populates the game state with sprites and registers the
+         *              event handlers needed for touch/mouse input
+         */
         HighscoreState.prototype.create = function () {
             // Make background image
             this.titleScreenImage = this.add.sprite(0, 0, "main"); // Pull the image out of memory
