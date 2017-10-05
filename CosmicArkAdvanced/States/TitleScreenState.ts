@@ -118,7 +118,7 @@
             this.game.songIndex = 0;    // The fist song will always be "Theremin's Beat"
             this.game.load.start();
 
-            this.game.music.volume = 0; // so we don't go insane.
+            //this.game.music.volume = 0; // so we don't go insane.
         }
     }
 }
