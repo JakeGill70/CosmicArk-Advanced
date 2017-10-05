@@ -4,7 +4,7 @@
 
     // TODO: Is supercollider still needed? Can IPhysics ready be gutted? How much of this code is dead now?
 
-    /**
+    /**f
      * @description The meat and potatoes of the game. This is where the actual "game" part lives.
      * @property game {Phaser.Game}                         - The game context
      * @property player {Phaser.Sprite}                     - The player object 
