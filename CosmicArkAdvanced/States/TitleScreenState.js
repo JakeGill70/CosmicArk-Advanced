@@ -1,13 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     /**
@@ -17,18 +7,17 @@ var CosmicArkAdvanced;
      * @property game {Phaser.Sprite}           - The actual splash screen image to display
      * @property finishedLoading {boolean}
      */
-    var TitleScreenState = (function (_super) {
-        __extends(TitleScreenState, _super);
+    class TitleScreenState extends Phaser.State {
         /**
          * @constructor Default.
          */
-        function TitleScreenState() {
-            return _super.call(this) || this;
+        constructor() {
+            super();
         }
         /**
          * @description Displays the splash image and scales it appropriately. Also registers the "onTap" event
          */
-        TitleScreenState.prototype.create = function () {
+        create() {
             // Display title card
             this.titleScreenImage = this.add.sprite(0, 0, "title"); // Pull the image out of memory
             this.titleScreenImage.scale.setTo(this.game.width / this.titleScreenImage.width, this.game.height / this.titleScreenImage.height); // Scale it to fit the size of the screen
@@ -46,11 +35,11 @@ var CosmicArkAdvanced;
             this.game.load.onLoadComplete.add(this.loadComplete, this); // Register the load complete event
             // Register the "TitleClicked" even handler
             this.input.onTap.add(this.TitleClicked, this);
-        };
+        }
         /**
          * @description Handles the "onTap" event. Just moves over to the mapSelectState state.
          */
-        TitleScreenState.prototype.TitleClicked = function () {
+        TitleClicked() {
             if (this.finishedLoading) {
                 this.game.state.start("mainMenuState");
                 if (!this.game.device.desktop) {
@@ -63,16 +52,16 @@ var CosmicArkAdvanced;
                     this.loadStuff();
                 }
             }
-        };
-        TitleScreenState.prototype.fileComplete = function () {
+        }
+        fileComplete() {
             this.text.setText("Loading... " + this.game.load.progress.toString() + "%");
-        };
-        TitleScreenState.prototype.loadComplete = function () {
+        }
+        loadComplete() {
             this.finishedLoading = true;
             this.text.setText("Click to Continue");
             this.game.readInstructionsAtLeastOnce = false;
-        };
-        TitleScreenState.prototype.loadStuff = function () {
+        }
+        loadStuff() {
             // Backgrounds
             this.game.load.image("blueGrid", "Graphics/Backgrounds/BlueGrid.png");
             this.game.load.image("help", "Graphics/Backgrounds/HelpScreen1.png");
@@ -112,10 +101,9 @@ var CosmicArkAdvanced;
             this.game.songs = ["ThereminsBeat", "SlideWhistleBlues", "LikePaper", "RunTripAndFall", "Groove88"];
             this.game.songIndex = 0; // The fist song will always be "Theremin's Beat"
             this.game.load.start();
-            this.game.music.volume = 0; // so we don't go insane.
-        };
-        return TitleScreenState;
-    }(Phaser.State));
+            //this.game.music.volume = 0; // so we don't go insane.
+        }
+    }
     CosmicArkAdvanced.TitleScreenState = TitleScreenState;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=TitleScreenState.js.map

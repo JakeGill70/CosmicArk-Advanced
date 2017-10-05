@@ -1,13 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     /**
@@ -26,8 +16,7 @@ var CosmicArkAdvanced;
      * @property isHooked {boolean}                  - Flag for if the player is captured by a hook bullet/turret right now.
      * @property hookedVelocity {Phaser.Point}       - X and Y velocity the ship should have while isHooked is set
      */
-    var Player = (function (_super) {
-        __extends(Player, _super);
+    class Player extends Phaser.Sprite {
         /**
          * @description constructor for the player's ship
          * @constructor
@@ -37,41 +26,40 @@ var CosmicArkAdvanced;
          * @param _name Unique identifer for this object
          * @param _beam Context of the Phaser.Graphics object which handles rendering the "tractor beam"
          */
-        function Player(_game, _x, _y, _name) {
-            var _this = _super.call(this, _game, _x, _y, "ship") || this;
-            _this.maxHeight = 400; // Max height is the highest the y value can be. 
-            _this.game = _game; // get game context
-            _this.name = _name; // Set the objects unique name
-            _this.aliensOnBoard = 0; // Reset score counters
-            _this.aliensCaptured = 0;
-            _this.beam = _this.game.add.graphics(0, 0); // Create and add the beam to the gamestate
-            _this.beamMask = _this.game.add.graphics(0, 0); // Create and add the beam's bit mask to the gamestate
-            _this.beamMask.renderable = false;
-            _this.game.add.existing(_this); // Add this object to the gamestate. We have to add it last so that it will render on top of the beam
-            _this.moveSpeed = 15; // Set current walking speed
-            _this.moveDistThreshold = 5; // Set threshold for moving the ship based on tapping the screen
-            _this.tag = CosmicArkAdvanced.PhysicsTag.PLAYER; // Physics tag to determine how other sections of code should interact with it.
-            _this.isAbudcting = false; // is the player abduction someone right now?
-            _this.abductionSpeed = 70; // Set the speed which aliens are abducted at. (px / sec)
-            _this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
-            _this.animations.add("flash", [0, 1], 5, true); // Add the animation which makes the ship glow
-            _this.game.physics.enable(_this, Phaser.Physics.ARCADE); // Enable physics for the ship
-            _this.body.collideWorldBounds = true; // Automatically lock the players sprite into the world so they cannot move off screen.
-            _this.cursor = _this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
-            _this.wasd = {
-                up: _this.game.input.keyboard.addKey(Phaser.Keyboard.W),
-                down: _this.game.input.keyboard.addKey(Phaser.Keyboard.S),
-                left: _this.game.input.keyboard.addKey(Phaser.Keyboard.A),
-                right: _this.game.input.keyboard.addKey(Phaser.Keyboard.D),
+        constructor(_game, _x, _y, _name) {
+            super(_game, _x, _y, "ship"); // Create the sprite at the x,y coordinate in game
+            this.maxHeight = 400; // Max height is the highest the y value can be. 
+            this.game = _game; // get game context
+            this.name = _name; // Set the objects unique name
+            this.aliensOnBoard = 0; // Reset score counters
+            this.aliensCaptured = 0;
+            this.beam = this.game.add.graphics(0, 0); // Create and add the beam to the gamestate
+            this.beamMask = this.game.add.graphics(0, 0); // Create and add the beam's bit mask to the gamestate
+            this.beamMask.renderable = false;
+            this.game.add.existing(this); // Add this object to the gamestate. We have to add it last so that it will render on top of the beam
+            this.moveSpeed = 15; // Set current walking speed
+            this.moveDistThreshold = 5; // Set threshold for moving the ship based on tapping the screen
+            this.tag = CosmicArkAdvanced.PhysicsTag.PLAYER; // Physics tag to determine how other sections of code should interact with it.
+            this.isAbudcting = false; // is the player abduction someone right now?
+            this.abductionSpeed = 70; // Set the speed which aliens are abducted at. (px / sec)
+            this.anchor.set(0.5, 1.0); // Move anchor point to the bottom-center
+            this.animations.add("flash", [0, 1], 5, true); // Add the animation which makes the ship glow
+            this.game.physics.enable(this, Phaser.Physics.ARCADE); // Enable physics for the ship
+            this.body.collideWorldBounds = true; // Automatically lock the players sprite into the world so they cannot move off screen.
+            this.cursor = this.game.input.keyboard.createCursorKeys(); // Register the "Arrow Keys"
+            this.wasd = {
+                up: this.game.input.keyboard.addKey(Phaser.Keyboard.W),
+                down: this.game.input.keyboard.addKey(Phaser.Keyboard.S),
+                left: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
+                right: this.game.input.keyboard.addKey(Phaser.Keyboard.D),
             };
-            _this.abductionSound = _this.game.add.sound("abduction", 0.06 * _this.game.music.volume, true);
-            return _this;
+            this.abductionSound = this.game.add.sound("abduction", 0.06 * this.game.music.volume, true);
         }
         /**
          * @description Called every frame. Handles moving the player and sets the "isMoving" flag.
          * Also, if abducting, will LERP the abductee's x-coordinate to match the player's.
          */
-        Player.prototype.update = function () {
+        update() {
             this.body.velocity = new Phaser.Point(0, 0);
             this.isMoving = false; // Turn this flag off. Movement will turn it back on if needed.
             // If hooked, move with the hook instead of taking input
@@ -95,24 +83,24 @@ var CosmicArkAdvanced;
                     this.alienAbductee.x = Phaser.Math.bezierInterpolation([this.alienAbductee.x, this.x], 0.085); // 0.085 felt like a good speed. No significant meaning.
                 }
             }
-        };
+        }
         /**
          * @description Setter for hooked Velocity and sets the isHooked flag. This is called when colliding with the end of a hook.
          * The ship and the hook must move at the same time, angle, and speed to make it look like the hook is pulling the ship.
          * @param vel The new velocity of the hook.
          */
-        Player.prototype.hookShip = function (vel) {
+        hookShip(vel) {
             this.isHooked = true;
             this.hookedVelocity = vel;
-        };
+        }
         /**
          * @description moves the ship's position according to touch/mouse input.
          */
-        Player.prototype.touchMovement = function () {
-            var pos = new Phaser.Point(this.game.input.worldX, this.game.input.worldY);
-            var ang = Phaser.Math.angleBetweenPoints(this.position, pos);
-            var moveAmtX = this.realSpeed() * Math.cos(ang);
-            var moveAmtY = this.realSpeed() * Math.sin(ang);
+        touchMovement() {
+            let pos = new Phaser.Point(this.game.input.worldX, this.game.input.worldY);
+            let ang = Phaser.Math.angleBetweenPoints(this.position, pos);
+            let moveAmtX = this.realSpeed() * Math.cos(ang);
+            let moveAmtY = this.realSpeed() * Math.sin(ang);
             if (this.game.input.pointer1.isDown || this.game.input.mousePointer.isDown) {
                 if (Phaser.Point.distance(this.position, pos) > this.moveDistThreshold) {
                     // Move along the X-axis
@@ -129,14 +117,14 @@ var CosmicArkAdvanced;
                     }
                 }
             }
-        };
+        }
         /**
          * @description moves the ship according to array key input
          */
-        Player.prototype.arrowKeyMovement = function () {
+        arrowKeyMovement() {
             // Make it so that if the ship is moving diagonally, both speeds are multiplied by 0.707, aka sin(45)
             // This keeps the ship from moving too fast when diagonal. For more, look up "vector addition".
-            var isDiagonal = ((this.cursor.right.isDown || this.cursor.left.isDown) && (this.cursor.up.isDown || this.cursor.down.isDown));
+            let isDiagonal = ((this.cursor.right.isDown || this.cursor.left.isDown) && (this.cursor.up.isDown || this.cursor.down.isDown));
             // Horizontal movement
             if (this.cursor.right.isDown == true || this.wasd.right.isDown) {
                 this.body.x += isDiagonal ? (this.realSpeed() * 0.707) : this.realSpeed();
@@ -159,63 +147,63 @@ var CosmicArkAdvanced;
                 // Stop abducting when moving
                 this.isMoving = true;
             }
-        };
+        }
         /**
          * @description Provides a variable time multiplier based on the framerate instead of the ms passed.
          * @returns a number, roughly representing the time spent per frame
          */
-        Player.prototype.getDeltaTime = function () {
+        getDeltaTime() {
             return (this.game.time.elapsedMS / 60);
-        };
+        }
         /**
          * @description takes the ship's nice integer value movespeed and multiplies it by delta time.
          * @returns a number representing the movespeed of the ship over time
          */
-        Player.prototype.realSpeed = function () {
+        realSpeed() {
             return (this.moveSpeed * this.getDeltaTime());
-        };
+        }
         /**
          * @Descirption Handles what should happen the imediate frame after a collision first occurs.
          * @param other The object the player's ship collided with
          */
-        Player.prototype.OnCollisionEnter = function (other) {
+        OnCollisionEnter(other) {
             if (other.tag == CosmicArkAdvanced.PhysicsTag.ALIEN) {
                 this.Abduct(other);
             }
-        };
+        }
         /**
          * @description Handles what should happen the exact frame a collision occurs. Answers the question "Do I want procede with this collision?"
          * @param other The object the player's ship collided with
          * @returns {boolean} Should the player's ship accept the collision, or act like nothing happened?
          */
-        Player.prototype.OnCollisionProposal = function (other) {
+        OnCollisionProposal(other) {
             return true; // We want to accept the collision by default
-        };
+        }
         /**
          * @descirption Handles what should happen for EVERY FRAME of a collision EXCEPT for the first, which is only handled by OnCollisionProposal.
          * @see {this.OnCollisionProposal}
          * @param other The object the player's ship collided with
          */
-        Player.prototype.OnCollision = function (other) {
-        };
+        OnCollision(other) {
+        }
         /**
          * @Descirption Handles what should happen the imediate frame after a collision stops occurring.
          * @param other The object the player's ship collided with
          */
-        Player.prototype.OnCollisionExit = function (other) {
+        OnCollisionExit(other) {
             this.stopAbducting(false);
-        };
+        }
         /**
          * @description Clears the alienAbductee property, and isAbducting flag. Also destroys any graphical artifacts associated with the "tractor beam".
          * @param caught Set to true if the abduction is stopping because you caught the alien. Set to false if it got away or you moved
          */
-        Player.prototype.stopAbducting = function (caught) {
+        stopAbducting(caught) {
             if (this.alienAbductee != null) {
                 if (caught) {
                     this.alienAbductee.kill(); // If caught by the player's ship, "destroy" it
                     console.log("I died");
                 }
-                var ab = this.alienAbductee.body; // Get a copy of it's physics body
+                let ab = this.alienAbductee.body; // Get a copy of it's physics body
                 ab.velocity = new Phaser.Point(this.alienAbductee.data.speed * this.alienAbductee.scale.x, 0); // Reset it's speed
                 this.alienAbductee.position = new Phaser.Point(this.alienAbductee.x, Math.abs(this.alienAbductee.data.initialY)); // Reset it's y-coordinate
                 this.alienAbductee.mask = null; // Clear it's render mask
@@ -225,20 +213,20 @@ var CosmicArkAdvanced;
             this.isAbudcting = false;
             this.beam.clear(); // Destroy any graphic's artifacts of the beam
             this.beamMask.clear(); // Destroy any graphic's artifacts of the beam's mask. This shouldn't make a difference since the mask isn't technically rendered, but do it anyway just in case of weirdness.
-        };
+        }
         /**
          * @description Should be called when colliding with the mothership.
          * This method resets the "In Transit" score to 0, and increases the "Captured" score appropriately
          */
-        Player.prototype.Capture = function () {
+        Capture() {
             this.aliensCaptured += this.aliensOnBoard;
             this.aliensOnBoard = 0;
-        };
+        }
         /**
          * @description Will exit imediately if the isMoving flag is set. Begins drawing the Tractor beam. Sets the isAbducting flag and the alienAbductee property.
          * @param a The alien the player will begin abducting
          */
-        Player.prototype.Abduct = function (a) {
+        Abduct(a) {
             // Only abduct 1 alien at a time
             if (this.alienAbductee != null && this.alienAbductee != a) {
                 return;
@@ -267,36 +255,35 @@ var CosmicArkAdvanced;
             }
             this.alienAbductee = a; // Set the alien abductee property equal to the alien the ship collided with
             // TODO: Tell the alien that we have started to abduct it so that it can make changes to it's behaviour too
-            var ab = this.alienAbductee.body;
+            let ab = this.alienAbductee.body;
             ab.velocity = new Phaser.Point(0, this.abductionSpeed * -1);
             this.alienAbductee.mask = this.beamMask; // Set the alien's mask equal to the beam's bitmask
             this.isAbudcting = true; // Set the isAbducting flag
             this.renderBeam(); // Show the beam
-        };
+        }
         /**
          * @description Draws the beam according to "beamDrawHeight" property
          */
-        Player.prototype.renderBeam = function () {
+        renderBeam() {
             this.beam.clear(); // Destroy the beam from the previous frame
             this.beamMask.clear(); // Destroy the beam Mask from the previous frame
             // this.beam.x = this.x;
             // this.beam.y = this.y;
             // Pick a random color, favoriting blue, with the ranges like so:
             // r: 0-45          g: 75-150           b: 155-255
-            var color = Phaser.Color.getColor(Math.random() * 45, Math.random() * 75 + 75, Math.random() * 100 + 155);
+            let color = Phaser.Color.getColor(Math.random() * 45, Math.random() * 75 + 75, Math.random() * 100 + 155);
             // beamDrawHeight is calculated OnCollisionEnter()
-            var rect = new Phaser.Rectangle(this.x - (this.body.width / 2) + 2, this.y - (this.body.height / 2), this.body.width - 4, this.beamDrawHeight);
+            let rect = new Phaser.Rectangle(this.x - (this.body.width / 2) + 2, this.y - (this.body.height / 2), this.body.width - 4, this.beamDrawHeight);
             this.beam.lineStyle(1, color, 0.75);
             this.beam.beginFill(color, 0.8);
             this.beam.drawRect(rect.x, rect.y, rect.width, rect.height);
             this.beam.endFill();
-            var maskRect = new Phaser.Rectangle(this.x - (this.body.width * 2), this.y - (this.body.height / 10), this.body.width * 4, this.beamDrawHeight); // These values are pretty much just eyeballed. 
+            let maskRect = new Phaser.Rectangle(this.x - (this.body.width * 2), this.y - (this.body.height / 10), this.body.width * 4, this.beamDrawHeight); // These values are pretty much just eyeballed. 
             this.beamMask.beginFill(0xFFFFFF);
             this.beamMask.drawRect(maskRect.x, maskRect.y, maskRect.width, maskRect.height);
             this.beamMask.endFill();
-        };
-        return Player;
-    }(Phaser.Sprite));
+        }
+    }
     CosmicArkAdvanced.Player = Player;
 })(CosmicArkAdvanced || (CosmicArkAdvanced = {}));
 //# sourceMappingURL=Player.js.map

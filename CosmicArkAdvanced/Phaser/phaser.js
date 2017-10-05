@@ -9371,7 +9371,7 @@ var p2 = module.exports = {
     version :                       _dereq_('../package.json').version,
 };
 
-Object.defineproperty(p2, 'Rectangle', {
+Object.defineProperty(p2, 'Rectangle', {
     get: function() {
         console.warn('The Rectangle class has been renamed to Box.');
         return this.Box;
@@ -10919,7 +10919,7 @@ Shape.LINE =        16;
  */
 Shape.BOX =   32;
 
-Object.defineproperty(Shape, 'RECTANGLE', {
+Object.defineProperty(Shape, 'RECTANGLE', {
     get: function() {
         console.warn('Shape.RECTANGLE is deprecated, use Shape.BOX instead.');
         return Shape.BOX;
@@ -15150,7 +15150,7 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function (renderSession) {
  * @property width
  * @type Number
  */
-Object.defineproperty(PIXI.DisplayObjectContainer.prototype, 'width', {
+Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
 
     get: function() {
         return this.getLocalBounds().width * this.scale.x;
@@ -15179,7 +15179,7 @@ Object.defineproperty(PIXI.DisplayObjectContainer.prototype, 'width', {
  * @property height
  * @type Number
  */
-Object.defineproperty(PIXI.DisplayObjectContainer.prototype, 'height', {
+Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
 
     get: function() {
         return this.getLocalBounds().height * this.scale.y;
@@ -15334,7 +15334,7 @@ PIXI.Sprite.prototype.constructor = PIXI.Sprite;
  * @property width
  * @type Number
  */
-Object.defineproperty(PIXI.Sprite.prototype, 'width', {
+Object.defineProperty(PIXI.Sprite.prototype, 'width', {
 
     get: function() {
         return this.scale.x * this.texture.frame.width;
@@ -15353,7 +15353,7 @@ Object.defineproperty(PIXI.Sprite.prototype, 'width', {
  * @property height
  * @type Number
  */
-Object.defineproperty(PIXI.Sprite.prototype, 'height', {
+Object.defineProperty(PIXI.Sprite.prototype, 'height', {
 
     get: function() {
         return  this.scale.y * this.texture.frame.height;
@@ -16242,7 +16242,7 @@ PIXI._CompileShader = function(gl, shaderSrc, shaderType)
     gl.shaderSource(shader, src);
     gl.compileShader(shader);
 
-    if (!gl.getShaderparameter(shader, gl.COMPILE_STATUS))
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
     {
         window.console.log(gl.getShaderInfoLog(shader));
         return null;
@@ -16270,7 +16270,7 @@ PIXI.compileProgram = function(gl, vertexSrc, fragmentSrc)
     gl.attachShader(shaderProgram, fragmentShader);
     gl.linkProgram(shaderProgram);
 
-    if (!gl.getProgramparameter(shaderProgram, gl.LINK_STATUS))
+    if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS))
     {
         window.console.log(gl.getProgramInfoLog(shaderProgram));
         window.console.log("Could not initialise shaders");
@@ -16547,10 +16547,10 @@ PIXI.PixiShader.prototype.initSampler2D = function(uniform)
             gl.texImage2D(gl.TEXTURE_2D, 0, format, gl.RGBA, gl.UNSIGNED_BYTE, uniform.value.baseTexture.source);
         }
 
-        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
-        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
-        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
-        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
     }
 
     gl.uniform1i(uniform.uniformLocation, this.textureCount);
@@ -17556,27 +17556,28 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
 
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
 
-    gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+    gl.texParameteri
 
     if (texture.mipmap && PIXI.isPowerOfTwo(texture.width, texture.height))
     {
-        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR_MIPMAP_LINEAR : gl.NEAREST_MIPMAP_NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR_MIPMAP_LINEAR : gl.NEAREST_MIPMAP_NEAREST);
         gl.generateMipmap(gl.TEXTURE_2D);
     }
     else
     {
-        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
     }
 
     if (!texture._powerOf2)
     {
-        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     }
     else
     {
-        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-        gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
     }
 
     texture._dirty[gl.id] = false;
@@ -19878,10 +19879,10 @@ PIXI.FilterTexture = function(gl, width, height, scaleMode)
     scaleMode = scaleMode || PIXI.scaleModes.DEFAULT;
 
     gl.bindTexture(gl.TEXTURE_2D,  this.texture);
-    gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texparameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer );
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer );
@@ -22685,7 +22686,7 @@ PIXI.TilingSprite.prototype.destroy = function () {
  * @property width
  * @type Number
  */
-Object.defineproperty(PIXI.TilingSprite.prototype, 'width', {
+Object.defineProperty(PIXI.TilingSprite.prototype, 'width', {
 
     get: function() {
         return this._width;
@@ -22703,7 +22704,7 @@ Object.defineproperty(PIXI.TilingSprite.prototype, 'width', {
  * @property height
  * @type Number
  */
-Object.defineproperty(PIXI.TilingSprite.prototype, 'height', {
+Object.defineProperty(PIXI.TilingSprite.prototype, 'height', {
 
     get: function() {
         return  this._height;
@@ -23681,7 +23682,7 @@ Phaser.Utils = {
         // the "constructor" property of certain host objects, ie. |window.location|
         // https://bugzilla.mozilla.org/show_bug.cgi?id=814622
         try {
-            if (obj.constructor && !({}).hasOwnproperty.call(obj.constructor.prototype, "isPrototypeOf"))
+            if (obj.constructor && !({}).hasOwnProperty.call(obj.constructor.prototype, "isPrototypeOf"))
             {
                 return false;
             }
@@ -23777,7 +23778,7 @@ Phaser.Utils = {
     /**
     * Mixes in an existing mixin object with the target.
     *
-    * Values in the mixin that have either `get` or `set` functions are created as properties via `defineproperty`
+    * Values in the mixin that have either `get` or `set` functions are created as properties via `defineProperty`
     * _except_ if they also define a `clone` method - if a clone method is defined that is called instead and
     * the result is assigned directly.
     *
@@ -23814,7 +23815,7 @@ Phaser.Utils = {
                     }
                     else
                     {
-                        Object.defineproperty(target, key, value);
+                        Object.defineProperty(target, key, value);
                     }
                 }
                 else
@@ -24140,7 +24141,7 @@ Phaser.Circle.prototype.constructor = Phaser.Circle;
 * @name Phaser.Circle#diameter
 * @property {number} diameter - Gets or sets the diameter of the circle.
 */
-Object.defineproperty(Phaser.Circle.prototype, "diameter", {
+Object.defineProperty(Phaser.Circle.prototype, "diameter", {
 
     get: function () {
         return this._diameter;
@@ -24162,7 +24163,7 @@ Object.defineproperty(Phaser.Circle.prototype, "diameter", {
 * @name Phaser.Circle#radius
 * @property {number} radius - Gets or sets the radius of the circle.
 */
-Object.defineproperty(Phaser.Circle.prototype, "radius", {
+Object.defineProperty(Phaser.Circle.prototype, "radius", {
 
     get: function () {
         return this._radius;
@@ -24185,7 +24186,7 @@ Object.defineproperty(Phaser.Circle.prototype, "radius", {
 * @name Phaser.Circle#left
 * @propety {number} left - Gets or sets the value of the leftmost point of the circle.
 */
-Object.defineproperty(Phaser.Circle.prototype, "left", {
+Object.defineProperty(Phaser.Circle.prototype, "left", {
 
     get: function () {
         return this.x - this._radius;
@@ -24212,7 +24213,7 @@ Object.defineproperty(Phaser.Circle.prototype, "left", {
 * @name Phaser.Circle#right
 * @property {number} right - Gets or sets the value of the rightmost point of the circle.
 */
-Object.defineproperty(Phaser.Circle.prototype, "right", {
+Object.defineProperty(Phaser.Circle.prototype, "right", {
 
     get: function () {
         return this.x + this._radius;
@@ -24239,7 +24240,7 @@ Object.defineproperty(Phaser.Circle.prototype, "right", {
 * @name Phaser.Circle#top
 * @property {number} top - Gets or sets the top of the circle.
 */
-Object.defineproperty(Phaser.Circle.prototype, "top", {
+Object.defineProperty(Phaser.Circle.prototype, "top", {
 
     get: function () {
         return this.y - this._radius;
@@ -24266,7 +24267,7 @@ Object.defineproperty(Phaser.Circle.prototype, "top", {
 * @name Phaser.Circle#bottom
 * @property {number} bottom - Gets or sets the bottom of the circle.
 */
-Object.defineproperty(Phaser.Circle.prototype, "bottom", {
+Object.defineProperty(Phaser.Circle.prototype, "bottom", {
 
     get: function () {
         return this.y + this._radius;
@@ -24294,7 +24295,7 @@ Object.defineproperty(Phaser.Circle.prototype, "bottom", {
 * @property {number} area - The area of this circle.
 * @readonly
 */
-Object.defineproperty(Phaser.Circle.prototype, "area", {
+Object.defineProperty(Phaser.Circle.prototype, "area", {
 
     get: function () {
 
@@ -24317,7 +24318,7 @@ Object.defineproperty(Phaser.Circle.prototype, "area", {
 * @name Phaser.Circle#empty
 * @property {boolean} empty - Gets or sets the empty state of the circle.
 */
-Object.defineproperty(Phaser.Circle.prototype, "empty", {
+Object.defineProperty(Phaser.Circle.prototype, "empty", {
 
     get: function () {
         return (this._diameter === 0);
@@ -24649,7 +24650,7 @@ Phaser.Ellipse.prototype.constructor = Phaser.Ellipse;
 * @name Phaser.Ellipse#left
 * @propety {number} left - Gets or sets the value of the leftmost point of the ellipse.
 */
-Object.defineproperty(Phaser.Ellipse.prototype, "left", {
+Object.defineProperty(Phaser.Ellipse.prototype, "left", {
 
     get: function () {
         return this.x;
@@ -24668,7 +24669,7 @@ Object.defineproperty(Phaser.Ellipse.prototype, "left", {
 * @name Phaser.Ellipse#right
 * @property {number} right - Gets or sets the value of the rightmost point of the ellipse.
 */
-Object.defineproperty(Phaser.Ellipse.prototype, "right", {
+Object.defineProperty(Phaser.Ellipse.prototype, "right", {
 
     get: function () {
         return this.x + this.width;
@@ -24693,7 +24694,7 @@ Object.defineproperty(Phaser.Ellipse.prototype, "right", {
 * @name Phaser.Ellipse#top
 * @property {number} top - Gets or sets the top of the ellipse.
 */
-Object.defineproperty(Phaser.Ellipse.prototype, "top", {
+Object.defineProperty(Phaser.Ellipse.prototype, "top", {
 
     get: function () {
         return this.y;
@@ -24710,7 +24711,7 @@ Object.defineproperty(Phaser.Ellipse.prototype, "top", {
 * @name Phaser.Ellipse#bottom
 * @property {number} bottom - Gets or sets the bottom of the ellipse.
 */
-Object.defineproperty(Phaser.Ellipse.prototype, "bottom", {
+Object.defineProperty(Phaser.Ellipse.prototype, "bottom", {
 
     get: function () {
         return this.y + this.height;
@@ -24736,7 +24737,7 @@ Object.defineproperty(Phaser.Ellipse.prototype, "bottom", {
 * @name Phaser.Ellipse#empty
 * @property {boolean} empty - Gets or sets the empty state of the ellipse.
 */
-Object.defineproperty(Phaser.Ellipse.prototype, "empty", {
+Object.defineProperty(Phaser.Ellipse.prototype, "empty", {
 
     get: function () {
         return (this.width === 0 || this.height === 0);
@@ -25145,7 +25146,7 @@ Phaser.Line.prototype = {
 * @property {number} length - Gets the length of the line segment.
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "length", {
+Object.defineProperty(Phaser.Line.prototype, "length", {
 
     get: function () {
         return Math.sqrt((this.end.x - this.start.x) * (this.end.x - this.start.x) + (this.end.y - this.start.y) * (this.end.y - this.start.y));
@@ -25158,7 +25159,7 @@ Object.defineproperty(Phaser.Line.prototype, "length", {
 * @property {number} angle - Gets the angle of the line in radians.
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "angle", {
+Object.defineProperty(Phaser.Line.prototype, "angle", {
 
     get: function () {
         return Math.atan2(this.end.y - this.start.y, this.end.x - this.start.x);
@@ -25171,7 +25172,7 @@ Object.defineproperty(Phaser.Line.prototype, "angle", {
 * @property {number} slope - Gets the slope of the line (y/x).
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "slope", {
+Object.defineProperty(Phaser.Line.prototype, "slope", {
 
     get: function () {
         return (this.end.y - this.start.y) / (this.end.x - this.start.x);
@@ -25184,7 +25185,7 @@ Object.defineproperty(Phaser.Line.prototype, "slope", {
 * @property {number} perpSlope - Gets the perpendicular slope of the line (x/y).
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "perpSlope", {
+Object.defineProperty(Phaser.Line.prototype, "perpSlope", {
 
     get: function () {
         return -((this.end.x - this.start.x) / (this.end.y - this.start.y));
@@ -25197,7 +25198,7 @@ Object.defineproperty(Phaser.Line.prototype, "perpSlope", {
 * @property {number} x - Gets the x coordinate of the top left of the bounds around this line.
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "x", {
+Object.defineProperty(Phaser.Line.prototype, "x", {
 
     get: function () {
         return Math.min(this.start.x, this.end.x);
@@ -25210,7 +25211,7 @@ Object.defineproperty(Phaser.Line.prototype, "x", {
 * @property {number} y - Gets the y coordinate of the top left of the bounds around this line.
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "y", {
+Object.defineProperty(Phaser.Line.prototype, "y", {
 
     get: function () {
         return Math.min(this.start.y, this.end.y);
@@ -25223,7 +25224,7 @@ Object.defineproperty(Phaser.Line.prototype, "y", {
 * @property {number} left - Gets the left-most point of this line.
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "left", {
+Object.defineProperty(Phaser.Line.prototype, "left", {
 
     get: function () {
         return Math.min(this.start.x, this.end.x);
@@ -25236,7 +25237,7 @@ Object.defineproperty(Phaser.Line.prototype, "left", {
 * @property {number} right - Gets the right-most point of this line.
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "right", {
+Object.defineProperty(Phaser.Line.prototype, "right", {
 
     get: function () {
         return Math.max(this.start.x, this.end.x);
@@ -25249,7 +25250,7 @@ Object.defineproperty(Phaser.Line.prototype, "right", {
 * @property {number} top - Gets the top-most point of this line.
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "top", {
+Object.defineProperty(Phaser.Line.prototype, "top", {
 
     get: function () {
         return Math.min(this.start.y, this.end.y);
@@ -25262,7 +25263,7 @@ Object.defineproperty(Phaser.Line.prototype, "top", {
 * @property {number} bottom - Gets the bottom-most point of this line.
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "bottom", {
+Object.defineProperty(Phaser.Line.prototype, "bottom", {
 
     get: function () {
         return Math.max(this.start.y, this.end.y);
@@ -25275,7 +25276,7 @@ Object.defineproperty(Phaser.Line.prototype, "bottom", {
 * @property {number} width - Gets the width of this bounds of this line.
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "width", {
+Object.defineProperty(Phaser.Line.prototype, "width", {
 
     get: function () {
         return Math.abs(this.start.x - this.end.x);
@@ -25288,7 +25289,7 @@ Object.defineproperty(Phaser.Line.prototype, "width", {
 * @property {number} height - Gets the height of this bounds of this line.
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "height", {
+Object.defineProperty(Phaser.Line.prototype, "height", {
 
     get: function () {
         return Math.abs(this.start.y - this.end.y);
@@ -25301,7 +25302,7 @@ Object.defineproperty(Phaser.Line.prototype, "height", {
 * @property {number} normalX - Gets the x component of the left-hand normal of this line.
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "normalX", {
+Object.defineProperty(Phaser.Line.prototype, "normalX", {
 
     get: function () {
         return Math.cos(this.angle - 1.5707963267948966);
@@ -25314,7 +25315,7 @@ Object.defineproperty(Phaser.Line.prototype, "normalX", {
 * @property {number} normalY - Gets the y component of the left-hand normal of this line.
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "normalY", {
+Object.defineProperty(Phaser.Line.prototype, "normalY", {
 
     get: function () {
         return Math.sin(this.angle - 1.5707963267948966);
@@ -25327,7 +25328,7 @@ Object.defineproperty(Phaser.Line.prototype, "normalY", {
 * @property {number} normalAngle - Gets the angle in radians of the normal of this line (line.angle - 90 degrees.)
 * @readonly
 */
-Object.defineproperty(Phaser.Line.prototype, "normalAngle", {
+Object.defineProperty(Phaser.Line.prototype, "normalAngle", {
 
     get: function () {
         return Phaser.Math.wrap(this.angle - 1.5707963267948966, -Math.PI, Math.PI);
@@ -27117,7 +27118,7 @@ Phaser.Polygon.prototype.constructor = Phaser.Polygon;
 * @property {Phaser.Point[]} points - The array of vertex points.
 * @deprecated Use `setTo`.
 */
-Object.defineproperty(Phaser.Polygon.prototype, 'points', {
+Object.defineProperty(Phaser.Polygon.prototype, 'points', {
 
     get: function() {
         return this._points;
@@ -27598,7 +27599,7 @@ Phaser.Rectangle.prototype = {
 * @property {number} halfWidth - Half of the width of the Rectangle.
 * @readonly
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "halfWidth", {
+Object.defineProperty(Phaser.Rectangle.prototype, "halfWidth", {
 
     get: function () {
         return Math.round(this.width / 2);
@@ -27611,7 +27612,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "halfWidth", {
 * @property {number} halfHeight - Half of the height of the Rectangle.
 * @readonly
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "halfHeight", {
+Object.defineProperty(Phaser.Rectangle.prototype, "halfHeight", {
 
     get: function () {
         return Math.round(this.height / 2);
@@ -27624,7 +27625,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "halfHeight", {
 * @name Phaser.Rectangle#bottom
 * @property {number} bottom - The sum of the y and height properties.
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "bottom", {
+Object.defineProperty(Phaser.Rectangle.prototype, "bottom", {
 
     get: function () {
         return this.y + this.height;
@@ -27650,7 +27651,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "bottom", {
 * @name Phaser.Rectangle#bottomLeft
 * @property {Phaser.Point} bottomLeft - Gets or sets the location of the Rectangles bottom left corner as a Point object.
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "bottomLeft", {
+Object.defineProperty(Phaser.Rectangle.prototype, "bottomLeft", {
 
     get: function () {
         return new Phaser.Point(this.x, this.bottom);
@@ -27668,7 +27669,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "bottomLeft", {
 * @name Phaser.Rectangle#bottomRight
 * @property {Phaser.Point} bottomRight - Gets or sets the location of the Rectangles bottom right corner as a Point object.
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "bottomRight", {
+Object.defineProperty(Phaser.Rectangle.prototype, "bottomRight", {
 
     get: function () {
         return new Phaser.Point(this.right, this.bottom);
@@ -27686,7 +27687,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "bottomRight", {
 * @name Phaser.Rectangle#left
 * @property {number} left - The x coordinate of the left of the Rectangle.
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "left", {
+Object.defineProperty(Phaser.Rectangle.prototype, "left", {
 
     get: function () {
         return this.x;
@@ -27708,7 +27709,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "left", {
 * @name Phaser.Rectangle#right
 * @property {number} right - The sum of the x and width properties.
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "right", {
+Object.defineProperty(Phaser.Rectangle.prototype, "right", {
 
     get: function () {
         return this.x + this.width;
@@ -27730,7 +27731,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "right", {
 * @property {number} volume - The volume of the Rectangle derived from width * height.
 * @readonly
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "volume", {
+Object.defineProperty(Phaser.Rectangle.prototype, "volume", {
 
     get: function () {
         return this.width * this.height;
@@ -27744,7 +27745,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "volume", {
 * @property {number} perimeter - The perimeter size of the Rectangle. This is the sum of all 4 sides.
 * @readonly
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "perimeter", {
+Object.defineProperty(Phaser.Rectangle.prototype, "perimeter", {
 
     get: function () {
         return (this.width * 2) + (this.height * 2);
@@ -27757,7 +27758,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "perimeter", {
 * @name Phaser.Rectangle#centerX
 * @property {number} centerX - The x coordinate of the center of the Rectangle.
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "centerX", {
+Object.defineProperty(Phaser.Rectangle.prototype, "centerX", {
 
     get: function () {
         return this.x + this.halfWidth;
@@ -27774,7 +27775,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "centerX", {
 * @name Phaser.Rectangle#centerY
 * @property {number} centerY - The y coordinate of the center of the Rectangle.
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "centerY", {
+Object.defineProperty(Phaser.Rectangle.prototype, "centerY", {
 
     get: function () {
         return this.y + this.halfHeight;
@@ -27792,7 +27793,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "centerY", {
 * @name Phaser.Rectangle#randomX
 * @property {number} randomX - A random value between the left and right values (inclusive) of the Rectangle.
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "randomX", {
+Object.defineProperty(Phaser.Rectangle.prototype, "randomX", {
 
     get: function () {
 
@@ -27808,7 +27809,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "randomX", {
 * @name Phaser.Rectangle#randomY
 * @property {number} randomY - A random value between the top and bottom values (inclusive) of the Rectangle.
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "randomY", {
+Object.defineProperty(Phaser.Rectangle.prototype, "randomY", {
 
     get: function () {
 
@@ -27824,7 +27825,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "randomY", {
 * @name Phaser.Rectangle#top
 * @property {number} top - The y coordinate of the top of the Rectangle.
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "top", {
+Object.defineProperty(Phaser.Rectangle.prototype, "top", {
 
     get: function () {
         return this.y;
@@ -27846,7 +27847,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "top", {
 * @name Phaser.Rectangle#topLeft
 * @property {Phaser.Point} topLeft - The location of the Rectangles top left corner as a Point object.
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "topLeft", {
+Object.defineProperty(Phaser.Rectangle.prototype, "topLeft", {
 
     get: function () {
         return new Phaser.Point(this.x, this.y);
@@ -27864,7 +27865,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "topLeft", {
 * @name Phaser.Rectangle#topRight
 * @property {Phaser.Point} topRight - The location of the Rectangles top left corner as a Point object.
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "topRight", {
+Object.defineProperty(Phaser.Rectangle.prototype, "topRight", {
 
     get: function () {
         return new Phaser.Point(this.x + this.width, this.y);
@@ -27883,7 +27884,7 @@ Object.defineproperty(Phaser.Rectangle.prototype, "topRight", {
 * @name Phaser.Rectangle#empty
 * @property {boolean} empty - Gets or sets the Rectangles empty state.
 */
-Object.defineproperty(Phaser.Rectangle.prototype, "empty", {
+Object.defineProperty(Phaser.Rectangle.prototype, "empty", {
 
     get: function () {
         return (!this.width || !this.height);
@@ -29117,7 +29118,7 @@ Phaser.Camera.prototype.constructor = Phaser.Camera;
 * @name Phaser.Camera#x
 * @property {number} x - Gets or sets the cameras x position.
 */
-Object.defineproperty(Phaser.Camera.prototype, "x", {
+Object.defineProperty(Phaser.Camera.prototype, "x", {
 
     get: function () {
 
@@ -29142,7 +29143,7 @@ Object.defineproperty(Phaser.Camera.prototype, "x", {
 * @name Phaser.Camera#y
 * @property {number} y - Gets or sets the cameras y position.
 */
-Object.defineproperty(Phaser.Camera.prototype, "y", {
+Object.defineProperty(Phaser.Camera.prototype, "y", {
 
     get: function () {
 
@@ -29167,7 +29168,7 @@ Object.defineproperty(Phaser.Camera.prototype, "y", {
 * @name Phaser.Camera#position
 * @property {Phaser.Point} position - Gets or sets the cameras xy position using Phaser.Point object.
 */
-Object.defineproperty(Phaser.Camera.prototype, "position", {
+Object.defineProperty(Phaser.Camera.prototype, "position", {
 
     get: function () {
 
@@ -29195,7 +29196,7 @@ Object.defineproperty(Phaser.Camera.prototype, "position", {
 * @name Phaser.Camera#width
 * @property {number} width - Gets or sets the cameras width.
 */
-Object.defineproperty(Phaser.Camera.prototype, "width", {
+Object.defineProperty(Phaser.Camera.prototype, "width", {
 
     get: function () {
 
@@ -29216,7 +29217,7 @@ Object.defineproperty(Phaser.Camera.prototype, "width", {
 * @name Phaser.Camera#height
 * @property {number} height - Gets or sets the cameras height.
 */
-Object.defineproperty(Phaser.Camera.prototype, "height", {
+Object.defineProperty(Phaser.Camera.prototype, "height", {
 
     get: function () {
 
@@ -29238,7 +29239,7 @@ Object.defineproperty(Phaser.Camera.prototype, "height", {
 * @name Phaser.Camera#shakeIntensity
 * @property {number} shakeIntensity - Gets or sets the cameras shake intensity.
 */
-Object.defineproperty(Phaser.Camera.prototype, "shakeIntensity", {
+Object.defineProperty(Phaser.Camera.prototype, "shakeIntensity", {
 
     get: function () {
 
@@ -30264,7 +30265,7 @@ Phaser.StateManager.prototype.constructor = Phaser.StateManager;
 * @property {boolean} created - True if the current state has had its `create` method run (if it has one, if not this is true by default).
 * @readOnly
 */
-Object.defineproperty(Phaser.StateManager.prototype, "created", {
+Object.defineProperty(Phaser.StateManager.prototype, "created", {
 
     get: function () {
 
@@ -30771,7 +30772,7 @@ Phaser.Signal.prototype = {
 * @memberof Phaser.Signal
 * @property {function} boundDispatch
 */
-Object.defineproperty(Phaser.Signal.prototype, "boundDispatch", {
+Object.defineProperty(Phaser.Signal.prototype, "boundDispatch", {
 
     get: function () {
         var _this = this;
@@ -31204,7 +31205,7 @@ Phaser.Filter.prototype.constructor = Phaser.Filter;
 * @name Phaser.Filter#width
 * @property {number} width - The width (resolution uniform)
 */
-Object.defineproperty(Phaser.Filter.prototype, 'width', {
+Object.defineProperty(Phaser.Filter.prototype, 'width', {
 
     get: function() {
         return this.uniforms.resolution.value.x;
@@ -31220,7 +31221,7 @@ Object.defineproperty(Phaser.Filter.prototype, 'width', {
 * @name Phaser.Filter#height
 * @property {number} height - The height (resolution uniform)
 */
-Object.defineproperty(Phaser.Filter.prototype, 'height', {
+Object.defineProperty(Phaser.Filter.prototype, 'height', {
 
     get: function() {
         return this.uniforms.resolution.value.y;
@@ -32019,7 +32020,7 @@ Phaser.Stage.prototype.destroy = function () {
 * @name Phaser.Stage#backgroundColor
 * @property {number|string} backgroundColor - Gets and sets the background color of the stage. The color can be given as a number: 0xff0000 or a hex string: '#ff0000'
 */
-Object.defineproperty(Phaser.Stage.prototype, "backgroundColor", {
+Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 
     get: function () {
 
@@ -32041,7 +32042,7 @@ Object.defineproperty(Phaser.Stage.prototype, "backgroundColor", {
 * @name Phaser.Stage#smoothed
 * @property {boolean} smoothed - Set to true to smooth all sprites rendered on this Stage, or false to disable smoothing (great for pixel art)
 */
-Object.defineproperty(Phaser.Stage.prototype, "smoothed", {
+Object.defineProperty(Phaser.Stage.prototype, "smoothed", {
 
     get: function () {
 
@@ -32452,7 +32453,7 @@ Phaser.Group.prototype.add = function (child, silent, index) {
         this.updateZ();
     }
 
-    if (this.enableBody && child.hasOwnproperty('body') && child.body === null)
+    if (this.enableBody && child.hasOwnProperty('body') && child.body === null)
     {
         this.game.physics.enable(child, this.physicsBodyType);
     }
@@ -34717,7 +34718,7 @@ Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
 * @property {integer} total
 * @readonly
 */
-Object.defineproperty(Phaser.Group.prototype, "total", {
+Object.defineProperty(Phaser.Group.prototype, "total", {
 
     get: function () {
 
@@ -34734,7 +34735,7 @@ Object.defineproperty(Phaser.Group.prototype, "total", {
 * @property {integer} length 
 * @readonly
 */
-Object.defineproperty(Phaser.Group.prototype, "length", {
+Object.defineProperty(Phaser.Group.prototype, "length", {
 
     get: function () {
 
@@ -34755,7 +34756,7 @@ Object.defineproperty(Phaser.Group.prototype, "length", {
 * @name Phaser.Group#angle
 * @property {number} angle
 */
-Object.defineproperty(Phaser.Group.prototype, "angle", {
+Object.defineProperty(Phaser.Group.prototype, "angle", {
 
     get: function() {
         return Phaser.Math.radToDeg(this.rotation);
@@ -34776,7 +34777,7 @@ Object.defineproperty(Phaser.Group.prototype, "angle", {
 * @name Phaser.Group#centerX
 * @property {number} centerX
 */
-Object.defineproperty(Phaser.Group.prototype, "centerX", {
+Object.defineProperty(Phaser.Group.prototype, "centerX", {
 
     get: function () {
 
@@ -34804,7 +34805,7 @@ Object.defineproperty(Phaser.Group.prototype, "centerX", {
 * @name Phaser.Group#centerY
 * @property {number} centerY
 */
-Object.defineproperty(Phaser.Group.prototype, "centerY", {
+Object.defineProperty(Phaser.Group.prototype, "centerY", {
 
     get: function () {
 
@@ -34832,7 +34833,7 @@ Object.defineproperty(Phaser.Group.prototype, "centerY", {
 * @name Phaser.Group#left
 * @property {number} left
 */
-Object.defineproperty(Phaser.Group.prototype, "left", {
+Object.defineProperty(Phaser.Group.prototype, "left", {
 
     get: function () {
 
@@ -34860,7 +34861,7 @@ Object.defineproperty(Phaser.Group.prototype, "left", {
 * @name Phaser.Group#right
 * @property {number} right
 */
-Object.defineproperty(Phaser.Group.prototype, "right", {
+Object.defineProperty(Phaser.Group.prototype, "right", {
 
     get: function () {
 
@@ -34888,7 +34889,7 @@ Object.defineproperty(Phaser.Group.prototype, "right", {
 * @name Phaser.Group#top
 * @property {number} top
 */
-Object.defineproperty(Phaser.Group.prototype, "top", {
+Object.defineProperty(Phaser.Group.prototype, "top", {
 
     get: function () {
 
@@ -34916,7 +34917,7 @@ Object.defineproperty(Phaser.Group.prototype, "top", {
 * @name Phaser.Group#bottom
 * @property {number} bottom
 */
-Object.defineproperty(Phaser.Group.prototype, "bottom", {
+Object.defineProperty(Phaser.Group.prototype, "bottom", {
 
     get: function () {
 
@@ -35318,7 +35319,7 @@ Phaser.World.prototype.wrap = function (sprite, padding, useBounds, horizontal, 
 * @name Phaser.World#width
 * @property {number} width - Gets or sets the current width of the game world. The world can never be smaller than the game (canvas) dimensions.
 */
-Object.defineproperty(Phaser.World.prototype, "width", {
+Object.defineProperty(Phaser.World.prototype, "width", {
 
     get: function () {
         return this.bounds.width;
@@ -35343,7 +35344,7 @@ Object.defineproperty(Phaser.World.prototype, "width", {
 * @name Phaser.World#height
 * @property {number} height - Gets or sets the current height of the game world. The world can never be smaller than the game (canvas) dimensions.
 */
-Object.defineproperty(Phaser.World.prototype, "height", {
+Object.defineProperty(Phaser.World.prototype, "height", {
 
     get: function () {
         return this.bounds.height;
@@ -35369,7 +35370,7 @@ Object.defineproperty(Phaser.World.prototype, "height", {
 * @property {number} centerX - Gets the X position corresponding to the center point of the world.
 * @readonly
 */
-Object.defineproperty(Phaser.World.prototype, "centerX", {
+Object.defineProperty(Phaser.World.prototype, "centerX", {
 
     get: function () {
         return this.bounds.halfWidth + this.bounds.x;
@@ -35382,7 +35383,7 @@ Object.defineproperty(Phaser.World.prototype, "centerX", {
 * @property {number} centerY - Gets the Y position corresponding to the center point of the world.
 * @readonly
 */
-Object.defineproperty(Phaser.World.prototype, "centerY", {
+Object.defineProperty(Phaser.World.prototype, "centerY", {
 
     get: function () {
         return this.bounds.halfHeight + this.bounds.y;
@@ -35395,7 +35396,7 @@ Object.defineproperty(Phaser.World.prototype, "centerY", {
 * @property {number} randomX - Gets a random integer which is lesser than or equal to the current width of the game world.
 * @readonly
 */
-Object.defineproperty(Phaser.World.prototype, "randomX", {
+Object.defineProperty(Phaser.World.prototype, "randomX", {
 
     get: function () {
 
@@ -35417,7 +35418,7 @@ Object.defineproperty(Phaser.World.prototype, "randomX", {
 * @property {number} randomY - Gets a random integer which is lesser than or equal to the current height of the game world.
 * @readonly
 */
-Object.defineproperty(Phaser.World.prototype, "randomY", {
+Object.defineProperty(Phaser.World.prototype, "randomY", {
 
     get: function () {
 
@@ -36593,7 +36594,7 @@ Phaser.Game.prototype.constructor = Phaser.Game;
 * @name Phaser.Game#paused
 * @property {boolean} paused - Gets and sets the paused state of the Game.
 */
-Object.defineproperty(Phaser.Game.prototype, "paused", {
+Object.defineProperty(Phaser.Game.prototype, "paused", {
 
     get: function () {
         return this._paused;
@@ -37671,7 +37672,7 @@ Phaser.Input.prototype.constructor = Phaser.Input;
 * @name Phaser.Input#x
 * @property {number} x
 */
-Object.defineproperty(Phaser.Input.prototype, "x", {
+Object.defineProperty(Phaser.Input.prototype, "x", {
 
     get: function () {
         return this._x;
@@ -37689,7 +37690,7 @@ Object.defineproperty(Phaser.Input.prototype, "x", {
 * @name Phaser.Input#y
 * @property {number} y
 */
-Object.defineproperty(Phaser.Input.prototype, "y", {
+Object.defineProperty(Phaser.Input.prototype, "y", {
 
     get: function () {
         return this._y;
@@ -37707,7 +37708,7 @@ Object.defineproperty(Phaser.Input.prototype, "y", {
 * @property {boolean} pollLocked
 * @readonly
 */
-Object.defineproperty(Phaser.Input.prototype, "pollLocked", {
+Object.defineProperty(Phaser.Input.prototype, "pollLocked", {
 
     get: function () {
         return (this.pollRate > 0 && this._pollCounter < this.pollRate);
@@ -37721,7 +37722,7 @@ Object.defineproperty(Phaser.Input.prototype, "pollLocked", {
 * @property {number} totalInactivePointers
 * @readonly
 */
-Object.defineproperty(Phaser.Input.prototype, "totalInactivePointers", {
+Object.defineProperty(Phaser.Input.prototype, "totalInactivePointers", {
 
     get: function () {
         return this.pointers.length - this.countActivePointers();
@@ -37735,7 +37736,7 @@ Object.defineproperty(Phaser.Input.prototype, "totalInactivePointers", {
 * @property {integers} totalActivePointers
 * @readonly
 */
-Object.defineproperty(Phaser.Input.prototype, "totalActivePointers", {
+Object.defineProperty(Phaser.Input.prototype, "totalActivePointers", {
 
     get: function () {
         return this.countActivePointers();
@@ -37749,7 +37750,7 @@ Object.defineproperty(Phaser.Input.prototype, "totalActivePointers", {
 * @property {number} worldX - The world X coordinate of the most recently active pointer.
 * @readonly
 */
-Object.defineproperty(Phaser.Input.prototype, "worldX", {
+Object.defineProperty(Phaser.Input.prototype, "worldX", {
 
     get: function () {
         return this.game.camera.view.x + this.x;
@@ -37763,7 +37764,7 @@ Object.defineproperty(Phaser.Input.prototype, "worldX", {
 * @property {number} worldY - The world Y coordinate of the most recently active pointer.
 * @readonly
 */
-Object.defineproperty(Phaser.Input.prototype, "worldY", {
+Object.defineProperty(Phaser.Input.prototype, "worldY", {
 
     get: function () {
         return this.game.camera.view.y + this.y;
@@ -38462,7 +38463,7 @@ WheelEventProxy.prototype.bindEvent = function (event) {
         {
             if (!(prop in WheelEventProxy.prototype))
             {
-                Object.defineproperty(WheelEventProxy.prototype, prop, {
+                Object.defineProperty(WheelEventProxy.prototype, prop, {
                     get: makeBinder(prop)
                 });
             }
@@ -39249,7 +39250,7 @@ Phaser.DeviceButton.prototype.constructor = Phaser.DeviceButton;
 * @property {number} duration
 * @readonly
 */
-Object.defineproperty(Phaser.DeviceButton.prototype, "duration", {
+Object.defineProperty(Phaser.DeviceButton.prototype, "duration", {
 
     get: function () {
 
@@ -40464,7 +40465,7 @@ Phaser.Pointer.prototype.constructor = Phaser.Pointer;
 * @property {number} duration
 * @readonly
 */
-Object.defineproperty(Phaser.Pointer.prototype, "duration", {
+Object.defineProperty(Phaser.Pointer.prototype, "duration", {
 
     get: function () {
 
@@ -40485,7 +40486,7 @@ Object.defineproperty(Phaser.Pointer.prototype, "duration", {
 * @property {number} worldX - The X value of this Pointer in world coordinates based on the world camera.
 * @readonly
 */
-Object.defineproperty(Phaser.Pointer.prototype, "worldX", {
+Object.defineProperty(Phaser.Pointer.prototype, "worldX", {
 
     get: function () {
 
@@ -40501,7 +40502,7 @@ Object.defineproperty(Phaser.Pointer.prototype, "worldX", {
 * @property {number} worldY - The Y value of this Pointer in world coordinates based on the world camera.
 * @readonly
 */
-Object.defineproperty(Phaser.Pointer.prototype, "worldY", {
+Object.defineProperty(Phaser.Pointer.prototype, "worldY", {
 
     get: function () {
 
@@ -43262,7 +43263,7 @@ Phaser.Gamepad.prototype.constructor = Phaser.Gamepad;
 * @property {boolean} active - If the gamepad input is active or not.
 * @readonly
 */
-Object.defineproperty(Phaser.Gamepad.prototype, "active", {
+Object.defineProperty(Phaser.Gamepad.prototype, "active", {
 
     get: function () {
         return this._active;
@@ -43276,7 +43277,7 @@ Object.defineproperty(Phaser.Gamepad.prototype, "active", {
 * @property {boolean} supported - Whether or not gamepads are supported in current browser.
 * @readonly
 */
-Object.defineproperty(Phaser.Gamepad.prototype, "supported", {
+Object.defineProperty(Phaser.Gamepad.prototype, "supported", {
 
     get: function () {
         return this._gamepadSupportAvailable;
@@ -43290,7 +43291,7 @@ Object.defineproperty(Phaser.Gamepad.prototype, "supported", {
 * @property {number} padsConnected - How many live gamepads are currently connected.
 * @readonly
 */
-Object.defineproperty(Phaser.Gamepad.prototype, "padsConnected", {
+Object.defineProperty(Phaser.Gamepad.prototype, "padsConnected", {
 
     get: function () {
         return this._rawPads.length;
@@ -43304,7 +43305,7 @@ Object.defineproperty(Phaser.Gamepad.prototype, "padsConnected", {
 * @property {Phaser.SinglePad} pad1 - Gamepad #1;
 * @readonly
 */
-Object.defineproperty(Phaser.Gamepad.prototype, "pad1", {
+Object.defineProperty(Phaser.Gamepad.prototype, "pad1", {
 
     get: function () {
         return this._gamepads[0];
@@ -43318,7 +43319,7 @@ Object.defineproperty(Phaser.Gamepad.prototype, "pad1", {
 * @property {Phaser.SinglePad} pad2 - Gamepad #2
 * @readonly
 */
-Object.defineproperty(Phaser.Gamepad.prototype, "pad2", {
+Object.defineProperty(Phaser.Gamepad.prototype, "pad2", {
 
     get: function () {
         return this._gamepads[1];
@@ -43332,7 +43333,7 @@ Object.defineproperty(Phaser.Gamepad.prototype, "pad2", {
 * @property {Phaser.SinglePad} pad3 - Gamepad #3
 * @readonly
 */
-Object.defineproperty(Phaser.Gamepad.prototype, "pad3", {
+Object.defineProperty(Phaser.Gamepad.prototype, "pad3", {
 
     get: function () {
         return this._gamepads[2];
@@ -43346,7 +43347,7 @@ Object.defineproperty(Phaser.Gamepad.prototype, "pad3", {
 * @property {Phaser.SinglePad} pad4 - Gamepad #4
 * @readonly
 */
-Object.defineproperty(Phaser.Gamepad.prototype, "pad4", {
+Object.defineProperty(Phaser.Gamepad.prototype, "pad4", {
 
     get: function () {
         return this._gamepads[3];
@@ -44285,7 +44286,7 @@ Phaser.Key.prototype = {
 * @memberof Phaser.Key
 * @default false
 */
-Object.defineproperty(Phaser.Key.prototype, "justDown", {
+Object.defineProperty(Phaser.Key.prototype, "justDown", {
 
     get: function () {
 
@@ -44307,7 +44308,7 @@ Object.defineproperty(Phaser.Key.prototype, "justDown", {
 * @memberof Phaser.Key
 * @default false
 */
-Object.defineproperty(Phaser.Key.prototype, "justUp", {
+Object.defineProperty(Phaser.Key.prototype, "justUp", {
 
     get: function () {
 
@@ -44327,7 +44328,7 @@ Object.defineproperty(Phaser.Key.prototype, "justUp", {
 * @memberof Phaser.Key
 * @default true
 */
-Object.defineproperty(Phaser.Key.prototype, "enabled", {
+Object.defineProperty(Phaser.Key.prototype, "enabled", {
 
     get: function () {
 
@@ -44912,7 +44913,7 @@ Phaser.Keyboard.prototype = {
 * @property {string} lastChar - The string value of the most recently pressed key.
 * @readonly
 */
-Object.defineproperty(Phaser.Keyboard.prototype, "lastChar", {
+Object.defineProperty(Phaser.Keyboard.prototype, "lastChar", {
 
     get: function () {
 
@@ -44935,7 +44936,7 @@ Object.defineproperty(Phaser.Keyboard.prototype, "lastChar", {
 * @property {Phaser.Key} lastKey - The most recently pressed Key.
 * @readonly
 */
-Object.defineproperty(Phaser.Keyboard.prototype, "lastKey", {
+Object.defineProperty(Phaser.Keyboard.prototype, "lastKey", {
 
     get: function () {
 
@@ -45172,7 +45173,7 @@ Phaser.KeyCode = {
 // Duplicate Phaser.KeyCode values in Phaser.Keyboard for compatibility
 for (var key in Phaser.KeyCode)
 {
-    if (Phaser.KeyCode.hasOwnproperty(key) && !key.match(/[a-z]/))
+    if (Phaser.KeyCode.hasOwnProperty(key) && !key.match(/[a-z]/))
     {
         Phaser.Keyboard[key] = Phaser.KeyCode[key];
     }
@@ -45896,7 +45897,7 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
 
     if (this.components.PhysicsBody)
     {
-        // Enable-body checks for hasOwnproperty; makes sure to lift property from prototype.
+        // Enable-body checks for hasOwnProperty; makes sure to lift property from prototype.
         this.body = this.body;
     }
 
@@ -46821,7 +46822,7 @@ Phaser.Events.prototype.constructor = Phaser.Events;
 // and the dispatch method is the same as the event name postfixed with '$dispatch'.
 for (var prop in Phaser.Events.prototype)
 {
-    if (!Phaser.Events.prototype.hasOwnproperty(prop) ||
+    if (!Phaser.Events.prototype.hasOwnProperty(prop) ||
         prop.indexOf('on') !== 0 ||
         Phaser.Events.prototype[prop] !== null)
     {
@@ -46832,7 +46833,7 @@ for (var prop in Phaser.Events.prototype)
         'use strict';
 
         // The accessor creates a new Signal; and so it should only be used from user-code.
-        Object.defineproperty(Phaser.Events.prototype, prop, {
+        Object.defineProperty(Phaser.Events.prototype, prop, {
             get: function () {
                 return this[backing] || (this[backing] = new Phaser.Signal());
             }
@@ -51502,7 +51503,7 @@ Phaser.BitmapData.prototype = {
         if (blendMode === undefined) { blendMode = null; }
         if (roundPx === undefined) { roundPx = false; }
 
-        if (!source.hasOwnproperty('worldTransform') || !source.worldVisible || source.worldAlpha === 0)
+        if (!source.hasOwnProperty('worldTransform') || !source.worldVisible || source.worldAlpha === 0)
         {
             return this;
         }
@@ -51681,7 +51682,7 @@ Phaser.BitmapData.prototype = {
     */
     drawGroupProxy: function (child, blendMode, roundPx) {
 
-        if (child.hasOwnproperty('texture'))
+        if (child.hasOwnProperty('texture'))
         {
             this.copyTransform(child, blendMode, roundPx);
         }
@@ -51692,7 +51693,7 @@ Phaser.BitmapData.prototype = {
         }
         else
         {
-            if (child.hasOwnproperty('children') && child.children.length > 0)
+            if (child.hasOwnProperty('children') && child.children.length > 0)
             {
                 for (var i = 0; i < child.children.length; i++)
                 {
@@ -51731,7 +51732,7 @@ Phaser.BitmapData.prototype = {
     */
     drawFull: function (parent, blendMode, roundPx) {
 
-        if (parent.worldVisible === false || parent.worldAlpha === 0 || (parent.hasOwnproperty('exists') && parent.exists === false))
+        if (parent.worldVisible === false || parent.worldAlpha === 0 || (parent.hasOwnProperty('exists') && parent.exists === false))
         {
             return this;
         }
@@ -52441,7 +52442,7 @@ Phaser.BitmapData.prototype = {
 * @memberof Phaser.BitmapData
 * @property {boolean} smoothed - Gets or sets this BitmapData.contexts smoothing enabled value.
 */
-Object.defineproperty(Phaser.BitmapData.prototype, "smoothed", {
+Object.defineProperty(Phaser.BitmapData.prototype, "smoothed", {
 
     get: function () {
 
@@ -52461,7 +52462,7 @@ Object.defineproperty(Phaser.BitmapData.prototype, "smoothed", {
 * @memberof Phaser.BitmapData
 * @property {string} op - A short-hand code to get or set the global composite operation of the BitmapDatas canvas.
 */
-Object.defineproperty(Phaser.BitmapData.prototype, "op", {
+Object.defineProperty(Phaser.BitmapData.prototype, "op", {
 
     get: function () {
 
@@ -53742,7 +53743,7 @@ PIXI.Graphics.prototype.drawShape = function(shape)
  * @default false
  * @private
  */
-Object.defineproperty(PIXI.Graphics.prototype, "cacheAsBitmap", {
+Object.defineProperty(PIXI.Graphics.prototype, "cacheAsBitmap", {
 
     get: function() {
         return  this._cacheAsBitmap;
@@ -57809,7 +57810,7 @@ Phaser.Text.prototype.getBounds = function (matrix) {
 * @name Phaser.Text#text
 * @property {string} text
 */
-Object.defineproperty(Phaser.Text.prototype, 'text', {
+Object.defineProperty(Phaser.Text.prototype, 'text', {
 
     get: function() {
         return this._text;
@@ -57843,7 +57844,7 @@ Object.defineproperty(Phaser.Text.prototype, 'text', {
 * @name Phaser.Text#cssFont
 * @property {string} cssFont
 */
-Object.defineproperty(Phaser.Text.prototype, 'cssFont', {
+Object.defineProperty(Phaser.Text.prototype, 'cssFont', {
 
     get: function() {
         return this.componentsToFont(this._fontComponents);
@@ -57869,7 +57870,7 @@ Object.defineproperty(Phaser.Text.prototype, 'cssFont', {
 * @name Phaser.Text#font
 * @property {string} font
 */
-Object.defineproperty(Phaser.Text.prototype, 'font', {
+Object.defineProperty(Phaser.Text.prototype, 'font', {
 
     get: function() {
         return this._fontComponents.fontFamily;
@@ -57902,7 +57903,7 @@ Object.defineproperty(Phaser.Text.prototype, 'font', {
 * @name Phaser.Text#fontSize
 * @property {number|string} fontSize
 */
-Object.defineproperty(Phaser.Text.prototype, 'fontSize', {
+Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
 
     get: function() {
 
@@ -57940,7 +57941,7 @@ Object.defineproperty(Phaser.Text.prototype, 'fontSize', {
 * @name Phaser.Text#fontWeight
 * @property {string} fontWeight
 */
-Object.defineproperty(Phaser.Text.prototype, 'fontWeight', {
+Object.defineProperty(Phaser.Text.prototype, 'fontWeight', {
 
     get: function() {
         return this._fontComponents.fontWeight || 'normal';
@@ -57961,7 +57962,7 @@ Object.defineproperty(Phaser.Text.prototype, 'fontWeight', {
 * @name Phaser.Text#fontStyle
 * @property {string} fontStyle
 */
-Object.defineproperty(Phaser.Text.prototype, 'fontStyle', {
+Object.defineProperty(Phaser.Text.prototype, 'fontStyle', {
 
     get: function() {
         return this._fontComponents.fontStyle || 'normal';
@@ -57982,7 +57983,7 @@ Object.defineproperty(Phaser.Text.prototype, 'fontStyle', {
 * @name Phaser.Text#fontVariant
 * @property {string} fontVariant
 */
-Object.defineproperty(Phaser.Text.prototype, 'fontVariant', {
+Object.defineProperty(Phaser.Text.prototype, 'fontVariant', {
 
     get: function() {
         return this._fontComponents.fontVariant || 'normal';
@@ -58002,7 +58003,7 @@ Object.defineproperty(Phaser.Text.prototype, 'fontVariant', {
 * @name Phaser.Text#fill
 * @property {object} fill - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
 */
-Object.defineproperty(Phaser.Text.prototype, 'fill', {
+Object.defineProperty(Phaser.Text.prototype, 'fill', {
 
     get: function() {
         return this.style.fill;
@@ -58027,7 +58028,7 @@ Object.defineproperty(Phaser.Text.prototype, 'fill', {
 * @name Phaser.Text#align
 * @property {string} align
 */
-Object.defineproperty(Phaser.Text.prototype, 'align', {
+Object.defineProperty(Phaser.Text.prototype, 'align', {
 
     get: function() {
         return this.style.align;
@@ -58051,7 +58052,7 @@ Object.defineproperty(Phaser.Text.prototype, 'align', {
 * @name Phaser.Text#resolution
 * @property {integer} resolution
 */
-Object.defineproperty(Phaser.Text.prototype, 'resolution', {
+Object.defineProperty(Phaser.Text.prototype, 'resolution', {
 
     get: function() {
         return this._res;
@@ -58078,7 +58079,7 @@ Object.defineproperty(Phaser.Text.prototype, 'resolution', {
 * @name Phaser.Text#tabs
 * @property {integer|array} tabs
 */
-Object.defineproperty(Phaser.Text.prototype, 'tabs', {
+Object.defineProperty(Phaser.Text.prototype, 'tabs', {
 
     get: function() {
         return this.style.tabs;
@@ -58101,7 +58102,7 @@ Object.defineproperty(Phaser.Text.prototype, 'tabs', {
 * @name Phaser.Text#boundsAlignH
 * @property {string} boundsAlignH
 */
-Object.defineproperty(Phaser.Text.prototype, 'boundsAlignH', {
+Object.defineProperty(Phaser.Text.prototype, 'boundsAlignH', {
 
     get: function() {
         return this.style.boundsAlignH;
@@ -58124,7 +58125,7 @@ Object.defineproperty(Phaser.Text.prototype, 'boundsAlignH', {
 * @name Phaser.Text#boundsAlignV
 * @property {string} boundsAlignV
 */
-Object.defineproperty(Phaser.Text.prototype, 'boundsAlignV', {
+Object.defineProperty(Phaser.Text.prototype, 'boundsAlignV', {
 
     get: function() {
         return this.style.boundsAlignV;
@@ -58146,7 +58147,7 @@ Object.defineproperty(Phaser.Text.prototype, 'boundsAlignV', {
 * @name Phaser.Text#stroke
 * @property {string} stroke - A canvas fillstyle that will be used on the text stroke eg 'blue', '#FCFF00'.
 */
-Object.defineproperty(Phaser.Text.prototype, 'stroke', {
+Object.defineProperty(Phaser.Text.prototype, 'stroke', {
 
     get: function() {
         return this.style.stroke;
@@ -58168,7 +58169,7 @@ Object.defineproperty(Phaser.Text.prototype, 'stroke', {
 * @name Phaser.Text#strokeThickness
 * @property {number} strokeThickness - A number that represents the thickness of the stroke. Default is 0 (no stroke)
 */
-Object.defineproperty(Phaser.Text.prototype, 'strokeThickness', {
+Object.defineProperty(Phaser.Text.prototype, 'strokeThickness', {
 
     get: function() {
         return this.style.strokeThickness;
@@ -58190,7 +58191,7 @@ Object.defineproperty(Phaser.Text.prototype, 'strokeThickness', {
 * @name Phaser.Text#wordWrap
 * @property {boolean} wordWrap - Indicates if word wrap should be used.
 */
-Object.defineproperty(Phaser.Text.prototype, 'wordWrap', {
+Object.defineProperty(Phaser.Text.prototype, 'wordWrap', {
 
     get: function() {
         return this.style.wordWrap;
@@ -58212,7 +58213,7 @@ Object.defineproperty(Phaser.Text.prototype, 'wordWrap', {
 * @name Phaser.Text#wordWrapWidth
 * @property {number} wordWrapWidth - The width at which text will wrap.
 */
-Object.defineproperty(Phaser.Text.prototype, 'wordWrapWidth', {
+Object.defineProperty(Phaser.Text.prototype, 'wordWrapWidth', {
 
     get: function() {
         return this.style.wordWrapWidth;
@@ -58234,7 +58235,7 @@ Object.defineproperty(Phaser.Text.prototype, 'wordWrapWidth', {
 * @name Phaser.Text#lineSpacing
 * @property {number} lineSpacing - Additional spacing (in pixels) between each line of text if multi-line.
 */
-Object.defineproperty(Phaser.Text.prototype, 'lineSpacing', {
+Object.defineProperty(Phaser.Text.prototype, 'lineSpacing', {
 
     get: function() {
         return this._lineSpacing;
@@ -58261,7 +58262,7 @@ Object.defineproperty(Phaser.Text.prototype, 'lineSpacing', {
 * @name Phaser.Text#shadowOffsetX
 * @property {number} shadowOffsetX - The shadowOffsetX value in pixels. This is how far offset horizontally the shadow effect will be.
 */
-Object.defineproperty(Phaser.Text.prototype, 'shadowOffsetX', {
+Object.defineProperty(Phaser.Text.prototype, 'shadowOffsetX', {
 
     get: function() {
         return this.style.shadowOffsetX;
@@ -58283,7 +58284,7 @@ Object.defineproperty(Phaser.Text.prototype, 'shadowOffsetX', {
 * @name Phaser.Text#shadowOffsetY
 * @property {number} shadowOffsetY - The shadowOffsetY value in pixels. This is how far offset vertically the shadow effect will be.
 */
-Object.defineproperty(Phaser.Text.prototype, 'shadowOffsetY', {
+Object.defineProperty(Phaser.Text.prototype, 'shadowOffsetY', {
 
     get: function() {
         return this.style.shadowOffsetY;
@@ -58305,7 +58306,7 @@ Object.defineproperty(Phaser.Text.prototype, 'shadowOffsetY', {
 * @name Phaser.Text#shadowColor
 * @property {string} shadowColor - The color of the shadow, as given in CSS rgba format. Set the alpha component to 0 to disable the shadow.
 */
-Object.defineproperty(Phaser.Text.prototype, 'shadowColor', {
+Object.defineProperty(Phaser.Text.prototype, 'shadowColor', {
 
     get: function() {
         return this.style.shadowColor;
@@ -58327,7 +58328,7 @@ Object.defineproperty(Phaser.Text.prototype, 'shadowColor', {
 * @name Phaser.Text#shadowBlur
 * @property {number} shadowBlur - The shadowBlur value. Make the shadow softer by applying a Gaussian blur to it. A number from 0 (no blur) up to approx. 10 (depending on scene).
 */
-Object.defineproperty(Phaser.Text.prototype, 'shadowBlur', {
+Object.defineProperty(Phaser.Text.prototype, 'shadowBlur', {
 
     get: function() {
         return this.style.shadowBlur;
@@ -58349,7 +58350,7 @@ Object.defineproperty(Phaser.Text.prototype, 'shadowBlur', {
 * @name Phaser.Text#shadowStroke
 * @property {boolean} shadowStroke - Sets if the drop shadow is applied to the Text stroke.
 */
-Object.defineproperty(Phaser.Text.prototype, 'shadowStroke', {
+Object.defineProperty(Phaser.Text.prototype, 'shadowStroke', {
 
     get: function() {
         return this.style.shadowStroke;
@@ -58371,7 +58372,7 @@ Object.defineproperty(Phaser.Text.prototype, 'shadowStroke', {
 * @name Phaser.Text#shadowFill
 * @property {boolean} shadowFill - Sets if the drop shadow is applied to the Text fill.
 */
-Object.defineproperty(Phaser.Text.prototype, 'shadowFill', {
+Object.defineProperty(Phaser.Text.prototype, 'shadowFill', {
 
     get: function() {
         return this.style.shadowFill;
@@ -58393,7 +58394,7 @@ Object.defineproperty(Phaser.Text.prototype, 'shadowFill', {
 * @name Phaser.Text#width
 * @property {number} width - The width of the Text. Setting this will modify the scale to achieve the value requested.
 */
-Object.defineproperty(Phaser.Text.prototype, 'width', {
+Object.defineProperty(Phaser.Text.prototype, 'width', {
 
     get: function() {
 
@@ -58418,7 +58419,7 @@ Object.defineproperty(Phaser.Text.prototype, 'width', {
 * @name Phaser.Text#height
 * @property {number} height - The height of the Text. Setting this will modify the scale to achieve the value requested.
 */
-Object.defineproperty(Phaser.Text.prototype, 'height', {
+Object.defineProperty(Phaser.Text.prototype, 'height', {
 
     get: function() {
 
@@ -58982,7 +58983,7 @@ Phaser.BitmapText.prototype.updateTransform = function () {
 * @name Phaser.BitmapText#align
 * @property {string} align - Alignment for multi-line text ('left', 'center' or 'right'), does not affect single lines of text.
 */
-Object.defineproperty(Phaser.BitmapText.prototype, 'align', {
+Object.defineProperty(Phaser.BitmapText.prototype, 'align', {
 
     get: function() {
         return this._align;
@@ -59004,7 +59005,7 @@ Object.defineproperty(Phaser.BitmapText.prototype, 'align', {
 * @name Phaser.BitmapText#tint
 * @property {number} tint - The tint applied to the BitmapText. This is a hex value. Set to white to disable (0xFFFFFF)
 */
-Object.defineproperty(Phaser.BitmapText.prototype, 'tint', {
+Object.defineProperty(Phaser.BitmapText.prototype, 'tint', {
 
     get: function() {
         return this._tint;
@@ -59026,7 +59027,7 @@ Object.defineproperty(Phaser.BitmapText.prototype, 'tint', {
 * @name Phaser.BitmapText#font
 * @property {string} font - The font the text will be rendered in, i.e. 'Arial'. Must be loaded in the browser before use.
 */
-Object.defineproperty(Phaser.BitmapText.prototype, 'font', {
+Object.defineProperty(Phaser.BitmapText.prototype, 'font', {
 
     get: function() {
         return this._font;
@@ -59049,7 +59050,7 @@ Object.defineproperty(Phaser.BitmapText.prototype, 'font', {
 * @name Phaser.BitmapText#fontSize
 * @property {number} fontSize - The size of the font in pixels.
 */
-Object.defineproperty(Phaser.BitmapText.prototype, 'fontSize', {
+Object.defineProperty(Phaser.BitmapText.prototype, 'fontSize', {
 
     get: function() {
         return this._fontSize;
@@ -59073,7 +59074,7 @@ Object.defineproperty(Phaser.BitmapText.prototype, 'fontSize', {
 * @name Phaser.BitmapText#text
 * @property {string} text - The text to be displayed by this BitmapText object.
 */
-Object.defineproperty(Phaser.BitmapText.prototype, 'text', {
+Object.defineProperty(Phaser.BitmapText.prototype, 'text', {
 
     get: function() {
         return this._text;
@@ -59104,7 +59105,7 @@ Object.defineproperty(Phaser.BitmapText.prototype, 'text', {
 * @name Phaser.BitmapText#maxWidth
 * @property {number} maxWidth - The maximum width of this BitmapText in pixels.
 */
-Object.defineproperty(Phaser.BitmapText.prototype, 'maxWidth', {
+Object.defineProperty(Phaser.BitmapText.prototype, 'maxWidth', {
 
     get: function() {
 
@@ -59134,7 +59135,7 @@ Object.defineproperty(Phaser.BitmapText.prototype, 'maxWidth', {
 * @name Phaser.BitmapText#smoothed
 * @property {boolean} smoothed
 */
-Object.defineproperty(Phaser.BitmapText.prototype, 'smoothed', {
+Object.defineProperty(Phaser.BitmapText.prototype, 'smoothed', {
 
     get: function() {
 
@@ -59707,7 +59708,7 @@ Phaser.RetroFont.prototype.updateOffset = function (x, y) {
 * @name Phaser.RetroFont#text
 * @property {string} text - Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
 */
-Object.defineproperty(Phaser.RetroFont.prototype, "text", {
+Object.defineProperty(Phaser.RetroFont.prototype, "text", {
 
     get: function () {
 
@@ -59745,7 +59746,7 @@ Object.defineproperty(Phaser.RetroFont.prototype, "text", {
 * @name Phaser.RetroFont#smoothed
 * @property {boolean} smoothed - Sets if the stamp is smoothed or not.
 */
-Object.defineproperty(Phaser.RetroFont.prototype, "smoothed", {
+Object.defineProperty(Phaser.RetroFont.prototype, "smoothed", {
 
     get: function () {
 
@@ -59911,7 +59912,7 @@ Phaser.Rope.prototype.reset = function(x, y) {
 * @name Phaser.Rope#updateAnimation
 * @property {function} updateAnimation - Set to a function if you'd like the rope to animate during the update phase. Set to false or null to remove it.
 */
-Object.defineproperty(Phaser.Rope.prototype, "updateAnimation", {
+Object.defineProperty(Phaser.Rope.prototype, "updateAnimation", {
 
     get: function () {
 
@@ -59942,7 +59943,7 @@ Object.defineproperty(Phaser.Rope.prototype, "updateAnimation", {
 * @name Phaser.Rope#segments
 * @property {Phaser.Rectangles[]} updateAnimation - Returns an array of Phaser.Rectangles that represent the segments of the given rope
 */
-Object.defineproperty(Phaser.Rope.prototype, "segments", {
+Object.defineProperty(Phaser.Rope.prototype, "segments", {
 
     get: function() {
 
@@ -61414,7 +61415,7 @@ Phaser.Device._initialize = function () {
             if (el.style[t] !== undefined)
             {
                 el.style[t] = "translate3d(1px,1px,1px)";
-                has3d = window.getComputedStyle(el).getpropertyValue(transforms[t]);
+                has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
             }
         }
 
@@ -65381,7 +65382,7 @@ Phaser.Tween.prototype = {
 * @name Phaser.Tween#totalDuration
 * @property {Phaser.TweenData} totalDuration - Gets the total duration of this Tween, including all child tweens, in milliseconds.
 */
-Object.defineproperty(Phaser.Tween.prototype, 'totalDuration', {
+Object.defineProperty(Phaser.Tween.prototype, 'totalDuration', {
 
     get: function () {
 
@@ -67159,7 +67160,7 @@ Phaser.Time.prototype = {
 * @name Phaser.Time#desiredFps
 * @property {integer} desiredFps - The desired frame rate of the game. Defaults to 60.
 */
-Object.defineproperty(Phaser.Time.prototype, "desiredFps", {
+Object.defineProperty(Phaser.Time.prototype, "desiredFps", {
 
     get: function () {
 
@@ -67853,7 +67854,7 @@ Phaser.Timer.prototype = {
 * @property {number} next - The time at which the next event will occur.
 * @readonly
 */
-Object.defineproperty(Phaser.Timer.prototype, "next", {
+Object.defineProperty(Phaser.Timer.prototype, "next", {
 
     get: function () {
         return this.nextTick;
@@ -67866,7 +67867,7 @@ Object.defineproperty(Phaser.Timer.prototype, "next", {
 * @property {number} duration - The duration in ms remaining until the next event will occur.
 * @readonly
 */
-Object.defineproperty(Phaser.Timer.prototype, "duration", {
+Object.defineProperty(Phaser.Timer.prototype, "duration", {
 
     get: function () {
 
@@ -67888,7 +67889,7 @@ Object.defineproperty(Phaser.Timer.prototype, "duration", {
 * @property {number} length - The number of pending events in the queue.
 * @readonly
 */
-Object.defineproperty(Phaser.Timer.prototype, "length", {
+Object.defineProperty(Phaser.Timer.prototype, "length", {
 
     get: function () {
         return this.events.length;
@@ -67901,7 +67902,7 @@ Object.defineproperty(Phaser.Timer.prototype, "length", {
 * @property {number} ms - The duration in milliseconds that this Timer has been running for.
 * @readonly
 */
-Object.defineproperty(Phaser.Timer.prototype, "ms", {
+Object.defineProperty(Phaser.Timer.prototype, "ms", {
 
     get: function () {
 
@@ -67923,7 +67924,7 @@ Object.defineproperty(Phaser.Timer.prototype, "ms", {
 * @property {number} seconds - The duration in seconds that this Timer has been running for.
 * @readonly
 */
-Object.defineproperty(Phaser.Timer.prototype, "seconds", {
+Object.defineProperty(Phaser.Timer.prototype, "seconds", {
 
     get: function () {
 
@@ -68438,7 +68439,7 @@ Phaser.AnimationManager.prototype = {
 
         for (var anim in this._anims)
         {
-            if (this._anims.hasOwnproperty(anim))
+            if (this._anims.hasOwnProperty(anim))
             {
                 this._anims[anim].destroy();
             }
@@ -68463,7 +68464,7 @@ Phaser.AnimationManager.prototype.constructor = Phaser.AnimationManager;
 * @property {Phaser.FrameData} frameData - The current animations FrameData.
 * @readonly
 */
-Object.defineproperty(Phaser.AnimationManager.prototype, 'frameData', {
+Object.defineProperty(Phaser.AnimationManager.prototype, 'frameData', {
 
     get: function () {
         return this._frameData;
@@ -68476,7 +68477,7 @@ Object.defineproperty(Phaser.AnimationManager.prototype, 'frameData', {
 * @property {number} frameTotal - The total number of frames in the currently loaded FrameData, or -1 if no FrameData is loaded.
 * @readonly
 */
-Object.defineproperty(Phaser.AnimationManager.prototype, 'frameTotal', {
+Object.defineProperty(Phaser.AnimationManager.prototype, 'frameTotal', {
 
     get: function () {
 
@@ -68489,7 +68490,7 @@ Object.defineproperty(Phaser.AnimationManager.prototype, 'frameTotal', {
 * @name Phaser.AnimationManager#paused
 * @property {boolean} paused - Gets and sets the paused state of the current animation.
 */
-Object.defineproperty(Phaser.AnimationManager.prototype, 'paused', {
+Object.defineProperty(Phaser.AnimationManager.prototype, 'paused', {
 
     get: function () {
 
@@ -68509,7 +68510,7 @@ Object.defineproperty(Phaser.AnimationManager.prototype, 'paused', {
 * @name Phaser.AnimationManager#name
 * @property {string} name - Gets the current animation name, if set.
 */
-Object.defineproperty(Phaser.AnimationManager.prototype, 'name', {
+Object.defineProperty(Phaser.AnimationManager.prototype, 'name', {
 
     get: function () {
 
@@ -68526,7 +68527,7 @@ Object.defineproperty(Phaser.AnimationManager.prototype, 'name', {
 * @name Phaser.AnimationManager#frame
 * @property {number} frame - Gets or sets the current frame index and updates the Texture Cache for display.
 */
-Object.defineproperty(Phaser.AnimationManager.prototype, 'frame', {
+Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
 
     get: function () {
 
@@ -68557,7 +68558,7 @@ Object.defineproperty(Phaser.AnimationManager.prototype, 'frame', {
 * @name Phaser.AnimationManager#frameName
 * @property {string} frameName - Gets or sets the current frame name and updates the Texture Cache for display.
 */
-Object.defineproperty(Phaser.AnimationManager.prototype, 'frameName', {
+Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
 
     get: function () {
 
@@ -69264,7 +69265,7 @@ Phaser.Animation.prototype.constructor = Phaser.Animation;
 * @name Phaser.Animation#paused
 * @property {boolean} paused - Gets and sets the paused state of this Animation.
 */
-Object.defineproperty(Phaser.Animation.prototype, 'paused', {
+Object.defineProperty(Phaser.Animation.prototype, 'paused', {
 
     get: function () {
 
@@ -69298,7 +69299,7 @@ Object.defineproperty(Phaser.Animation.prototype, 'paused', {
 * @name Phaser.Animation#reversed
 * @property {boolean} reversed - Gets and sets the isReversed state of this Animation.
 */
-Object.defineproperty(Phaser.Animation.prototype, 'reversed', {
+Object.defineProperty(Phaser.Animation.prototype, 'reversed', {
 
     get: function () {
 
@@ -69319,7 +69320,7 @@ Object.defineproperty(Phaser.Animation.prototype, 'reversed', {
 * @property {number} frameTotal - The total number of frames in the currently loaded FrameData, or -1 if no FrameData is loaded.
 * @readonly
 */
-Object.defineproperty(Phaser.Animation.prototype, 'frameTotal', {
+Object.defineProperty(Phaser.Animation.prototype, 'frameTotal', {
 
     get: function () {
         return this._frames.length;
@@ -69331,7 +69332,7 @@ Object.defineproperty(Phaser.Animation.prototype, 'frameTotal', {
 * @name Phaser.Animation#frame
 * @property {number} frame - Gets or sets the current frame index and updates the Texture Cache for display.
 */
-Object.defineproperty(Phaser.Animation.prototype, 'frame', {
+Object.defineProperty(Phaser.Animation.prototype, 'frame', {
 
     get: function () {
 
@@ -69369,7 +69370,7 @@ Object.defineproperty(Phaser.Animation.prototype, 'frame', {
 * @name Phaser.Animation#speed
 * @property {number} speed - Gets or sets the current speed of the animation in frames per second. Changing this in a playing animation will take effect from the next frame. Value must be greater than 0.
 */
-Object.defineproperty(Phaser.Animation.prototype, 'speed', {
+Object.defineProperty(Phaser.Animation.prototype, 'speed', {
 
     get: function () {
 
@@ -69392,7 +69393,7 @@ Object.defineproperty(Phaser.Animation.prototype, 'speed', {
 * @name Phaser.Animation#enableUpdate
 * @property {boolean} enableUpdate - Gets or sets if this animation will dispatch the onUpdate events upon changing frame.
 */
-Object.defineproperty(Phaser.Animation.prototype, 'enableUpdate', {
+Object.defineProperty(Phaser.Animation.prototype, 'enableUpdate', {
 
     get: function () {
 
@@ -69675,7 +69676,7 @@ Phaser.Frame.prototype = {
 
         for (var prop in this)
         {
-            if (this.hasOwnproperty(prop))
+            if (this.hasOwnProperty(prop))
             {
                 output[prop] = this[prop];
             }
@@ -69835,7 +69836,7 @@ Phaser.FrameData.prototype = {
 
         for (var p in this._frameNames)
         {
-            if (this._frameNames.hasOwnproperty(p))
+            if (this._frameNames.hasOwnProperty(p))
             {
                 output._frameNames.push(this._frameNames[p]);
             }
@@ -69982,7 +69983,7 @@ Phaser.FrameData.prototype.constructor = Phaser.FrameData;
 * @property {number} total - The total number of frames in this FrameData set.
 * @readonly
 */
-Object.defineproperty(Phaser.FrameData.prototype, "total", {
+Object.defineProperty(Phaser.FrameData.prototype, "total", {
 
     get: function () {
         return this._frames.length;
@@ -75351,7 +75352,7 @@ Phaser.Loader.prototype = {
 * @name Phaser.Loader#progressFloat
 * @property {number}
 */
-Object.defineproperty(Phaser.Loader.prototype, "progressFloat", {
+Object.defineProperty(Phaser.Loader.prototype, "progressFloat", {
 
     get: function () {
         var progress = (this._loadedFileCount / this._totalFileCount) * 100;
@@ -75366,7 +75367,7 @@ Object.defineproperty(Phaser.Loader.prototype, "progressFloat", {
 * @name Phaser.Loader#progress
 * @property {integer}
 */
-Object.defineproperty(Phaser.Loader.prototype, "progress", {
+Object.defineProperty(Phaser.Loader.prototype, "progress", {
 
     get: function () {
         return Math.round(this.progressFloat);
@@ -76753,7 +76754,7 @@ Phaser.Sound.prototype.constructor = Phaser.Sound;
 * @property {boolean} isDecoding - Returns true if the sound file is still decoding.
 * @readonly
 */
-Object.defineproperty(Phaser.Sound.prototype, "isDecoding", {
+Object.defineProperty(Phaser.Sound.prototype, "isDecoding", {
 
     get: function () {
         return this.game.cache.getSound(this.key).isDecoding;
@@ -76766,7 +76767,7 @@ Object.defineproperty(Phaser.Sound.prototype, "isDecoding", {
 * @property {boolean} isDecoded - Returns true if the sound file has decoded.
 * @readonly
 */
-Object.defineproperty(Phaser.Sound.prototype, "isDecoded", {
+Object.defineProperty(Phaser.Sound.prototype, "isDecoded", {
 
     get: function () {
         return this.game.cache.isSoundDecoded(this.key);
@@ -76778,7 +76779,7 @@ Object.defineproperty(Phaser.Sound.prototype, "isDecoded", {
 * @name Phaser.Sound#mute
 * @property {boolean} mute - Gets or sets the muted state of this sound.
 */
-Object.defineproperty(Phaser.Sound.prototype, "mute", {
+Object.defineProperty(Phaser.Sound.prototype, "mute", {
 
     get: function () {
 
@@ -76833,7 +76834,7 @@ Object.defineproperty(Phaser.Sound.prototype, "mute", {
 * @name Phaser.Sound#volume
 * @property {number} volume - Gets or sets the volume of this sound, a value between 0 and 1. The value given is clamped to the range 0 to 1.
 */
-Object.defineproperty(Phaser.Sound.prototype, "volume", {
+Object.defineProperty(Phaser.Sound.prototype, "volume", {
 
     get: function () {
         return this._volume;
@@ -77636,7 +77637,7 @@ Phaser.SoundManager.prototype.constructor = Phaser.SoundManager;
 * @name Phaser.SoundManager#mute
 * @property {boolean} mute - Gets or sets the muted state of the SoundManager. This effects all sounds in the game.
 */
-Object.defineproperty(Phaser.SoundManager.prototype, "mute", {
+Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
 
     get: function () {
 
@@ -77676,7 +77677,7 @@ Object.defineproperty(Phaser.SoundManager.prototype, "mute", {
 * @name Phaser.SoundManager#volume
 * @property {number} volume - Gets or sets the global volume of the SoundManager, a value between 0 and 1. The value given is clamped to the range 0 to 1.
 */
-Object.defineproperty(Phaser.SoundManager.prototype, "volume", {
+Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
 
     get: function () {
 
@@ -79822,7 +79823,7 @@ Phaser.ScaleManager.prototype.constructor = Phaser.ScaleManager;
 * @property {?DOMElement} boundingParent
 * @readonly
 */
-Object.defineproperty(Phaser.ScaleManager.prototype, "boundingParent", {
+Object.defineProperty(Phaser.ScaleManager.prototype, "boundingParent", {
 
     get: function () {
 
@@ -79877,7 +79878,7 @@ Object.defineproperty(Phaser.ScaleManager.prototype, "boundingParent", {
 * @name Phaser.ScaleManager#scaleMode
 * @property {integer} scaleMode
 */
-Object.defineproperty(Phaser.ScaleManager.prototype, "scaleMode", {
+Object.defineProperty(Phaser.ScaleManager.prototype, "scaleMode", {
 
     get: function () {
 
@@ -79912,7 +79913,7 @@ Object.defineproperty(Phaser.ScaleManager.prototype, "scaleMode", {
 * @name Phaser.ScaleManager#fullScreenScaleMode
 * @property {integer} fullScreenScaleMode
 */
-Object.defineproperty(Phaser.ScaleManager.prototype, "fullScreenScaleMode", {
+Object.defineProperty(Phaser.ScaleManager.prototype, "fullScreenScaleMode", {
 
     get: function () {
 
@@ -79955,7 +79956,7 @@ Object.defineproperty(Phaser.ScaleManager.prototype, "fullScreenScaleMode", {
 * @protected
 * @readonly
 */
-Object.defineproperty(Phaser.ScaleManager.prototype, "currentScaleMode", {
+Object.defineProperty(Phaser.ScaleManager.prototype, "currentScaleMode", {
 
     get: function () {
 
@@ -79977,7 +79978,7 @@ Object.defineproperty(Phaser.ScaleManager.prototype, "currentScaleMode", {
 * @property {boolean} pageAlignHorizontally
 * @default false
 */
-Object.defineproperty(Phaser.ScaleManager.prototype, "pageAlignHorizontally", {
+Object.defineProperty(Phaser.ScaleManager.prototype, "pageAlignHorizontally", {
 
     get: function () {
 
@@ -80016,7 +80017,7 @@ Object.defineproperty(Phaser.ScaleManager.prototype, "pageAlignHorizontally", {
 * @property {boolean} pageAlignVertically
 * @default false
 */
-Object.defineproperty(Phaser.ScaleManager.prototype, "pageAlignVertically", {
+Object.defineProperty(Phaser.ScaleManager.prototype, "pageAlignVertically", {
 
     get: function () {
 
@@ -80042,7 +80043,7 @@ Object.defineproperty(Phaser.ScaleManager.prototype, "pageAlignVertically", {
 * @property {boolean} isFullScreen
 * @readonly
 */
-Object.defineproperty(Phaser.ScaleManager.prototype, "isFullScreen", {
+Object.defineProperty(Phaser.ScaleManager.prototype, "isFullScreen", {
 
     get: function () {
         return !!(document['fullscreenElement'] ||
@@ -80060,7 +80061,7 @@ Object.defineproperty(Phaser.ScaleManager.prototype, "isFullScreen", {
 * @property {boolean} isPortrait
 * @readonly
 */
-Object.defineproperty(Phaser.ScaleManager.prototype, "isPortrait", {
+Object.defineProperty(Phaser.ScaleManager.prototype, "isPortrait", {
 
     get: function () {
         return this.classifyOrientation(this.screenOrientation) === 'portrait';
@@ -80075,7 +80076,7 @@ Object.defineproperty(Phaser.ScaleManager.prototype, "isPortrait", {
 * @property {boolean} isLandscape
 * @readonly
 */
-Object.defineproperty(Phaser.ScaleManager.prototype, "isLandscape", {
+Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
 
     get: function () {
         return this.classifyOrientation(this.screenOrientation) === 'landscape';
@@ -80093,7 +80094,7 @@ Object.defineproperty(Phaser.ScaleManager.prototype, "isLandscape", {
 * @property {boolean} isGamePortrait
 * @readonly
 */
-Object.defineproperty(Phaser.ScaleManager.prototype, "isGamePortrait", {
+Object.defineProperty(Phaser.ScaleManager.prototype, "isGamePortrait", {
 
     get: function () {
         return (this.height > this.width);
@@ -80111,7 +80112,7 @@ Object.defineproperty(Phaser.ScaleManager.prototype, "isGamePortrait", {
 * @property {boolean} isGameLandscape
 * @readonly
 */
-Object.defineproperty(Phaser.ScaleManager.prototype, "isGameLandscape", {
+Object.defineProperty(Phaser.ScaleManager.prototype, "isGameLandscape", {
 
     get: function () {
         return (this.width > this.height);
@@ -80976,7 +80977,7 @@ Phaser.Utils.Debug.prototype = {
 
         if (displayObject === undefined) { displayObject = this.game.world; }
 
-        if (displayObject.hasOwnproperty('renderOrderID'))
+        if (displayObject.hasOwnProperty('renderOrderID'))
         {
             console.log('[' + displayObject.renderOrderID + ']', displayObject);
         }
@@ -81306,7 +81307,7 @@ Phaser.Device.whenReady(function (device) {
     * @readonly
     * @protected
     */
-    Object.defineproperty(Phaser.DOM, "scrollX", {
+    Object.defineProperty(Phaser.DOM, "scrollX", {
         get: scrollX
     });
 
@@ -81318,23 +81319,23 @@ Phaser.Device.whenReady(function (device) {
     * @readonly
     * @protected
     */
-    Object.defineproperty(Phaser.DOM, "scrollY", {
+    Object.defineProperty(Phaser.DOM, "scrollY", {
         get: scrollY
     });
 
-    Object.defineproperty(Phaser.DOM.visualBounds, "x", {
+    Object.defineProperty(Phaser.DOM.visualBounds, "x", {
         get: scrollX
     });
 
-    Object.defineproperty(Phaser.DOM.visualBounds, "y", {
+    Object.defineProperty(Phaser.DOM.visualBounds, "y", {
         get: scrollY
     });
 
-    Object.defineproperty(Phaser.DOM.layoutBounds, "x", {
+    Object.defineProperty(Phaser.DOM.layoutBounds, "x", {
         value: 0
     });
 
-    Object.defineproperty(Phaser.DOM.layoutBounds, "y", {
+    Object.defineProperty(Phaser.DOM.layoutBounds, "y", {
         value: 0
     });
 
@@ -81358,37 +81359,37 @@ Phaser.Device.whenReady(function (device) {
         };
 
         // Interested in area sans-scrollbar
-        Object.defineproperty(Phaser.DOM.visualBounds, "width", {
+        Object.defineProperty(Phaser.DOM.visualBounds, "width", {
             get: clientWidth
         });
 
-        Object.defineproperty(Phaser.DOM.visualBounds, "height", {
+        Object.defineProperty(Phaser.DOM.visualBounds, "height", {
             get: clientHeight
         });
 
-        Object.defineproperty(Phaser.DOM.layoutBounds, "width", {
+        Object.defineProperty(Phaser.DOM.layoutBounds, "width", {
             get: clientWidth
         });
 
-        Object.defineproperty(Phaser.DOM.layoutBounds, "height", {
+        Object.defineProperty(Phaser.DOM.layoutBounds, "height", {
             get: clientHeight
         });
 
     } else {
 
-        Object.defineproperty(Phaser.DOM.visualBounds, "width", {
+        Object.defineProperty(Phaser.DOM.visualBounds, "width", {
             get: function () {
                 return window.innerWidth;
             }
         });
 
-        Object.defineproperty(Phaser.DOM.visualBounds, "height", {
+        Object.defineProperty(Phaser.DOM.visualBounds, "height", {
             get: function () {
                 return window.innerHeight;
             }
         });
 
-        Object.defineproperty(Phaser.DOM.layoutBounds, "width", {
+        Object.defineProperty(Phaser.DOM.layoutBounds, "width", {
 
             get: function () {
                 var a = document.documentElement.clientWidth;
@@ -81399,7 +81400,7 @@ Phaser.Device.whenReady(function (device) {
 
         });
 
-        Object.defineproperty(Phaser.DOM.layoutBounds, "height", {
+        Object.defineProperty(Phaser.DOM.layoutBounds, "height", {
 
             get: function () {
                 var a = document.documentElement.clientHeight;
@@ -81415,15 +81416,15 @@ Phaser.Device.whenReady(function (device) {
     // For Phaser.DOM.documentBounds
     // Ref. http://www.quirksmode.org/mobile/tableViewport_desktop.html
 
-    Object.defineproperty(Phaser.DOM.documentBounds, "x", {
+    Object.defineProperty(Phaser.DOM.documentBounds, "x", {
         value: 0
     });
 
-    Object.defineproperty(Phaser.DOM.documentBounds, "y", {
+    Object.defineProperty(Phaser.DOM.documentBounds, "y", {
         value: 0
     });
 
-    Object.defineproperty(Phaser.DOM.documentBounds, "width", {
+    Object.defineProperty(Phaser.DOM.documentBounds, "width", {
 
         get: function () {
             var d = document.documentElement;
@@ -81432,7 +81433,7 @@ Phaser.Device.whenReady(function (device) {
 
     });
 
-    Object.defineproperty(Phaser.DOM.documentBounds, "height", {
+    Object.defineProperty(Phaser.DOM.documentBounds, "height", {
 
         get: function () {
             var d = document.documentElement;
@@ -81665,7 +81666,7 @@ Phaser.ArraySet.prototype = {
 * @name Phaser.ArraySet#total
 * @property {integer} total
 */
-Object.defineproperty(Phaser.ArraySet.prototype, "total", {
+Object.defineProperty(Phaser.ArraySet.prototype, "total", {
 
     get: function () {
         return this.list.length;
@@ -81679,7 +81680,7 @@ Object.defineproperty(Phaser.ArraySet.prototype, "total", {
 * @name Phaser.ArraySet#first
 * @property {any} first
 */
-Object.defineproperty(Phaser.ArraySet.prototype, "first", {
+Object.defineProperty(Phaser.ArraySet.prototype, "first", {
 
     get: function () {
 
@@ -81704,7 +81705,7 @@ Object.defineproperty(Phaser.ArraySet.prototype, "first", {
 * @name Phaser.ArraySet#next
 * @property {any} next
 */
-Object.defineproperty(Phaser.ArraySet.prototype, "next", {
+Object.defineProperty(Phaser.ArraySet.prototype, "next", {
 
     get: function () {
 
@@ -84377,28 +84378,28 @@ Phaser.Physics.prototype = {
     */
     parseConfig: function () {
 
-        if ((!this.config.hasOwnproperty('arcade') || this.config['arcade'] === true) && Phaser.Physics.hasOwnproperty('Arcade'))
+        if ((!this.config.hasOwnProperty('arcade') || this.config['arcade'] === true) && Phaser.Physics.hasOwnProperty('Arcade'))
         {
             //  If Arcade isn't specified, we create it automatically if we can
             this.arcade = new Phaser.Physics.Arcade(this.game);
         }
 
-        if (this.config.hasOwnproperty('ninja') && this.config['ninja'] === true && Phaser.Physics.hasOwnproperty('Ninja'))
+        if (this.config.hasOwnProperty('ninja') && this.config['ninja'] === true && Phaser.Physics.hasOwnProperty('Ninja'))
         {
             this.ninja = new Phaser.Physics.Ninja(this.game);
         }
 
-        if (this.config.hasOwnproperty('p2') && this.config['p2'] === true && Phaser.Physics.hasOwnproperty('P2'))
+        if (this.config.hasOwnProperty('p2') && this.config['p2'] === true && Phaser.Physics.hasOwnProperty('P2'))
         {
             this.p2 = new Phaser.Physics.P2(this.game, this.config);
         }
 
-        if (this.config.hasOwnproperty('box2d') && this.config['box2d'] === true && Phaser.Physics.hasOwnproperty('BOX2D'))
+        if (this.config.hasOwnProperty('box2d') && this.config['box2d'] === true && Phaser.Physics.hasOwnProperty('BOX2D'))
         {
             this.box2d = new Phaser.Physics.BOX2D(this.game, this.config);
         }
 
-        if (this.config.hasOwnproperty('matter') && this.config['matter'] === true && Phaser.Physics.hasOwnproperty('Matter'))
+        if (this.config.hasOwnProperty('matter') && this.config['matter'] === true && Phaser.Physics.hasOwnProperty('Matter'))
         {
             this.matter = new Phaser.Physics.Matter(this.game, this.config);
         }
@@ -84884,7 +84885,7 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     this.enableBody(object[i]);
 
-                    if (children && object[i].hasOwnproperty('children') && object[i].children.length > 0)
+                    if (children && object[i].hasOwnProperty('children') && object[i].children.length > 0)
                     {
                         this.enable(object[i], true);
                     }
@@ -84902,7 +84903,7 @@ Phaser.Physics.Arcade.prototype = {
             {
                 this.enableBody(object);
 
-                if (children && object.hasOwnproperty('children') && object.children.length > 0)
+                if (children && object.hasOwnProperty('children') && object.children.length > 0)
                 {
                     this.enable(object.children, true);
                 }
@@ -84923,7 +84924,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     enableBody: function (object) {
 
-        if (object.hasOwnproperty('body') && object.body === null)
+        if (object.hasOwnProperty('body') && object.body === null)
         {
             object.body = new Phaser.Physics.Arcade.Body(object);
 
@@ -88141,7 +88142,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 * @name Phaser.Physics.Arcade.Body#left
 * @property {number} left - The x position of the Body. The same as `Body.x`.
 */
-Object.defineproperty(Phaser.Physics.Arcade.Body.prototype, "left", {
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "left", {
 
     get: function () {
 
@@ -88156,7 +88157,7 @@ Object.defineproperty(Phaser.Physics.Arcade.Body.prototype, "left", {
 * @property {number} right - The right value of this Body (same as Body.x + Body.width)
 * @readonly
 */
-Object.defineproperty(Phaser.Physics.Arcade.Body.prototype, "right", {
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
 
     get: function () {
 
@@ -88170,7 +88171,7 @@ Object.defineproperty(Phaser.Physics.Arcade.Body.prototype, "right", {
 * @name Phaser.Physics.Arcade.Body#top
 * @property {number} top - The y position of the Body. The same as `Body.y`.
 */
-Object.defineproperty(Phaser.Physics.Arcade.Body.prototype, "top", {
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "top", {
 
     get: function () {
 
@@ -88185,7 +88186,7 @@ Object.defineproperty(Phaser.Physics.Arcade.Body.prototype, "top", {
 * @property {number} bottom - The bottom value of this Body (same as Body.y + Body.height)
 * @readonly
 */
-Object.defineproperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
 
     get: function () {
 
@@ -88199,7 +88200,7 @@ Object.defineproperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
 * @name Phaser.Physics.Arcade.Body#x
 * @property {number} x - The x position.
 */
-Object.defineproperty(Phaser.Physics.Arcade.Body.prototype, "x", {
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "x", {
 
     get: function () {
 
@@ -88218,7 +88219,7 @@ Object.defineproperty(Phaser.Physics.Arcade.Body.prototype, "x", {
 * @name Phaser.Physics.Arcade.Body#y
 * @property {number} y - The y position.
 */
-Object.defineproperty(Phaser.Physics.Arcade.Body.prototype, "y", {
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "y", {
 
     get: function () {
 
@@ -88750,12 +88751,12 @@ Phaser.Physics.P2 = function (game, config) {
     }
     else
     {
-        if (!config.hasOwnproperty('gravity'))
+        if (!config.hasOwnProperty('gravity'))
         {
             config.gravity = [0, 0];
         }
 
-        if (!config.hasOwnproperty('broadphase'))
+        if (!config.hasOwnProperty('broadphase'))
         {
             config.broadphase = new p2.SAPBroadphase();
         }
@@ -88914,7 +88915,7 @@ Phaser.Physics.P2 = function (game, config) {
     this.onEndContact = new Phaser.Signal();
 
     //  Pixel to meter function overrides
-    if (config.hasOwnproperty('mpx') && config.hasOwnproperty('pxm') && config.hasOwnproperty('mpxi') && config.hasOwnproperty('pxmi'))
+    if (config.hasOwnProperty('mpx') && config.hasOwnProperty('pxm') && config.hasOwnProperty('mpxi') && config.hasOwnProperty('pxmi'))
     {
         this.mpx = config.mpx;
         this.mpxi = config.mpxi;
@@ -89062,7 +89063,7 @@ Phaser.Physics.P2.prototype = {
                 {
                     this.enableBody(object[i], debug);
 
-                    if (children && object[i].hasOwnproperty('children') && object[i].children.length > 0)
+                    if (children && object[i].hasOwnProperty('children') && object[i].children.length > 0)
                     {
                         this.enable(object[i], debug, true);
                     }
@@ -89080,7 +89081,7 @@ Phaser.Physics.P2.prototype = {
             {
                 this.enableBody(object, debug);
 
-                if (children && object.hasOwnproperty('children') && object.children.length > 0)
+                if (children && object.hasOwnProperty('children') && object.children.length > 0)
                 {
                     this.enable(object.children, debug, true);
                 }
@@ -89099,7 +89100,7 @@ Phaser.Physics.P2.prototype = {
     */
     enableBody: function (object, debug) {
 
-        if (object.hasOwnproperty('body') && object.body === null)
+        if (object.hasOwnProperty('body') && object.body === null)
         {
             object.body = new Phaser.Physics.P2.Body(this.game, object, object.x, object.y, 1);
             object.body.debug = debug;
@@ -90106,7 +90107,7 @@ Phaser.Physics.P2.prototype = {
             {
                 query.push(bodies[i]);
             }
-            else if (bodies[i] instanceof Phaser.Sprite && bodies[i].hasOwnproperty('body') && !(filterStatic && bodies[i].body.data.type === p2.Body.STATIC))
+            else if (bodies[i] instanceof Phaser.Sprite && bodies[i].hasOwnProperty('body') && !(filterStatic && bodies[i].body.data.type === p2.Body.STATIC))
             {
                 query.push(bodies[i].body.data);
             }
@@ -90560,7 +90561,7 @@ Phaser.Physics.P2.prototype = {
 * @name Phaser.Physics.P2#friction
 * @property {number} friction - Friction between colliding bodies. This value is used if no matching ContactMaterial is found for a Material pair.
 */
-Object.defineproperty(Phaser.Physics.P2.prototype, "friction", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "friction", {
 
     get: function () {
 
@@ -90580,7 +90581,7 @@ Object.defineproperty(Phaser.Physics.P2.prototype, "friction", {
 * @name Phaser.Physics.P2#restitution
 * @property {number} restitution - Default coefficient of restitution between colliding bodies. This value is used if no matching ContactMaterial is found for a Material pair.
 */
-Object.defineproperty(Phaser.Physics.P2.prototype, "restitution", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "restitution", {
 
     get: function () {
 
@@ -90600,7 +90601,7 @@ Object.defineproperty(Phaser.Physics.P2.prototype, "restitution", {
 * @name Phaser.Physics.P2#contactMaterial
 * @property {p2.ContactMaterial} contactMaterial - The default Contact Material being used by the World.
 */
-Object.defineproperty(Phaser.Physics.P2.prototype, "contactMaterial", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "contactMaterial", {
 
     get: function () {
 
@@ -90620,7 +90621,7 @@ Object.defineproperty(Phaser.Physics.P2.prototype, "contactMaterial", {
 * @name Phaser.Physics.P2#applySpringForces
 * @property {boolean} applySpringForces - Enable to automatically apply spring forces each step.
 */
-Object.defineproperty(Phaser.Physics.P2.prototype, "applySpringForces", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "applySpringForces", {
 
     get: function () {
 
@@ -90640,7 +90641,7 @@ Object.defineproperty(Phaser.Physics.P2.prototype, "applySpringForces", {
 * @name Phaser.Physics.P2#applyDamping
 * @property {boolean} applyDamping - Enable to automatically apply body damping each step.
 */
-Object.defineproperty(Phaser.Physics.P2.prototype, "applyDamping", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "applyDamping", {
 
     get: function () {
 
@@ -90660,7 +90661,7 @@ Object.defineproperty(Phaser.Physics.P2.prototype, "applyDamping", {
 * @name Phaser.Physics.P2#applyGravity
 * @property {boolean} applyGravity - Enable to automatically apply gravity each step.
 */
-Object.defineproperty(Phaser.Physics.P2.prototype, "applyGravity", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "applyGravity", {
 
     get: function () {
 
@@ -90680,7 +90681,7 @@ Object.defineproperty(Phaser.Physics.P2.prototype, "applyGravity", {
 * @name Phaser.Physics.P2#solveConstraints
 * @property {boolean} solveConstraints - Enable/disable constraint solving in each step.
 */
-Object.defineproperty(Phaser.Physics.P2.prototype, "solveConstraints", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "solveConstraints", {
 
     get: function () {
 
@@ -90701,7 +90702,7 @@ Object.defineproperty(Phaser.Physics.P2.prototype, "solveConstraints", {
 * @property {boolean} time - The World time.
 * @readonly
 */
-Object.defineproperty(Phaser.Physics.P2.prototype, "time", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "time", {
 
     get: function () {
 
@@ -90715,7 +90716,7 @@ Object.defineproperty(Phaser.Physics.P2.prototype, "time", {
 * @name Phaser.Physics.P2#emitImpactEvent
 * @property {boolean} emitImpactEvent - Set to true if you want to the world to emit the "impact" event. Turning this off could improve performance.
 */
-Object.defineproperty(Phaser.Physics.P2.prototype, "emitImpactEvent", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "emitImpactEvent", {
 
     get: function () {
 
@@ -90737,7 +90738,7 @@ Object.defineproperty(Phaser.Physics.P2.prototype, "emitImpactEvent", {
 * @name Phaser.Physics.P2#sleepMode
 * @property {number} sleepMode
 */
-Object.defineproperty(Phaser.Physics.P2.prototype, "sleepMode", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "sleepMode", {
 
     get: function () {
 
@@ -90758,7 +90759,7 @@ Object.defineproperty(Phaser.Physics.P2.prototype, "sleepMode", {
 * @property {number} total - The total number of bodies in the world.
 * @readonly
 */
-Object.defineproperty(Phaser.Physics.P2.prototype, "total", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "total", {
 
     get: function () {
 
@@ -91027,7 +91028,7 @@ Phaser.Physics.P2.PointProxy.prototype.constructor = Phaser.Physics.P2.PointProx
 * @name Phaser.Physics.P2.PointProxy#x
 * @property {number} x - The x property of this PointProxy get and set in pixels.
 */
-Object.defineproperty(Phaser.Physics.P2.PointProxy.prototype, "x", {
+Object.defineProperty(Phaser.Physics.P2.PointProxy.prototype, "x", {
 
     get: function () {
 
@@ -91047,7 +91048,7 @@ Object.defineproperty(Phaser.Physics.P2.PointProxy.prototype, "x", {
 * @name Phaser.Physics.P2.PointProxy#y
 * @property {number} y - The y property of this PointProxy get and set in pixels.
 */
-Object.defineproperty(Phaser.Physics.P2.PointProxy.prototype, "y", {
+Object.defineProperty(Phaser.Physics.P2.PointProxy.prototype, "y", {
 
     get: function () {
 
@@ -91067,7 +91068,7 @@ Object.defineproperty(Phaser.Physics.P2.PointProxy.prototype, "y", {
 * @name Phaser.Physics.P2.PointProxy#mx
 * @property {number} mx - The x property of this PointProxy get and set in meters.
 */
-Object.defineproperty(Phaser.Physics.P2.PointProxy.prototype, "mx", {
+Object.defineProperty(Phaser.Physics.P2.PointProxy.prototype, "mx", {
 
     get: function () {
 
@@ -91087,7 +91088,7 @@ Object.defineproperty(Phaser.Physics.P2.PointProxy.prototype, "mx", {
 * @name Phaser.Physics.P2.PointProxy#my
 * @property {number} my - The x property of this PointProxy get and set in meters.
 */
-Object.defineproperty(Phaser.Physics.P2.PointProxy.prototype, "my", {
+Object.defineProperty(Phaser.Physics.P2.PointProxy.prototype, "my", {
 
     get: function () {
 
@@ -91130,7 +91131,7 @@ Phaser.Physics.P2.InversePointProxy.prototype.constructor = Phaser.Physics.P2.In
 * @name Phaser.Physics.P2.InversePointProxy#x
 * @property {number} x - The x property of this InversePointProxy get and set in pixels.
 */
-Object.defineproperty(Phaser.Physics.P2.InversePointProxy.prototype, "x", {
+Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "x", {
 
     get: function () {
 
@@ -91150,7 +91151,7 @@ Object.defineproperty(Phaser.Physics.P2.InversePointProxy.prototype, "x", {
 * @name Phaser.Physics.P2.InversePointProxy#y
 * @property {number} y - The y property of this InversePointProxy get and set in pixels.
 */
-Object.defineproperty(Phaser.Physics.P2.InversePointProxy.prototype, "y", {
+Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "y", {
 
     get: function () {
 
@@ -91170,7 +91171,7 @@ Object.defineproperty(Phaser.Physics.P2.InversePointProxy.prototype, "y", {
 * @name Phaser.Physics.P2.InversePointProxy#mx
 * @property {number} mx - The x property of this InversePointProxy get and set in meters.
 */
-Object.defineproperty(Phaser.Physics.P2.InversePointProxy.prototype, "mx", {
+Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "mx", {
 
     get: function () {
 
@@ -91190,7 +91191,7 @@ Object.defineproperty(Phaser.Physics.P2.InversePointProxy.prototype, "mx", {
 * @name Phaser.Physics.P2.InversePointProxy#my
 * @property {number} my - The y property of this InversePointProxy get and set in meters.
 */
-Object.defineproperty(Phaser.Physics.P2.InversePointProxy.prototype, "my", {
+Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "my", {
 
     get: function () {
 
@@ -92725,7 +92726,7 @@ Phaser.Physics.P2.Body.KINEMATIC = 4;
 * @name Phaser.Physics.P2.Body#static
 * @property {boolean} static - Returns true if the Body is static. Setting Body.static to 'false' will make it dynamic.
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "static", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "static", {
 
     get: function () {
 
@@ -92754,7 +92755,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "static", {
 * @name Phaser.Physics.P2.Body#dynamic
 * @property {boolean} dynamic - Returns true if the Body is dynamic. Setting Body.dynamic to 'false' will make it static.
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "dynamic", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "dynamic", {
 
     get: function () {
 
@@ -92783,7 +92784,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "dynamic", {
 * @name Phaser.Physics.P2.Body#kinematic
 * @property {boolean} kinematic - Returns true if the Body is kinematic. Setting Body.kinematic to 'false' will make it static.
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "kinematic", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "kinematic", {
 
     get: function () {
 
@@ -92812,7 +92813,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "kinematic", {
 * @name Phaser.Physics.P2.Body#allowSleep
 * @property {boolean} allowSleep -
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "allowSleep", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "allowSleep", {
 
     get: function () {
 
@@ -92839,7 +92840,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "allowSleep", {
 * @name Phaser.Physics.P2.Body#angle
 * @property {number} angle - The angle of this Body in degrees.
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "angle", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "angle", {
 
     get: function() {
 
@@ -92860,7 +92861,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "angle", {
 * @name Phaser.Physics.P2.Body#angularDamping
 * @property {number} angularDamping - The angular damping acting acting on the body.
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "angularDamping", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "angularDamping", {
 
     get: function () {
 
@@ -92880,7 +92881,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "angularDamping", {
 * @name Phaser.Physics.P2.Body#angularForce
 * @property {number} angularForce - The angular force acting on the body.
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "angularForce", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "angularForce", {
 
     get: function () {
 
@@ -92900,7 +92901,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "angularForce", {
 * @name Phaser.Physics.P2.Body#angularVelocity
 * @property {number} angularVelocity - The angular velocity of the body.
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "angularVelocity", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "angularVelocity", {
 
     get: function () {
 
@@ -92921,7 +92922,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "angularVelocity", {
 * @name Phaser.Physics.P2.Body#damping
 * @property {number} damping - The linear damping acting on the body in the velocity direction.
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "damping", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "damping", {
 
     get: function () {
 
@@ -92941,7 +92942,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "damping", {
 * @name Phaser.Physics.P2.Body#fixedRotation
 * @property {boolean} fixedRotation -
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "fixedRotation", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "fixedRotation", {
 
     get: function () {
 
@@ -92964,7 +92965,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "fixedRotation", {
 * @name Phaser.Physics.P2.Body#inertia
 * @property {number} inertia - The inertia of the body around the Z axis..
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "inertia", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "inertia", {
 
     get: function () {
 
@@ -92984,7 +92985,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "inertia", {
 * @name Phaser.Physics.P2.Body#mass
 * @property {number} mass - The mass of the body.
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "mass", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "mass", {
 
     get: function () {
 
@@ -93008,7 +93009,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "mass", {
 * @name Phaser.Physics.P2.Body#motionState
 * @property {number} motionState - The type of motion this body has. Should be one of: Body.STATIC (the body does not move), Body.DYNAMIC (body can move and respond to collisions) and Body.KINEMATIC (only moves according to its .velocity).
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "motionState", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "motionState", {
 
     get: function () {
 
@@ -93034,7 +93035,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "motionState", {
 * @name Phaser.Physics.P2.Body#rotation
 * @property {number} rotation - The angle of this Body in radians.
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "rotation", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "rotation", {
 
     get: function() {
 
@@ -93054,7 +93055,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "rotation", {
 * @name Phaser.Physics.P2.Body#sleepSpeedLimit
 * @property {number} sleepSpeedLimit - .
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "sleepSpeedLimit", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "sleepSpeedLimit", {
 
     get: function () {
 
@@ -93074,7 +93075,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "sleepSpeedLimit", {
 * @name Phaser.Physics.P2.Body#x
 * @property {number} x - The x coordinate of this Body.
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "x", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "x", {
 
     get: function () {
 
@@ -93094,7 +93095,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "x", {
 * @name Phaser.Physics.P2.Body#y
 * @property {number} y - The y coordinate of this Body.
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "y", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "y", {
 
     get: function () {
 
@@ -93115,7 +93116,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "y", {
 * @property {number} id - The Body ID. Each Body that has been added to the World has a unique ID.
 * @readonly
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "id", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "id", {
 
     get: function () {
 
@@ -93129,7 +93130,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "id", {
 * @name Phaser.Physics.P2.Body#debug
 * @property {boolean} debug - Enable or disable debug drawing of this body
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "debug", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
 
     get: function () {
 
@@ -93163,7 +93164,7 @@ Object.defineproperty(Phaser.Physics.P2.Body.prototype, "debug", {
 * @name Phaser.Physics.P2.Body#collideWorldBounds
 * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?
 */
-Object.defineproperty(Phaser.Physics.P2.Body.prototype, "collideWorldBounds", {
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "collideWorldBounds", {
 
     get: function () {
 
@@ -94614,7 +94615,7 @@ Phaser.Tile.prototype.constructor = Phaser.Tile;
 * @property {boolean} collides - True if this tile can collide on any of its faces.
 * @readonly
 */
-Object.defineproperty(Phaser.Tile.prototype, "collides", {
+Object.defineProperty(Phaser.Tile.prototype, "collides", {
 
     get: function () {
         return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown);
@@ -94627,7 +94628,7 @@ Object.defineproperty(Phaser.Tile.prototype, "collides", {
 * @property {boolean} canCollide - True if this tile can collide on any of its faces or has a collision callback set.
 * @readonly
 */
-Object.defineproperty(Phaser.Tile.prototype, "canCollide", {
+Object.defineProperty(Phaser.Tile.prototype, "canCollide", {
 
     get: function () {
         return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || this.collisionCallback);
@@ -94640,7 +94641,7 @@ Object.defineproperty(Phaser.Tile.prototype, "canCollide", {
 * @property {number} left - The x value in pixels.
 * @readonly
 */
-Object.defineproperty(Phaser.Tile.prototype, "left", {
+Object.defineProperty(Phaser.Tile.prototype, "left", {
 
     get: function () {
         return this.worldX;
@@ -94653,7 +94654,7 @@ Object.defineproperty(Phaser.Tile.prototype, "left", {
 * @property {number} right - The sum of the x and width properties.
 * @readonly
 */
-Object.defineproperty(Phaser.Tile.prototype, "right", {
+Object.defineProperty(Phaser.Tile.prototype, "right", {
 
     get: function () {
         return this.worldX + this.width;
@@ -94666,7 +94667,7 @@ Object.defineproperty(Phaser.Tile.prototype, "right", {
 * @property {number} top - The y value.
 * @readonly
 */
-Object.defineproperty(Phaser.Tile.prototype, "top", {
+Object.defineProperty(Phaser.Tile.prototype, "top", {
 
     get: function () {
         return this.worldY;
@@ -94679,7 +94680,7 @@ Object.defineproperty(Phaser.Tile.prototype, "top", {
 * @property {number} bottom - The sum of the y and height properties.
 * @readonly
 */
-Object.defineproperty(Phaser.Tile.prototype, "bottom", {
+Object.defineProperty(Phaser.Tile.prototype, "bottom", {
 
     get: function () {
         return this.worldY + this.height;
@@ -96637,7 +96638,7 @@ Phaser.Tilemap.prototype.constructor = Phaser.Tilemap;
 * @name Phaser.Tilemap#layer
 * @property {number|string|Phaser.TilemapLayer} layer - The current layer object.
 */
-Object.defineproperty(Phaser.Tilemap.prototype, "layer", {
+Object.defineProperty(Phaser.Tilemap.prototype, "layer", {
 
     get: function () {
 
@@ -97902,7 +97903,7 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 * @public
 * @default false
 */
-Object.defineproperty(Phaser.TilemapLayer.prototype, "wrap", {
+Object.defineProperty(Phaser.TilemapLayer.prototype, "wrap", {
 
     get: function () {
         return this._wrap;
@@ -97922,7 +97923,7 @@ Object.defineproperty(Phaser.TilemapLayer.prototype, "wrap", {
 * @memberof Phaser.TilemapLayer
 * @public
 */
-Object.defineproperty(Phaser.TilemapLayer.prototype, "scrollX", {
+Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
 
     get: function () {
         return this._scrollX;
@@ -97941,7 +97942,7 @@ Object.defineproperty(Phaser.TilemapLayer.prototype, "scrollX", {
 * @memberof Phaser.TilemapLayer
 * @public
 */
-Object.defineproperty(Phaser.TilemapLayer.prototype, "scrollY", {
+Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
 
     get: function () {
         return this._scrollY;
@@ -97960,7 +97961,7 @@ Object.defineproperty(Phaser.TilemapLayer.prototype, "scrollY", {
 * @memberof Phaser.TilemapLayer
 * @public
 */
-Object.defineproperty(Phaser.TilemapLayer.prototype, "collisionWidth", {
+Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionWidth", {
 
     get: function () {
         return this._mc.cw;
@@ -97980,7 +97981,7 @@ Object.defineproperty(Phaser.TilemapLayer.prototype, "collisionWidth", {
 * @memberof Phaser.TilemapLayer
 * @public
 */
-Object.defineproperty(Phaser.TilemapLayer.prototype, "collisionHeight", {
+Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionHeight", {
 
     get: function () {
         return this._mc.ch;
@@ -98517,7 +98518,7 @@ Phaser.TilemapParser = {
 
                         gid: curo.objects[v].gid,
                         name: curo.objects[v].name,
-                        type: curo.objects[v].hasOwnproperty("type") ? curo.objects[v].type : "",
+                        type: curo.objects[v].hasOwnProperty("type") ? curo.objects[v].type : "",
                         x: curo.objects[v].x,
                         y: curo.objects[v].y,
                         visible: curo.objects[v].visible,
@@ -100107,7 +100108,7 @@ Phaser.Particles.Arcade.Emitter.prototype.at = function (object) {
 * @name Phaser.Particles.Arcade.Emitter#width
 * @property {number} width - Gets or sets the width of the Emitter. This is the region in which a particle can be emitted.
 */
-Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "width", {
+Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "width", {
 
     get: function () {
         return this.area.width;
@@ -100123,7 +100124,7 @@ Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "width", {
 * @name Phaser.Particles.Arcade.Emitter#height
 * @property {number} height - Gets or sets the height of the Emitter. This is the region in which a particle can be emitted.
 */
-Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "height", {
+Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "height", {
 
     get: function () {
         return this.area.height;
@@ -100139,7 +100140,7 @@ Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "height", {
 * @name Phaser.Particles.Arcade.Emitter#x
 * @property {number} x - Gets or sets the x position of the Emitter.
 */
-Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "x", {
+Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "x", {
 
     get: function () {
         return this.emitX;
@@ -100155,7 +100156,7 @@ Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "x", {
 * @name Phaser.Particles.Arcade.Emitter#y
 * @property {number} y - Gets or sets the y position of the Emitter.
 */
-Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "y", {
+Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "y", {
 
     get: function () {
         return this.emitY;
@@ -100172,7 +100173,7 @@ Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "y", {
 * @property {number} left - Gets the left position of the Emitter.
 * @readonly
 */
-Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "left", {
+Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "left", {
 
     get: function () {
         return Math.floor(this.x - (this.area.width / 2));
@@ -100185,7 +100186,7 @@ Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "left", {
 * @property {number} right - Gets the right position of the Emitter.
 * @readonly
 */
-Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "right", {
+Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "right", {
 
     get: function () {
         return Math.floor(this.x + (this.area.width / 2));
@@ -100198,7 +100199,7 @@ Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "right", {
 * @property {number} top - Gets the top position of the Emitter.
 * @readonly
 */
-Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "top", {
+Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "top", {
 
     get: function () {
         return Math.floor(this.y - (this.area.height / 2));
@@ -100211,7 +100212,7 @@ Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "top", {
 * @property {number} bottom - Gets the bottom position of the Emitter.
 * @readonly
 */
-Object.defineproperty(Phaser.Particles.Arcade.Emitter.prototype, "bottom", {
+Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "bottom", {
 
     get: function () {
         return Math.floor(this.y + (this.area.height / 2));
@@ -101336,7 +101337,7 @@ Phaser.Weapon.prototype.debug = function (x, y, debugBodies) {
 * @name Phaser.Weapon#bulletClass
 * @property {Object} bulletClass
 */
-Object.defineproperty(Phaser.Weapon.prototype, "bulletClass", {
+Object.defineProperty(Phaser.Weapon.prototype, "bulletClass", {
 
     get: function () {
 
@@ -101385,7 +101386,7 @@ Object.defineproperty(Phaser.Weapon.prototype, "bulletClass", {
 * @name Phaser.Weapon#bulletKillType
 * @property {integer} bulletKillType
 */
-Object.defineproperty(Phaser.Weapon.prototype, "bulletKillType", {
+Object.defineProperty(Phaser.Weapon.prototype, "bulletKillType", {
 
     get: function () {
 
@@ -101423,7 +101424,7 @@ Object.defineproperty(Phaser.Weapon.prototype, "bulletKillType", {
 * @name Phaser.Weapon#bulletCollideWorldBounds
 * @property {boolean} bulletCollideWorldBounds
 */
-Object.defineproperty(Phaser.Weapon.prototype, "bulletCollideWorldBounds", {
+Object.defineProperty(Phaser.Weapon.prototype, "bulletCollideWorldBounds", {
 
     get: function () {
 
@@ -101449,7 +101450,7 @@ Object.defineproperty(Phaser.Weapon.prototype, "bulletCollideWorldBounds", {
 * @name Phaser.Weapon#x
 * @property {number} x
 */
-Object.defineproperty(Phaser.Weapon.prototype, "x", {
+Object.defineProperty(Phaser.Weapon.prototype, "x", {
 
     get: function () {
 
@@ -101471,7 +101472,7 @@ Object.defineproperty(Phaser.Weapon.prototype, "x", {
 * @name Phaser.Weapon#y
 * @property {number} y
 */
-Object.defineproperty(Phaser.Weapon.prototype, "y", {
+Object.defineProperty(Phaser.Weapon.prototype, "y", {
 
     get: function () {
 
@@ -102758,7 +102759,7 @@ Phaser.Video.prototype = {
 * @name Phaser.Video#currentTime
 * @property {number} currentTime - The current time of the video in seconds. If set the video will attempt to seek to that point in time.
 */
-Object.defineproperty(Phaser.Video.prototype, "currentTime", {
+Object.defineProperty(Phaser.Video.prototype, "currentTime", {
 
     get: function () {
 
@@ -102779,7 +102780,7 @@ Object.defineproperty(Phaser.Video.prototype, "currentTime", {
 * @property {number} duration - The duration of the video in seconds.
 * @readOnly
 */
-Object.defineproperty(Phaser.Video.prototype, "duration", {
+Object.defineProperty(Phaser.Video.prototype, "duration", {
 
     get: function () {
 
@@ -102794,7 +102795,7 @@ Object.defineproperty(Phaser.Video.prototype, "duration", {
 * @property {number} progress - The progress of this video. This is a value between 0 and 1, where 0 is the start and 1 is the end of the video.
 * @readOnly
 */
-Object.defineproperty(Phaser.Video.prototype, "progress", {
+Object.defineProperty(Phaser.Video.prototype, "progress", {
 
     get: function () {
 
@@ -102808,7 +102809,7 @@ Object.defineproperty(Phaser.Video.prototype, "progress", {
 * @name Phaser.Video#mute
 * @property {boolean} mute - Gets or sets the muted state of the Video.
 */
-Object.defineproperty(Phaser.Video.prototype, "mute", {
+Object.defineProperty(Phaser.Video.prototype, "mute", {
 
     get: function () {
 
@@ -102851,7 +102852,7 @@ Object.defineproperty(Phaser.Video.prototype, "mute", {
 * @name Phaser.Video#paused
 * @property {boolean} paused
 */
-Object.defineproperty(Phaser.Video.prototype, "paused", {
+Object.defineProperty(Phaser.Video.prototype, "paused", {
 
     get: function () {
 
@@ -102896,7 +102897,7 @@ Object.defineproperty(Phaser.Video.prototype, "paused", {
 * @name Phaser.Video#volume
 * @property {number} volume - Gets or sets the volume of the Video, a value between 0 and 1. The value given is clamped to the range 0 to 1.
 */
-Object.defineproperty(Phaser.Video.prototype, "volume", {
+Object.defineProperty(Phaser.Video.prototype, "volume", {
 
     get: function () {
 
@@ -102928,7 +102929,7 @@ Object.defineproperty(Phaser.Video.prototype, "volume", {
 * @name Phaser.Video#playbackRate
 * @property {number} playbackRate - Gets or sets the playback rate of the Video. This is the speed at which the video is playing.
 */
-Object.defineproperty(Phaser.Video.prototype, "playbackRate", {
+Object.defineProperty(Phaser.Video.prototype, "playbackRate", {
 
     get: function () {
 
@@ -102955,7 +102956,7 @@ Object.defineproperty(Phaser.Video.prototype, "playbackRate", {
 * @name Phaser.Video#loop
 * @property {boolean} loop
 */
-Object.defineproperty(Phaser.Video.prototype, "loop", {
+Object.defineProperty(Phaser.Video.prototype, "loop", {
 
     get: function () {
 
@@ -102983,7 +102984,7 @@ Object.defineproperty(Phaser.Video.prototype, "loop", {
 * @property {boolean} playing - True if the video is currently playing (and not paused or ended), otherwise false.
 * @readOnly
 */
-Object.defineproperty(Phaser.Video.prototype, "playing", {
+Object.defineProperty(Phaser.Video.prototype, "playing", {
 
     get: function () {
 

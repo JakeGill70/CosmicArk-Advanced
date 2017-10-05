@@ -4,14 +4,14 @@ var CosmicArkAdvanced;
      * @description The setup for the game context
      * @property game {Phaser.game}         - The game context used by everything else in the game.
      */
-    var MyGame = (function () {
+    class MyGame {
         /**
          * @description Creates the game context to use with the rest of the game
          * @param _elementHook       - The html div box that the game context should be created in.
          * @param _sizeOfScreen      - The size of the window containing the game
          * @constructor
          */
-        function MyGame(_elementHook) {
+        constructor(_elementHook) {
             // Phaser.AUTO selects either WebGL or canvas (Which ever the browser likes better),
             // then places it in the HTML document at 'elementHook' tag.
             this.game = new Phaser.Game(800, 450, Phaser.AUTO, _elementHook, {
@@ -21,7 +21,7 @@ var CosmicArkAdvanced;
         /**
          * @description Loads the assests used in the game.
          */
-        MyGame.prototype.preload = function () {
+        preload() {
             // Backgrounds
             this.game.load.image("title", "Graphics/Backgrounds/TitleCard3-4.png");
             // Most of the loading will now be done in the "TitleScreenState", which will now double as a loading screen.
@@ -54,11 +54,11 @@ var CosmicArkAdvanced;
             // Use game.load.audio for music
             this.game.load.audio("ThereminsBeat", "Audio/Music/ThereminsBeatShort.wav");
             // Use game.load.audiosprite for SFX
-        };
+        }
         /**
          * @description Adds the game states to the game context and sets the scaling mode.
          */
-        MyGame.prototype.create = function () {
+        create() {
             // Add game states
             this.game.state.add("gamePlayState", CosmicArkAdvanced.GamePlayState, false);
             this.game.state.add("mapSelectState", CosmicArkAdvanced.MapSelectState, false);
@@ -80,9 +80,8 @@ var CosmicArkAdvanced;
                     this.game.scale.startFullScreen(true);
                 }
             }
-        };
-        return MyGame;
-    }());
+        }
+    }
     MyGame.AUTO_SCALING = true; // Debug var
     CosmicArkAdvanced.MyGame = MyGame;
     /**
@@ -99,7 +98,7 @@ var CosmicArkAdvanced;
 /**
 @description The javascript COM event that creates the game in the webpage.
 */
-window.onload = function () {
+window.onload = () => {
     var el = document.getElementById('content');
     var game = new CosmicArkAdvanced.MyGame(el);
 };
