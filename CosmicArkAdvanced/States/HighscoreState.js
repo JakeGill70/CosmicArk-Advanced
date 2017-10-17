@@ -28,14 +28,14 @@ var CosmicArkAdvanced;
                 this.game.music.play();
             }
             // Register Event Handlers
-            this.input.onTap.add(this.ButtonClicked, this, 0, this.input.position);
+            //this.input.onTap.add(this.ButtonClicked, this, 0, this.input.position);
+            this.input.onTap.add(this.ButtonClicked, this);
         }
         /**
-         * @description Handles "onTap" event. Will grow and shink planets when tapped. Also handles movement into the next gameplay state.
-         * @param {Phaser.point} pos The x,y coordinates of where the user touched/clicked
+         * @description Handles the "onTap" event. Just moves over to the mapSelectState state.
          */
-        ButtonClicked(pos) {
-            // TODO
+        ButtonClicked() {
+            this.game.state.start("mainMenuState");
         }
     }
     CosmicArkAdvanced.HighscoreState = HighscoreState;

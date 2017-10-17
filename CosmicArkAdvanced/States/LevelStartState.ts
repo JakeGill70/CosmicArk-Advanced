@@ -11,9 +11,9 @@
         music: Phaser.Sound;
         titleScreenImage: Phaser.Sprite;
         uiText: Phaser.BitmapText;          // UI Text for updating score information
-        timeToCapture;                       // Timer in seconds
-        numberToCapture: number;              // Number of aliens needed to be captured to complete the level
-        difficulty: number;             // Difficulty rating of the selected level
+        timeToCapture;                      // Timer in seconds
+        numberToCapture: number;            // Number of aliens needed to be captured to complete the level
+        difficulty: number;                 // Difficulty rating of the selected level
         score: number;
        /**
         * @constructor Default.
