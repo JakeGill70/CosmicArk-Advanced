@@ -2,7 +2,7 @@ var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     // Yo yo yo this be ethan dawg!
     // TODO: Is supercollider still needed? Can IPhysics ready be gutted? How much of this code is dead now?
-    /**f
+    /**
      * @description The meat and potatoes of the game. This is where the actual "game" part lives.
      * @property game {Phaser.Game}                         - The game context
      * @property player {Phaser.Sprite}                     - The player object
@@ -15,6 +15,8 @@ var CosmicArkAdvanced;
      * @property uiText {Phaser.BitmapText}                 - Temp UI element for displaying score information
      * @property uiText_Score {Phaser.BitmapText}           - Temp UI element for displaying the literal score information <edf>
      * @property uiBtn_Pause {Phaser.Button}                - Temp UI element for displaying a pause button icon
+     * @property uiText_Restart {Phaser.BitmapText}         - Temp UI element for displaying a restart option in the pause menu
+     * @property uiText_Difficulty {Phaser.BitmapText}      - Temp UI element for displaying a difficulty option in the pause menu
      * @property uiText_Restart {Phaser.BitmapText}         - Temp UI element for displaying a restart option in the pause menu
      */
     class GamePlayState extends Phaser.State {
