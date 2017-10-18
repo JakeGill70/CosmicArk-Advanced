@@ -17,7 +17,7 @@ var CosmicArkAdvanced;
      * @property uiBtn_Pause {Phaser.Button}                - Temp UI element for displaying a pause button icon
      * @property uiText_Restart {Phaser.BitmapText}         - Temp UI element for displaying a restart option in the pause menu
      * @property uiText_Difficulty {Phaser.BitmapText}      - Temp UI element for displaying a difficulty option in the pause menu
-     * @property uiText_Restart {Phaser.BitmapText}         - Temp UI element for displaying a restart option in the pause menu
+     * @property uiText_Quit {Phaser.BitmapText}            - Temp UI element for displaying a quit option in the pause menu
      */
     class GamePlayState extends Phaser.State {
         /**
@@ -252,7 +252,13 @@ var CosmicArkAdvanced;
             this.pauseBackground.position.y = (this.game.height / 2) + this.camera.position.y - this.pauseBackground.height / 2;
             this.uiText_Restart = this.game.add.bitmapText(0, 0, "EdoSZ", "RESTART", 48);
             this.uiText_Restart.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Restart.textWidth / 2;
-            this.uiText_Restart.position.y = (this.game.height / 2) + this.camera.position.y - this.uiText_Restart.textHeight / 2;
+            this.uiText_Restart.position.y = (this.game.height / 2) + ((this.camera.position.y - this.uiText_Restart.textHeight / 2) - 100);
+            this.uiText_Difficulty = this.game.add.bitmapText(0, 0, "EdoSZ", "DIFFICULTY", 48);
+            this.uiText_Difficulty.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Difficulty.textWidth / 2;
+            this.uiText_Difficulty.position.y = (this.game.height / 2) + ((this.camera.position.y - this.uiText_Difficulty.textHeight / 2));
+            this.uiText_Quit = this.game.add.bitmapText(0, 0, "EdoSZ", "QUIT", 48);
+            this.uiText_Quit.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Quit.textWidth / 2;
+            this.uiText_Quit.position.y = (this.game.height / 2) + ((this.camera.position.y - this.uiText_Quit.textHeight / 2) + 100);
         }
         /**
          * @description when you press the pause button again it will un-pause the game.
@@ -263,12 +269,24 @@ var CosmicArkAdvanced;
             if (this.uiBtn_Pause.getBounds().contains(pos.x, pos.y)) {
                 this.game.paused = false;
                 this.uiText_Restart.destroy();
+                this.uiText_Difficulty.destroy();
+                this.uiText_Quit.destroy();
                 this.pauseBackground.destroy();
             }
             else if (this.uiText_Restart.getBounds().contains(pos.x, pos.y)) {
                 //console.log("Restart has been activated"); // testing
                 this.game.paused = false;
                 this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
+            }
+            else if (this.uiText_Difficulty.getBounds().contains(pos.x, pos.y)) {
+                //console.log("Restart has been activated"); // testing
+                this.game.paused = false;
+                this.game.state.start("mapSelectState", true, false);
+            }
+            else if (this.uiText_Quit.getBounds().contains(pos.x, pos.y)) {
+                //console.log("Restart has been activated"); // testing
+                this.game.paused = false;
+                this.game.state.start("titleScreenState", true, false);
             }
         }
         /**
