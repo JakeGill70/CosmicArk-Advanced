@@ -412,7 +412,7 @@
                     this.musicOff.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicOff.width / 2) + 250);
                     this.musicOff.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicOff.height / 2) - 100);
                 }
-                if (this.musicOff.getBounds().contains(pos.x, pos.y) && this.isMusicImageOn == false) {
+                else if (this.musicOff.getBounds().contains(pos.x, pos.y) && this.isMusicImageOn == false) {
                     this.musicOff.destroy();
                     this.isMusicImageOn = true;
                     this.musicOn = this.game.add.image(0, 0, "music_on");
