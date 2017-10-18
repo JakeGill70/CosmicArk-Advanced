@@ -55,6 +55,8 @@
     <Content Include="Graphics\Sprites\dinghy3.png" />
     <Content Include="Graphics\Sprites\gunBase-01.png" />
     <Content Include="Graphics\Sprites\gunTop-01.png" />
+    <Content Include="Graphics\Sprites\Music_Off.png" />
+    <Content Include="Graphics\Sprites\Music_On.png" />
     <Content Include="Graphics\Sprites\UFO_Glow.png" />
     <Content Include="Graphics\Sprites\walk5_sheet.png" />
     <Content Include="Graphics\Sprites\wave.png" />
@@ -150,7 +152,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>5860</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

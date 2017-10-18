@@ -44,6 +44,9 @@
         uiText_Quit: Phaser.BitmapText;       // UI Text used as a selection to quit the game
 
         pauseBackground: Phaser.Image;        // Variable used to easier control the pause menu background image
+
+        musicOn: Phaser.Image;                // Image to show music/sounds are on
+        musicOff: Phaser.Image;               // Image to show music/sounds are off
                                               
         tweenSize: Phaser.Tween;              // Used to transition in between sizes
         tweenColor: Phaser.Tween;             // Used to transition in between colors
@@ -57,6 +60,8 @@
         levelTimer: Phaser.Timer;             // Timer object that counts down the number of seconds the player has left to complete the level
                                               
         score: number;                        // Holds the current score to carry it over to the LevelFinishState
+
+        isMusicImageOn = true;
 
         /**
          * @description Mostly empty. Does initialize the aliens list and the dictionary.
@@ -356,7 +361,15 @@
             this.uiText_Quit.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Quit.textWidth / 2;
             this.uiText_Quit.position.y = (this.game.height / 2) + ((this.camera.position.y - this.uiText_Quit.textHeight / 2) + 100);
 
+            this.musicOn = this.game.add.image(0, 0, "music_on");
+            this.musicOn.width = this.musicOn.width / 2 - 10;
+            this.musicOn.height = this.musicOn.height / 2 - 45;
+            this.musicOn.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicOn.width / 2) + 250);
+            this.musicOn.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicOn.height / 2) - 100);
+            this.isMusicImageOn = true;
+
         }
+
 
         /**
          * @description when you press the pause button again it will un-pause the game.
@@ -369,20 +382,47 @@
                 this.uiText_Restart.destroy();
                 this.uiText_Difficulty.destroy();
                 this.uiText_Quit.destroy();
+                if (this.isMusicImageOn == true) {
+                    this.musicOn.destroy();
+                }
+                if (this.isMusicImageOn == false) {
+                    this.musicOff.destroy();
+                }
                 this.pauseBackground.destroy();
             }
-            else if (this.uiText_Restart.getBounds().contains(pos.x, pos.y)) {
-                this.game.paused = false;
-                this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
+            else {
+                if (this.uiText_Restart.getBounds().contains(pos.x, pos.y)) {
+                    this.game.paused = false;
+                    this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
+                }
+                else if (this.uiText_Difficulty.getBounds().contains(pos.x, pos.y)) {
+                    this.game.paused = false;
+                    this.game.state.start("mapSelectState", true, false);
+                }
+                else if (this.uiText_Quit.getBounds().contains(pos.x, pos.y)) {
+                    this.game.paused = false;
+                    this.game.state.start("titleScreenState", true, false);
+                }
+                if (this.musicOn.getBounds().contains(pos.x, pos.y) && this.isMusicImageOn == true) {
+                    this.musicOn.destroy();
+                    this.isMusicImageOn = false;
+                    this.musicOff = this.game.add.image(0, 0, "music_off");
+                    this.musicOff.width = this.musicOff.width / 2 - 10;
+                    this.musicOff.height = this.musicOff.height / 2 - 45;
+                    this.musicOff.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicOff.width / 2) + 250);
+                    this.musicOff.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicOff.height / 2) - 100);
+                }
+                if (this.musicOff.getBounds().contains(pos.x, pos.y) && this.isMusicImageOn == false) {
+                    this.musicOff.destroy();
+                    this.isMusicImageOn = true;
+                    this.musicOn = this.game.add.image(0, 0, "music_on");
+                    this.musicOn.width = this.musicOn.width / 2 - 10;
+                    this.musicOn.height = this.musicOn.height / 2 - 45;
+                    this.musicOn.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicOn.width / 2) + 250);
+                    this.musicOn.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicOn.height / 2) - 100);
+                }
             }
-            else if (this.uiText_Difficulty.getBounds().contains(pos.x, pos.y)) {
-                this.game.paused = false;
-                this.game.state.start("mapSelectState", true, false);
-            }
-            else if (this.uiText_Quit.getBounds().contains(pos.x, pos.y)) {
-                this.game.paused = false;
-                this.game.state.start("titleScreenState", true, false);
-            }
+                
         }
 
         /**
