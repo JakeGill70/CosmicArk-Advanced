@@ -41,18 +41,11 @@
         }
 
         /**
-         * @description Handles the "onTap" event. Just moves over to the mapSelectState state.
+         * @description Handles "onTap" event. Will grow and shink planets when tapped. Also handles movement into the next gameplay state.
+         * @param {Phaser.point} pos The x,y coordinates of where the user touched/clicked
          */
         ButtonClicked() {
             this.game.state.start("mainMenuState");
         }
-
-        /**
-         * @description Handles "onTap" event. Will grow and shink planets when tapped. Also handles movement into the next gameplay state.
-         * @param {Phaser.point} pos The x,y coordinates of where the user touched/clicked
-         */
-        //ButtonClicked(pos: Phaser.Point) {
-        //    // TODO
-        //}
     }
 }

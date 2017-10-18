@@ -1,7 +1,5 @@
 ﻿module CosmicArkAdvanced {
 
-    // Yo yo yo this be ethan dawg!
-
     // TODO: Is supercollider still needed? Can IPhysics ready be gutted? How much of this code is dead now?
 
     /**
@@ -26,17 +24,17 @@
         player: CosmicArkAdvanced.Player;           // Player object
         aliens: CosmicArkAdvanced.IPhysicsReady[];  // List of aliens in this scene that are capable of recieving physics calls
 
-        men: Phaser.Group;                  // Collection of men
+        men: Phaser.Group;                    // Collection of men
+                                              
+        alienBatch: Phaser.SpriteBatch;       // Collection of aliens in the game 
+                                              
+        guns: CosmicArkAdvanced.Gun[];        // Collection of guns  in the game
+        mines: CosmicArkAdvanced.Mine[];      // Collection of mines in the game
+        hooks: CosmicArkAdvanced.Hook[];      // Collection of hooks in the game
 
-        alienBatch: Phaser.SpriteBatch;     // Collection of aliens in the game 
-
-        guns: CosmicArkAdvanced.Gun[];      // Collection of guns  in the game
-        mines: CosmicArkAdvanced.Mine[];    // Collection of mines in the game
-        hooks: CosmicArkAdvanced.Hook[];    // Collection of hooks in the game
-
-        mothership: Phaser.Sprite;          // Mothership object
-
-        dict: any[];                        // 2 key dictionary of IPhysicsReady object's names which define a boolean value for if the two objects were colliding as of the previous frame.
+        mothership: Phaser.Sprite;            // Mothership object
+                                              
+        dict: any[];                          // 2 key dictionary of IPhysicsReady object's names which define a boolean value for if the two objects were colliding as of the previous frame.
 
         uiText: Phaser.BitmapText;            // UI Text for updating score information
         uiText_Score: Phaser.BitmapText;      // UI Text for updating the literal score information <edf>
@@ -45,20 +43,20 @@
         uiText_Difficulty: Phaser.BitmapText; // UI Text used as a selection to change the difficulty in the level
         uiText_Quit: Phaser.BitmapText;       // UI Text used as a selection to quit the game
 
-        pauseBackground: Phaser.Image;      // Variable used to easier control the pause menu background image
-
-        tweenSize: Phaser.Tween;            // Used to transition in between sizes
-        tweenColor: Phaser.Tween;           // Used to transition in between colors
-        
-
-        difficulty: number;                 // Value 1-3 which assists in level generation
-        numberToCapture: number;            // Number of aliens needed 
-        alienTotal: number;                 // Total number of aliens walking along the ground
-
-        timeToCapture: number;              // Number of seconds the player has to finish the level
-        levelTimer: Phaser.Timer;           // Timer object that counts down the number of seconds the player has left to complete the level
-
-        score: number;                      // Holds the current score to carry it over to the LevelFinishState
+        pauseBackground: Phaser.Image;        // Variable used to easier control the pause menu background image
+                                              
+        tweenSize: Phaser.Tween;              // Used to transition in between sizes
+        tweenColor: Phaser.Tween;             // Used to transition in between colors
+                                              
+                                              
+        difficulty: number;                   // Value 1-3 which assists in level generation
+        numberToCapture: number;              // Number of aliens needed 
+        alienTotal: number;                   // Total number of aliens walking along the ground
+                                              
+        timeToCapture: number;                // Number of seconds the player has to finish the level
+        levelTimer: Phaser.Timer;             // Timer object that counts down the number of seconds the player has left to complete the level
+                                              
+        score: number;                        // Holds the current score to carry it over to the LevelFinishState
 
         /**
          * @description Mostly empty. Does initialize the aliens list and the dictionary.
@@ -374,17 +372,14 @@
                 this.pauseBackground.destroy();
             }
             else if (this.uiText_Restart.getBounds().contains(pos.x, pos.y)) {
-                //console.log("Restart has been activated"); // testing
                 this.game.paused = false;
                 this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
             }
             else if (this.uiText_Difficulty.getBounds().contains(pos.x, pos.y)) {
-                //console.log("Restart has been activated"); // testing
                 this.game.paused = false;
                 this.game.state.start("mapSelectState", true, false);
             }
             else if (this.uiText_Quit.getBounds().contains(pos.x, pos.y)) {
-                //console.log("Restart has been activated"); // testing
                 this.game.paused = false;
                 this.game.state.start("titleScreenState", true, false);
             }
@@ -543,7 +538,6 @@
                             this.addMan(true);
                         }
                     }
-                    
                     
 
                     // Change UI

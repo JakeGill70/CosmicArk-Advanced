@@ -1,6 +1,5 @@
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
-    // Yo yo yo this be ethan dawg!
     // TODO: Is supercollider still needed? Can IPhysics ready be gutted? How much of this code is dead now?
     /**
      * @description The meat and potatoes of the game. This is where the actual "game" part lives.
@@ -274,17 +273,14 @@ var CosmicArkAdvanced;
                 this.pauseBackground.destroy();
             }
             else if (this.uiText_Restart.getBounds().contains(pos.x, pos.y)) {
-                //console.log("Restart has been activated"); // testing
                 this.game.paused = false;
                 this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
             }
             else if (this.uiText_Difficulty.getBounds().contains(pos.x, pos.y)) {
-                //console.log("Restart has been activated"); // testing
                 this.game.paused = false;
                 this.game.state.start("mapSelectState", true, false);
             }
             else if (this.uiText_Quit.getBounds().contains(pos.x, pos.y)) {
-                //console.log("Restart has been activated"); // testing
                 this.game.paused = false;
                 this.game.state.start("titleScreenState", true, false);
             }
