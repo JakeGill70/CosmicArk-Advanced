@@ -286,6 +286,25 @@ var CosmicArkAdvanced;
                 this.pauseBackground.destroy();
             }
             else {
+                //switch (this.uiText.getBounds().contains(pos.x, pos.y)) {
+                //    case this.uiText_Restart.getBounds().contains(pos.x, pos.y):
+                //        console.debug("Restart has been clicked."); // testing
+                //        this.game.paused = false;
+                //        this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
+                //        break;
+                //    case this.uiText_Difficulty.getBounds().contains(pos.x, pos.y):
+                //        console.debug("Difficulty has been clicked."); // testing
+                //        this.game.paused = false;
+                //        this.game.state.start("mapSelectState", true, false);
+                //        break;
+                //    case this.uiText_Quit.getBounds().contains(pos.x, pos.y):
+                //        console.debug("Quit has been clicked."); // testing
+                //        this.game.paused = false;
+                //        this.game.state.start("titleScreenState", true, false);
+                //        break;
+                //    default:
+                //        break;
+                //}
                 if (this.uiText_Restart.getBounds().contains(pos.x, pos.y)) {
                     this.game.paused = false;
                     this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
@@ -307,7 +326,7 @@ var CosmicArkAdvanced;
                     this.musicOff.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicOff.width / 2) + 250);
                     this.musicOff.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicOff.height / 2) - 100);
                 }
-                else if (this.musicOff.getBounds().contains(pos.x, pos.y) && this.isMusicImageOn == false) {
+                if (this.musicOff.getBounds().contains(pos.x, pos.y) && this.isMusicImageOn == false) {
                     this.musicOff.destroy();
                     this.isMusicImageOn = true;
                     this.musicOn = this.game.add.image(0, 0, "music_on");
