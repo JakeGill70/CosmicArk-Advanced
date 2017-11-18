@@ -259,7 +259,12 @@ var CosmicArkAdvanced;
             this.uiText_Quit = this.game.add.bitmapText(0, 0, "EdoSZ", "QUIT", 48);
             this.uiText_Quit.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Quit.textWidth / 2;
             this.uiText_Quit.position.y = (this.game.height / 2) + ((this.camera.position.y - this.uiText_Quit.textHeight / 2) + 100);
-            this.musicButton = this.game.add.image(0, 0, "music_on");
+            if (this.game.music.volume == 0) {
+                this.musicButton = this.game.add.image(0, 0, "music_off");
+            }
+            else {
+                this.musicButton = this.game.add.image(0, 0, "music_on");
+            }
             this.musicButton.width = this.musicButton.width / 2 - 10;
             this.musicButton.height = this.musicButton.height / 2 - 45;
             this.musicButton.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicButton.width / 2) + 250);
@@ -317,16 +322,21 @@ var CosmicArkAdvanced;
                     this.game.paused = false;
                     this.game.state.start("titleScreenState", true, false);
                 }
-                if (this.musicButton.getBounds().contains(pos.x, pos.y) /*&& this.isMusicImageOn == true*/) {
+                if (this.musicButton.getBounds().contains(pos.x, pos.y)) {
                     //this.musicOn.destroy();
                     if (this.isMusicImageOn) {
                         this.isMusicImageOn = false;
+                        this.musicButton.destroy();
                         this.musicButton = this.game.add.image(0, 0, "music_off");
+                        this.game.music.volume = 0;
                     }
                     else {
                         this.isMusicImageOn = true;
+                        this.musicButton.destroy();
                         this.musicButton = this.game.add.image(0, 0, "music_on");
+                        this.game.music.volume = 0.9;
                     }
+                    console.log(this.game.music.volume);
                     this.musicButton.width = this.musicButton.width / 2 - 10;
                     this.musicButton.height = this.musicButton.height / 2 - 45;
                     this.musicButton.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicButton.width / 2) + 250);
