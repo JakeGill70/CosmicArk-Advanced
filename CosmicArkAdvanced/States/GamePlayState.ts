@@ -45,8 +45,8 @@
 
         pauseBackground: Phaser.Image;        // Variable used to easier control the pause menu background image
 
-        musicOn: Phaser.Image;                // Image to show music/sounds are on
-        musicOff: Phaser.Image;               // Image to show music/sounds are off
+        musicButton: Phaser.Image;                // Image to show music/sounds are on
+        //musicButton: Phaser.Image;               // Image to show music/sounds are off
                                               
         tweenSize: Phaser.Tween;              // Used to transition in between sizes
         tweenColor: Phaser.Tween;             // Used to transition in between colors
@@ -361,11 +361,11 @@
             this.uiText_Quit.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Quit.textWidth / 2;
             this.uiText_Quit.position.y = (this.game.height / 2) + ((this.camera.position.y - this.uiText_Quit.textHeight / 2) + 100);
 
-            this.musicOn = this.game.add.image(0, 0, "music_on");
-            this.musicOn.width = this.musicOn.width / 2 - 10;
-            this.musicOn.height = this.musicOn.height / 2 - 45;
-            this.musicOn.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicOn.width / 2) + 250);
-            this.musicOn.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicOn.height / 2) - 100);
+            this.musicButton = this.game.add.image(0, 0, "music_on");
+            this.musicButton.width = this.musicButton.width / 2 - 10;
+            this.musicButton.height = this.musicButton.height / 2 - 45;
+            this.musicButton.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicButton.width / 2) + 250);
+            this.musicButton.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicButton.height / 2) - 100);
             this.isMusicImageOn = true;
 
         }
@@ -383,10 +383,10 @@
                 this.uiText_Difficulty.destroy();
                 this.uiText_Quit.destroy();
                 if (this.isMusicImageOn == true) {
-                    this.musicOn.destroy();
+                    this.musicButton.destroy();
                 }
                 if (this.isMusicImageOn == false) {
-                    this.musicOff.destroy();
+                    this.musicButton.destroy();
                 }
                 this.pauseBackground.destroy();
             }
@@ -424,24 +424,30 @@
                     this.game.paused = false;
                     this.game.state.start("titleScreenState", true, false);
                 }
-                if (this.musicOn.getBounds().contains(pos.x, pos.y) && this.isMusicImageOn == true) {
-                    this.musicOn.destroy();
-                    this.isMusicImageOn = false;
-                    this.musicOff = this.game.add.image(0, 0, "music_off");
-                    this.musicOff.width = this.musicOff.width / 2 - 10;
-                    this.musicOff.height = this.musicOff.height / 2 - 45;
-                    this.musicOff.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicOff.width / 2) + 250);
-                    this.musicOff.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicOff.height / 2) - 100);
+                if (this.musicButton.getBounds().contains(pos.x, pos.y) /*&& this.isMusicImageOn == true*/) {
+                    //this.musicOn.destroy();
+                    if (this.isMusicImageOn) {
+                        this.isMusicImageOn = false;
+                        this.musicButton = this.game.add.image(0, 0, "music_off");
+                    }
+                    else {
+                        this.isMusicImageOn = true;
+                        this.musicButton = this.game.add.image(0, 0, "music_on");
+                    }
+                    this.musicButton.width = this.musicButton.width / 2 - 10;
+                    this.musicButton.height = this.musicButton.height / 2 - 45;
+                    this.musicButton.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicButton.width / 2) + 250);
+                    this.musicButton.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicButton.height / 2) - 100);
                 }
-                if (this.musicOff.getBounds().contains(pos.x, pos.y) && this.isMusicImageOn == false) {
-                    this.musicOff.destroy();
-                    this.isMusicImageOn = true;
-                    this.musicOn = this.game.add.image(0, 0, "music_on");
-                    this.musicOn.width = this.musicOn.width / 2 - 10;
-                    this.musicOn.height = this.musicOn.height / 2 - 45;
-                    this.musicOn.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicOn.width / 2) + 250);
-                    this.musicOn.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicOn.height / 2) - 100);
-                }
+                //if (this.musicOff.getBounds().contains(pos.x, pos.y) && this.isMusicImageOn == false) {
+                //    this.musicOff.destroy();
+                //    this.isMusicImageOn = true;
+                //    this.musicOn = this.game.add.image(0, 0, "music_on");
+                //    this.musicOn.width = this.musicOn.width / 2 - 10;
+                //    this.musicOn.height = this.musicOn.height / 2 - 45;
+                //    this.musicOn.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicOn.width / 2) + 250);
+                //    this.musicOn.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicOn.height / 2) - 100);
+                //}
             }
                 
         }
