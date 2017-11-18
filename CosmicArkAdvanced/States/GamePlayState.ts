@@ -1,7 +1,5 @@
 ﻿module CosmicArkAdvanced {
 
-    // Yo yo yo this be ethan dawg!
-
     // TODO: Is supercollider still needed? Can IPhysics ready be gutted? How much of this code is dead now?
 
     /**
@@ -19,44 +17,51 @@
      * @property uiBtn_Pause {Phaser.Button}                - Temp UI element for displaying a pause button icon
      * @property uiText_Restart {Phaser.BitmapText}         - Temp UI element for displaying a restart option in the pause menu
      * @property uiText_Difficulty {Phaser.BitmapText}      - Temp UI element for displaying a difficulty option in the pause menu
-     * @property uiText_Restart {Phaser.BitmapText}         - Temp UI element for displaying a restart option in the pause menu
+     * @property uiText_Quit {Phaser.BitmapText}            - Temp UI element for displaying a quit option in the pause menu
      */
     export class GamePlayState extends Phaser.State {
         game: Phaser.Game;                          // Game Refence
         player: CosmicArkAdvanced.Player;           // Player object
         aliens: CosmicArkAdvanced.IPhysicsReady[];  // List of aliens in this scene that are capable of recieving physics calls
 
-        men: Phaser.Group;                  // Collection of men
+        men: Phaser.Group;                    // Collection of men
+                                              
+        alienBatch: Phaser.SpriteBatch;       // Collection of aliens in the game 
+                                              
+        guns: CosmicArkAdvanced.Gun[];        // Collection of guns  in the game
+        mines: CosmicArkAdvanced.Mine[];      // Collection of mines in the game
+        hooks: CosmicArkAdvanced.Hook[];      // Collection of hooks in the game
 
-        alienBatch: Phaser.SpriteBatch;     // Collection of aliens in the game 
+        mothership: Phaser.Sprite;            // Mothership object
+                                              
+        dict: any[];                          // 2 key dictionary of IPhysicsReady object's names which define a boolean value for if the two objects were colliding as of the previous frame.
 
-        guns: CosmicArkAdvanced.Gun[];      // Collection of guns  in the game
-        mines: CosmicArkAdvanced.Mine[];    // Collection of mines in the game
-        hooks: CosmicArkAdvanced.Hook[];    // Collection of hooks in the game
+        uiText: Phaser.BitmapText;            // UI Text for updating score information
+        uiText_Score: Phaser.BitmapText;      // UI Text for updating the literal score information <edf>
+        uiBtn_Pause: Phaser.Button;           // UI Button for pausing the game
+        uiText_Restart: Phaser.BitmapText;    // UI Text used as a selection to restart the level
+        uiText_Difficulty: Phaser.BitmapText; // UI Text used as a selection to change the difficulty in the level
+        uiText_Quit: Phaser.BitmapText;       // UI Text used as a selection to quit the game
 
-        mothership: Phaser.Sprite;          // Mothership object
+        pauseBackground: Phaser.Image;        // Variable used to easier control the pause menu background image
 
-        dict: any[];                        // 2 key dictionary of IPhysicsReady object's names which define a boolean value for if the two objects were colliding as of the previous frame.
+        musicButton: Phaser.Image;                // Image to show music/sounds are on
+        //musicButton: Phaser.Image;               // Image to show music/sounds are off
+                                              
+        tweenSize: Phaser.Tween;              // Used to transition in between sizes
+        tweenColor: Phaser.Tween;             // Used to transition in between colors
+                                              
+                                              
+        difficulty: number;                   // Value 1-3 which assists in level generation
+        numberToCapture: number;              // Number of aliens needed 
+        alienTotal: number;                   // Total number of aliens walking along the ground
+                                              
+        timeToCapture: number;                // Number of seconds the player has to finish the level
+        levelTimer: Phaser.Timer;             // Timer object that counts down the number of seconds the player has left to complete the level
+                                              
+        score: number;                        // Holds the current score to carry it over to the LevelFinishState
 
-        uiText: Phaser.BitmapText;          // UI Text for updating score information
-        uiText_Score: Phaser.BitmapText;    // UI Text for updating the literal score information <edf>
-        uiBtn_Pause: Phaser.Button;         // UI Button for pausing the game
-        uiText_Restart: Phaser.BitmapText;  // UI Text used as a selection to restart the level
-
-        pauseBackground: Phaser.Image;      // Variable used to easier control the pause menu background image
-
-        tweenSize: Phaser.Tween;            // Used to transition in between sizes
-        tweenColor: Phaser.Tween;           // Used to transition in between colors
-        
-
-        difficulty: number;                 // Value 1-3 which assists in level generation
-        numberToCapture: number;            // Number of aliens needed 
-        alienTotal: number;                 // Total number of aliens walking along the ground
-
-        timeToCapture: number;              // Number of seconds the player has to finish the level
-        levelTimer: Phaser.Timer;           // Timer object that counts down the number of seconds the player has left to complete the level
-
-        score: number;                      // Holds the current score to carry it over to the LevelFinishState
+        isMusicImageOn = true;
 
         /**
          * @description Mostly empty. Does initialize the aliens list and the dictionary.
@@ -346,9 +351,25 @@
             
             this.uiText_Restart = this.game.add.bitmapText(0, 0, "EdoSZ", "RESTART", 48);
             this.uiText_Restart.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Restart.textWidth / 2;
-            this.uiText_Restart.position.y = (this.game.height / 2) + this.camera.position.y - this.uiText_Restart.textHeight / 2;
+            this.uiText_Restart.position.y = (this.game.height / 2) + ((this.camera.position.y - this.uiText_Restart.textHeight / 2) - 100);
+
+            this.uiText_Difficulty = this.game.add.bitmapText(0, 0, "EdoSZ", "DIFFICULTY", 48);
+            this.uiText_Difficulty.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Difficulty.textWidth / 2;
+            this.uiText_Difficulty.position.y = (this.game.height / 2) + ((this.camera.position.y - this.uiText_Difficulty.textHeight / 2));
+
+            this.uiText_Quit = this.game.add.bitmapText(0, 0, "EdoSZ", "QUIT", 48);
+            this.uiText_Quit.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Quit.textWidth / 2;
+            this.uiText_Quit.position.y = (this.game.height / 2) + ((this.camera.position.y - this.uiText_Quit.textHeight / 2) + 100);
+
+            this.musicButton = this.game.add.image(0, 0, "music_on");
+            this.musicButton.width = this.musicButton.width / 2 - 10;
+            this.musicButton.height = this.musicButton.height / 2 - 45;
+            this.musicButton.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicButton.width / 2) + 250);
+            this.musicButton.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicButton.height / 2) - 100);
+            this.isMusicImageOn = true;
 
         }
+
 
         /**
          * @description when you press the pause button again it will un-pause the game.
@@ -359,13 +380,76 @@
             if (this.uiBtn_Pause.getBounds().contains(pos.x, pos.y)) {
                 this.game.paused = false;
                 this.uiText_Restart.destroy();
+                this.uiText_Difficulty.destroy();
+                this.uiText_Quit.destroy();
+                if (this.isMusicImageOn == true) {
+                    this.musicButton.destroy();
+                }
+                if (this.isMusicImageOn == false) {
+                    this.musicButton.destroy();
+                }
                 this.pauseBackground.destroy();
             }
-            else if (this.uiText_Restart.getBounds().contains(pos.x, pos.y)) {
-                //console.log("Restart has been activated"); // testing
-                this.game.paused = false;
-                this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
+            else {
+
+                //switch (this.uiText.getBounds().contains(pos.x, pos.y)) {
+
+                //    case this.uiText_Restart.getBounds().contains(pos.x, pos.y):
+                //        console.debug("Restart has been clicked."); // testing
+                //        this.game.paused = false;
+                //        this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
+                //        break;
+                //    case this.uiText_Difficulty.getBounds().contains(pos.x, pos.y):
+                //        console.debug("Difficulty has been clicked."); // testing
+                //        this.game.paused = false;
+                //        this.game.state.start("mapSelectState", true, false);
+                //        break;
+                //    case this.uiText_Quit.getBounds().contains(pos.x, pos.y):
+                //        console.debug("Quit has been clicked."); // testing
+                //        this.game.paused = false;
+                //        this.game.state.start("titleScreenState", true, false);
+                //        break;
+                //    default:
+                //        break;
+                //}
+                if (this.uiText_Restart.getBounds().contains(pos.x, pos.y)) {
+                    this.game.paused = false;
+                    this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
+                }
+                else if (this.uiText_Difficulty.getBounds().contains(pos.x, pos.y)) {
+                    this.game.paused = false;
+                    this.game.state.start("mapSelectState", true, false);
+                }
+                else if (this.uiText_Quit.getBounds().contains(pos.x, pos.y)) {
+                    this.game.paused = false;
+                    this.game.state.start("titleScreenState", true, false);
+                }
+                if (this.musicButton.getBounds().contains(pos.x, pos.y) /*&& this.isMusicImageOn == true*/) {
+                    //this.musicOn.destroy();
+                    if (this.isMusicImageOn) {
+                        this.isMusicImageOn = false;
+                        this.musicButton = this.game.add.image(0, 0, "music_off");
+                    }
+                    else {
+                        this.isMusicImageOn = true;
+                        this.musicButton = this.game.add.image(0, 0, "music_on");
+                    }
+                    this.musicButton.width = this.musicButton.width / 2 - 10;
+                    this.musicButton.height = this.musicButton.height / 2 - 45;
+                    this.musicButton.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicButton.width / 2) + 250);
+                    this.musicButton.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicButton.height / 2) - 100);
+                }
+                //if (this.musicOff.getBounds().contains(pos.x, pos.y) && this.isMusicImageOn == false) {
+                //    this.musicOff.destroy();
+                //    this.isMusicImageOn = true;
+                //    this.musicOn = this.game.add.image(0, 0, "music_on");
+                //    this.musicOn.width = this.musicOn.width / 2 - 10;
+                //    this.musicOn.height = this.musicOn.height / 2 - 45;
+                //    this.musicOn.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicOn.width / 2) + 250);
+                //    this.musicOn.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicOn.height / 2) - 100);
+                //}
             }
+                
         }
 
         /**
@@ -521,7 +605,6 @@
                             this.addMan(true);
                         }
                     }
-                    
                     
 
                     // Change UI

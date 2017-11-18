@@ -78,6 +78,8 @@ var CosmicArkAdvanced;
             this.game.load.spritesheet("ship", "Graphics/Sprites/UFO_Glow.png", 48, 24, 2);
             this.game.load.spritesheet("bang", "Graphics/Sprites/bang.png", 64, 64, 14);
             this.game.load.spritesheet("wave", "Graphics/Sprites/wave.png", 32, 32, 3);
+            this.game.load.image("music_on", "Graphics/Sprites/Music_On.png");
+            this.game.load.image("music_off", "Graphics/Sprites/Music_Off.png");
             // Static Sprites
             this.game.load.image("mothership", "Graphics/Statics/mothership3.png");
             this.game.load.image("hook", "Graphics/Statics/hook.png");
