@@ -98,7 +98,6 @@
             this.game.load.image("music_off", "Graphics/Sprites/Music_Off.png");
             // Static Sprites
             this.game.load.image("mothership", "Graphics/Statics/mothership3.png");
-            this.game.load.image("hook", "Graphics/Statics/hook.png");
             this.game.load.image("mine", "Graphics/Statics/Mine3.png");
             this.game.load.image("bullet", "Graphics/Statics/bullet1.png");
             this.game.load.image("planet1", "Graphics/Statics/planet_1.png");

@@ -1,5 +1,5 @@
 ﻿﻿module CosmicArkAdvanced {
-        /**
+   /**
     * @description Level starting splash screen, explaining specifics of current level win/lose conditions
     * @property game {Phaser.Game}             - The game context
     * @property music {Phaser.Sound}           - The SFX player
@@ -41,7 +41,7 @@
         }
 
     
-        /**
+       /**
         * @description Displays the splash image and scales it appropriately. Also registers the "onTap" event
         */
        create() {
@@ -66,7 +66,7 @@
             this.input.onTap.add(this.LevelStartClicked, this);
         }
     
-        /**
+       /**
         * @description Handles the "onTap" event. Just moves over to the gamePlayState state.
         */
         LevelStartClicked() {

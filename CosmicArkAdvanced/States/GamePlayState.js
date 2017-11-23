@@ -25,7 +25,6 @@ var CosmicArkAdvanced;
          */
         constructor() {
             super();
-            this.isMusicImageOn = true;
         }
         /**
          * @description TODO
@@ -45,6 +44,7 @@ var CosmicArkAdvanced;
             this.mines = [];
             this.hooks = [];
             this.dict = [];
+            this.uiText_Graveyard = [];
         }
         /**
          * @description adding mines to the level
@@ -79,7 +79,7 @@ var CosmicArkAdvanced;
                 spd = 20 * this.difficulty + 60;
             }
             let gun = new CosmicArkAdvanced.Gun(this.game, x, y, "gunTop", spd, this.player);
-            //gun.bullets.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
+            // gun.bullets.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
             gun.bullets.fireRate = (58 * this.difficulty * this.difficulty) - (1093 * this.difficulty) + 5946;
             gun.bullets.fireRateVariance = (Math.random() * 25 + 25) * ((this.difficulty % 3) + 1);
             this.guns.push(gun);
@@ -103,7 +103,7 @@ var CosmicArkAdvanced;
             }
             let hook = new CosmicArkAdvanced.Hook(this.game, x, y, "gun", "hook1", this.player);
             // 2000ms was the original testing speed
-            //hook.wep.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
+            // hook.wep.fireRate = 6290 * (Math.E ^ (-0.233 * this.difficulty));
             hook.wep.fireRate = (58 * this.difficulty * this.difficulty) - (1093 * this.difficulty) + 5946;
             hook.wep.fireRateVariance = (Math.random() * 30 + 35) * ((this.difficulty % 3) + 1);
             this.hooks.push(hook);
@@ -246,30 +246,36 @@ var CosmicArkAdvanced;
             this.game.paused = true;
             this.game.input.onDown.add(this.unpauseGame, this, 0, this.input.position);
             this.pauseBackground = this.game.add.image(0, 0, "blueGrid");
-            this.pauseBackground.width = this.pauseBackground.width / 2 - 10;
-            this.pauseBackground.height = this.pauseBackground.height / 2 - 45; // the 45 is so it doesn't obscured the top left text. probably be changed later.
+            this.pauseBackground.scale.setTo(this.game.width / this.pauseBackground.width, this.game.height / this.pauseBackground.height); // Scale it to fit the size of the screen
             this.pauseBackground.position.x = (this.game.width / 2) + this.camera.position.x - this.pauseBackground.width / 2;
             this.pauseBackground.position.y = (this.game.height / 2) + this.camera.position.y - this.pauseBackground.height / 2;
+            let uiTextOffsetDiviser = 5 * 2 + 2; // Twice the number of UI elements plus 2 looks about right
+            let offset = this.game.height / uiTextOffsetDiviser; // The offset of each UI element along the Y-axis
+            // Resume
+            this.uiText_Resume = this.game.add.bitmapText(0, 0, "EdoSZ", "RESUME", 48);
+            this.uiText_Resume.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Resume.textWidth / 2;
+            this.uiText_Resume.position.y = (this.camera.position.y - this.uiText_Resume.textHeight / 2) + offset * 2;
+            // Restart
             this.uiText_Restart = this.game.add.bitmapText(0, 0, "EdoSZ", "RESTART", 48);
             this.uiText_Restart.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Restart.textWidth / 2;
-            this.uiText_Restart.position.y = (this.game.height / 2) + ((this.camera.position.y - this.uiText_Restart.textHeight / 2) - 100);
+            this.uiText_Restart.position.y = (this.camera.position.y - this.uiText_Restart.textHeight / 2) + offset * 4;
+            // Difficulty
             this.uiText_Difficulty = this.game.add.bitmapText(0, 0, "EdoSZ", "DIFFICULTY", 48);
             this.uiText_Difficulty.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Difficulty.textWidth / 2;
-            this.uiText_Difficulty.position.y = (this.game.height / 2) + ((this.camera.position.y - this.uiText_Difficulty.textHeight / 2));
-            this.uiText_Quit = this.game.add.bitmapText(0, 0, "EdoSZ", "QUIT", 48);
-            this.uiText_Quit.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Quit.textWidth / 2;
-            this.uiText_Quit.position.y = (this.game.height / 2) + ((this.camera.position.y - this.uiText_Quit.textHeight / 2) + 100);
+            this.uiText_Difficulty.position.y = (this.camera.position.y - this.uiText_Difficulty.textHeight / 2) + offset * 6;
+            // Mute
             if (this.game.music.volume == 0) {
-                this.musicButton = this.game.add.image(0, 0, "music_off");
+                this.uiText_Mute = this.game.add.bitmapText(0, 0, "EdoSZ", "SOUND IS OFF", 48);
             }
             else {
-                this.musicButton = this.game.add.image(0, 0, "music_on");
+                this.uiText_Mute = this.game.add.bitmapText(0, 0, "EdoSZ", "SOUND IS ON", 48);
             }
-            this.musicButton.width = this.musicButton.width / 2 - 10;
-            this.musicButton.height = this.musicButton.height / 2 - 45;
-            this.musicButton.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicButton.width / 2) + 250);
-            this.musicButton.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicButton.height / 2) - 100);
-            this.isMusicImageOn = true;
+            this.uiText_Mute.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Mute.textWidth / 2;
+            this.uiText_Mute.position.y = (this.camera.position.y - this.uiText_Mute.textHeight / 2) + offset * 8;
+            // Quit (Make developers cry)
+            this.uiText_Quit = this.game.add.bitmapText(0, 0, "EdoSZ", "QUIT", 48);
+            this.uiText_Quit.position.x = (this.game.width / 2) + this.camera.position.x - this.uiText_Quit.textWidth / 2;
+            this.uiText_Quit.position.y = (this.camera.position.y - this.uiText_Quit.textHeight / 2) + offset * 10;
         }
         /**
          * @description when you press the pause button again it will un-pause the game.
@@ -277,40 +283,18 @@ var CosmicArkAdvanced;
          * @param position of your finger/cursor
          */
         unpauseGame(pos) {
-            if (this.uiBtn_Pause.getBounds().contains(pos.x, pos.y)) {
-                this.game.paused = false;
-                this.uiText_Restart.destroy();
-                this.uiText_Difficulty.destroy();
-                this.uiText_Quit.destroy();
-                if (this.isMusicImageOn == true) {
-                    this.musicButton.destroy();
+            if (this.game.paused) {
+                // Resume
+                if (this.uiText_Resume.getBounds().contains(pos.x, pos.y)) {
+                    this.game.paused = false;
+                    this.uiText_Graveyard.push(this.uiText_Restart);
+                    this.uiText_Graveyard.push(this.uiText_Difficulty);
+                    this.uiText_Graveyard.push(this.uiText_Quit);
+                    this.uiText_Graveyard.push(this.uiText_Mute);
+                    this.uiText_Graveyard.push(this.uiText_Resume);
+                    this.pauseBackground.destroy();
                 }
-                if (this.isMusicImageOn == false) {
-                    this.musicButton.destroy();
-                }
-                this.pauseBackground.destroy();
-            }
-            else {
-                //switch (this.uiText.getBounds().contains(pos.x, pos.y)) {
-                //    case this.uiText_Restart.getBounds().contains(pos.x, pos.y):
-                //        console.debug("Restart has been clicked."); // testing
-                //        this.game.paused = false;
-                //        this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
-                //        break;
-                //    case this.uiText_Difficulty.getBounds().contains(pos.x, pos.y):
-                //        console.debug("Difficulty has been clicked."); // testing
-                //        this.game.paused = false;
-                //        this.game.state.start("mapSelectState", true, false);
-                //        break;
-                //    case this.uiText_Quit.getBounds().contains(pos.x, pos.y):
-                //        console.debug("Quit has been clicked."); // testing
-                //        this.game.paused = false;
-                //        this.game.state.start("titleScreenState", true, false);
-                //        break;
-                //    default:
-                //        break;
-                //}
-                if (this.uiText_Restart.getBounds().contains(pos.x, pos.y)) {
+                else if (this.uiText_Restart.getBounds().contains(pos.x, pos.y)) {
                     this.game.paused = false;
                     this.game.state.start("levelStartState", true, false, this.difficulty, this.score);
                 }
@@ -322,35 +306,23 @@ var CosmicArkAdvanced;
                     this.game.paused = false;
                     this.game.state.start("titleScreenState", true, false);
                 }
-                if (this.musicButton.getBounds().contains(pos.x, pos.y)) {
-                    //this.musicOn.destroy();
-                    if (this.isMusicImageOn) {
-                        this.isMusicImageOn = false;
-                        this.musicButton.destroy();
-                        this.musicButton = this.game.add.image(0, 0, "music_off");
+                else if (this.uiText_Mute.getBounds().contains(pos.x, pos.y)) {
+                    if (this.game.music.volume > 0) {
+                        this.uiText_Mute.setText("SOUND IS OFF");
                         this.game.music.volume = 0;
                     }
                     else {
-                        this.isMusicImageOn = true;
-                        this.musicButton.destroy();
-                        this.musicButton = this.game.add.image(0, 0, "music_on");
+                        this.uiText_Mute.setText("SOUND IS ON");
                         this.game.music.volume = 0.9;
                     }
                     console.log(this.game.music.volume);
-                    this.musicButton.width = this.musicButton.width / 2 - 10;
-                    this.musicButton.height = this.musicButton.height / 2 - 45;
-                    this.musicButton.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicButton.width / 2) + 250);
-                    this.musicButton.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicButton.height / 2) - 100);
                 }
-                //if (this.musicOff.getBounds().contains(pos.x, pos.y) && this.isMusicImageOn == false) {
-                //    this.musicOff.destroy();
-                //    this.isMusicImageOn = true;
-                //    this.musicOn = this.game.add.image(0, 0, "music_on");
-                //    this.musicOn.width = this.musicOn.width / 2 - 10;
-                //    this.musicOn.height = this.musicOn.height / 2 - 45;
-                //    this.musicOn.position.x = (this.game.width / 2) + ((this.camera.position.x - this.musicOn.width / 2) + 250);
-                //    this.musicOn.position.y = (this.game.height / 2) + ((this.camera.position.y - this.musicOn.height / 2) - 100);
-                //}
+            }
+        }
+        emptyGraveyard() {
+            while (this.uiText_Graveyard.length > 0) {
+                let item = this.uiText_Graveyard.pop();
+                item.destroy();
             }
         }
         /**
@@ -375,6 +347,7 @@ var CosmicArkAdvanced;
          * @description Check for collisions between objects, update the UI and coordinate AI movements
          */
         update() {
+            this.emptyGraveyard(); // Delete any left over menu text
             this.collideObjects(); // Check for collisions
             this.moveMen(); // Move the men along the bottom of the screen
             for (let n = 0; n < this.alienBatch.hash.length; n++) {
@@ -391,7 +364,7 @@ var CosmicArkAdvanced;
         }
         /**
          * @description returns how much time is remaining
-        */
+         */
         GetTimeRemaining() {
             return (this.levelTimer.duration / 1000);
         }
@@ -410,36 +383,40 @@ var CosmicArkAdvanced;
          */
         collideObjects() {
             // Collide the player's ship with the gun's bullets
+            let bulletWasHit = false;
+            let bulls = new Array();
             for (let n = 0; n < this.guns.length; n++) {
                 for (let i = 0; i < this.guns[n].bullets.bullets.length; i++) {
+                    // Destroy all bullets within the kill radius (Ess. provide a localized i-frame to the player for fairness)
+                    let kill_radius = 150;
+                    let bull = this.guns[n].bullets.bullets.getAt(i);
+                    if (Phaser.Math.distance(bull.x, bull.y, this.player.x, this.player.y) < kill_radius) {
+                        bulls.push(bull);
+                    }
                     if (this.game.physics.arcade.overlap(this.player, this.guns[n].bullets.bullets.getAt(i))) {
-                        // Destroy all bullets within the kill radius (Ess. provide a localized i-frame to the player for fairness)
-                        let kill_radius = 150;
-                        this.guns.forEach(function (g, gi, ga) {
-                            for (let bi = 0; bi < g.bullets.bullets.length; bi++) {
-                                let bull = g.bullets.bullets.getAt(bi);
-                                if (bull.alive) {
-                                    if (Phaser.Math.distance(bull.x, bull.y, this.player.x, this.player.y) < kill_radius) {
-                                        bull.kill();
-                                    }
-                                }
-                            }
-                        }, this);
-                        // Play SFX
-                        this.game.sound.play("explosion", this.game.music.volume * 0.50);
-                        // Reduce Time
-                        this.addTime(-5000);
-                        // Reduce Transit Count
-                        if (this.player.aliensOnBoard > 0) {
-                            this.player.aliensOnBoard--;
-                            // Replace that person
-                            this.addMan(true);
-                        }
-                        // Change UI
-                        this.tweenSize.start();
-                        this.tweenColor.start();
+                        bulletWasHit = true;
                     }
                 }
+            }
+            if (bulletWasHit) {
+                // Destroy all bullets within the kill radius (Ess. provide a localized i-frame to the player for fairness)
+                while (bulls.length > 0) {
+                    let bull = bulls.pop();
+                    bull.kill();
+                }
+                // Play SFX
+                this.game.sound.play("explosion", this.game.music.volume * 0.50);
+                // Reduce Time
+                this.addTime(-5000);
+                // Reduce Transit Count
+                if (this.player.aliensOnBoard > 0) {
+                    this.player.aliensOnBoard--;
+                    // Replace that person
+                    this.addMan(true);
+                }
+                // Change UI
+                this.tweenSize.start();
+                this.tweenColor.start();
             }
             // Collide the player's ship with the hooks
             for (let n = 0; n < this.hooks.length; n++) {
@@ -603,14 +580,14 @@ var CosmicArkAdvanced;
          */
         render() {
             // Debug features...
-            //this.game.debug.body(this.player);
+            // this.game.debug.body(this.player);
             // this.game.debug.body(this.man1, "rgba(255,0,0,0.4");
             // this.gun1.bullets.debug();
             // this.game.debug.body(this.mine1);
             // this.game.debug.ropeSegments(this.hook1.rope);
             // this.game.debug.body(this.mothership);
             this.game.debug.text(this.game.time.fps.toString(), 8, 80);
-            //this.game.debug.body(this.myBatch.getFirstExists(true));
+            // this.game.debug.body(this.myBatch.getFirstExists(true));
         }
         /**
          * @description un-initializes game objects

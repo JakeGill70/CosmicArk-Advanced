@@ -1,12 +1,12 @@
 var CosmicArkAdvanced;
 (function (CosmicArkAdvanced) {
     /**
-* @description Level starting splash screen, explaining specifics of current level win/lose conditions
-* @property game {Phaser.Game}             - The game context
-* @property music {Phaser.Sound}           - The SFX player
-* @property game {Phaser.Sprite}           - The actual splash screen image to display
-* @property uiText {Phaser.BitmapText}     - Temp UI element for displaying score information
-*/
+     * @description Level starting splash screen, explaining specifics of current level win/lose conditions
+     * @property game {Phaser.Game}             - The game context
+     * @property music {Phaser.Sound}           - The SFX player
+     * @property game {Phaser.Sprite}           - The actual splash screen image to display
+     * @property uiText {Phaser.BitmapText}     - Temp UI element for displaying score information
+     */
     class LevelStartState extends Phaser.State {
         /**
          * @constructor Default.
@@ -30,8 +30,8 @@ var CosmicArkAdvanced;
             this.timeToCapture = time + (this.numberToCapture * perPersonTime);
         }
         /**
-        * @description Displays the splash image and scales it appropriately. Also registers the "onTap" event
-        */
+         * @description Displays the splash image and scales it appropriately. Also registers the "onTap" event
+         */
         create() {
             // Start Music
             if (!this.game.music.isPlaying) {
@@ -50,8 +50,8 @@ var CosmicArkAdvanced;
             this.input.onTap.add(this.LevelStartClicked, this);
         }
         /**
-        * @description Handles the "onTap" event. Just moves over to the gamePlayState state.
-        */
+         * @description Handles the "onTap" event. Just moves over to the gamePlayState state.
+         */
         LevelStartClicked() {
             console.log("I'm over here!");
             this.game.state.start("gamePlayState", true, false, this.difficulty, this.timeToCapture, this.numberToCapture, this.score); // Jump to the GamePlayState
